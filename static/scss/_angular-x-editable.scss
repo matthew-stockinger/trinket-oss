@@ -1,0 +1,28 @@
+.editable-click, a.editable-click {
+  border-bottom: 1px dashed #666;
+}
+  
+.editable-wrap {
+  width: 100%;
+  input[type="text"] {
+    border: none !important;
+  }
+  textarea {
+    margin: 0;
+    box-shadow: none;
+    background: none;
+    resize: none;
+  }
+	.editable-error {
+		margin-bottom: 20px;
+	}
+}
+.editable-click:hover, a.editable-click:hover  {
+	// border-bottom: none;
+	cursor: pointer;
+	color: $primary-color;
+}
+
+.editable-input {
+	width: 100%;
+}

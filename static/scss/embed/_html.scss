@@ -1,0 +1,193 @@
+#embed_content_html_display_only {
+  #codeOutput {
+    height: 100%;
+    width: 100%;
+  }
+  #htmlOutput {
+    border: 0;
+    width: 99%;
+    height: 100%;
+  }
+}
+
+#embed_content_html {
+
+  span.error {
+    margin-top: 0;
+  }
+
+  #codeOutput {
+    height: 100%;
+  }
+
+  #htmlOutput {
+    border: 0;
+    width: 99%;
+    height: 100%;
+  }
+
+  #outputTabs {
+    display: block !important;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    background-color: #eee;
+    border-bottom: 1px solid #d4d4d4;
+    text-align: center;
+    overflow: hidden;
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    .active {
+      background-color: #fff;
+    }
+
+    #codeOutputTab {
+      float: left;
+      width: 50%;
+      cursor: pointer;
+    }
+
+    #instructionsTab {
+      border-left: 1px solid #d4d4d4;
+      float: left;
+      width: 50%;
+      cursor: pointer;
+    }
+  }
+
+  #outputTabs.hideInstructions {
+    display: none !important;
+  }
+
+  #outputContainer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    &.withTabs {
+      top: 32px;
+    }
+    &.withoutTabs {
+      top: 0;
+    }
+  }
+
+  #instructionsContainer {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #fff;
+    padding: 10px 10px 32px 10px;
+
+    &.editor {
+      padding: 0;
+    }
+
+    #instructionsActions {
+      position: absolute;
+      top: 4px;
+      right: 12px;
+    }
+    #instructionsToolbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 4px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+
+  &.mode-output {
+    #codeOutput {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #editor {
+      display: none !important;
+    }
+  }
+
+  &.mode-standard {
+    @media #{$medium-up} {
+      #codeOutput, #editor, #dragbar {
+        display: block !important;
+        position: relative;
+        height: 100%;
+      }
+
+      #codeOutput {
+        width: auto;
+        overflow: hidden;
+      }
+
+      #editor {
+        float: left;
+        text-align: left;
+        width: 49%;
+      }
+
+      #dragbar {
+        width: 9px;
+        cursor: col-resize;
+        background-color: #ddd;
+        background-image: url("#{$img_prefix}/resizex.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        border-left: 1px solid #b4b4b4;
+        border-right: 1px solid #b4b4b4;
+        float: left;
+      }
+    }
+
+    @media #{$small-only} {
+      #codeOutput, #editor {
+        float: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  &.mode-snapshot {
+    #codeOutput {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 320px;
+      height: 320px;
+      overflow: hidden;
+    }
+    #outputTabs {
+      display: none !important;
+    }
+  }
+
+  &.mode-toggle {
+    #codeOutput, #editor {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}

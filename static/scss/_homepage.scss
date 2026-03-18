@@ -1,0 +1,448 @@
+$dark-blue: darken($primary-color, 10%);
+
+// Animations
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes RtL {
+  from {
+    opacity: 0;
+    transform: translateX(242%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+
+.homeLabel {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  display: inline-block;
+  width: 100%;
+  line-height: 1.4em;
+  font-size: 0.75em;
+
+  padding: 0px 8px 0px 8px;
+}
+
+// Use Modernizr to only display animation styles if browser supports
+.cssanimations #home #letters {
+  will-change: opacity;
+  opacity: 0;
+  -moz-animation: fadein .5s 2.5s ease 1 forwards;
+  -webkit-animation: fadein .5s 2.5s ease 1 forwards;
+  animation: fadein .5s 2.5s ease 1 forwards;
+}
+.cssanimations #home #green-logo-circle {
+  will-change: opacity;
+  opacity: 0;
+  -moz-animation: RtL 1s 1.5s ease 1 forwards;
+  -webkit-animation: RtL 1s 1.5s ease 1 forwards;
+  animation: RtL 1s 1.5s ease 1 forwards;
+}
+
+.cssanimations #home #yellow-logo-circle {
+  will-change: opacity;
+  opacity: 0;
+  transform: translateX(285%);
+  -moz-animation: RtL 1.5s 0s ease 1 forwards;
+  -webkit-animation: RtL 1.5s 0s ease 1 forwards;
+  animation: RtL 1.5s 0s ease 1 forwards;
+}
+
+// If Javascript active, apply lazysizes.js styles
+.js {
+  #home iframe {
+    will-change: opacity;
+    transition: opacity 1s ease-in 3s ;
+  }
+  #home .lazyload {
+    opacity: 0;
+  }
+
+  #home .lazyloaded {
+    opacity: 1;
+  }
+  #home .no-js-iframe {
+    display: none;
+  }
+}
+
+// for no-js, don't show lazy iframe
+.no-js #home .lazyload, .no-js #home .lazyloaded {
+  display: none;
+}
+
+body#home {
+  #svg-logo {
+    .letters {
+      fill: #fff;
+    }
+    .yellow {
+      fill: #FFDA00;
+    }
+    .blue {
+      fill: #008AFF;
+    }
+    .green {
+      fill: #26BF12;
+    }
+    .white {
+      fill: #fff;
+    }
+  }
+  .signup-form {
+    height: 475px;
+    &>div {
+      max-width: 300px;
+      height: 180px;
+      margin: auto;
+      margin-top: 50px;
+    }
+  }
+
+  .subheader {
+    vertical-align: top;
+    .slogans {
+      display: inline-block;
+      font-size: inherit;
+      line-height: inherit;
+      margin-bottom: 0;
+    }
+  }
+
+  #pro-banner {
+    width: 100%;
+    background: #f9f9f9;
+    border: 1px solid $secondary-color;
+    box-shadow: 0 8px 6px -6px $secondary-color;
+    padding: 20px 20px 0 20px;
+    margin-bottom: 20px;
+    p {
+      text-align: center;
+      margin: auto;
+      line-height: 1.25em;
+      a {
+        font-weight: bold;
+        font-size: 1.25em;
+        font-family: $header-font-family;
+      }
+    }
+  }
+
+  @media #{$small-only} {
+    #recent-trinkets, #my-courses {
+      max-width: 80%;
+    }
+  }
+  @media #{$medium-only} {
+    #recent-trinkets, #my-courses {
+      max-width: 90%;
+    }
+  }
+
+  #recent-trinkets .item {
+    text-align: center;
+    line-height: 42px;
+
+    a {
+      background: #f9f9f9;
+      position: relative;
+      display : inline-block;
+      border: solid 4px #eee;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      height: 280px;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+      &:hover {
+        box-shadow: 0 0 2px 2px rgba($primary-color, 0.5);
+      }
+    }
+
+    .overlay {
+      font-size: 1.25em;
+      line-height: 1.5em;
+      display: inline-block;
+      background: rgba(0,0,0,0.2);
+      color: white;
+      cursor: pointer;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      bottom: 0;
+    }
+  }
+  #main-content { padding: 20px 0 10px; }
+  form.home-signup {
+    width: 100%;
+    margin: 25px 0;
+    input[type="text"] {
+      margin: auto;
+      min-width: 275px;
+      max-width: 400px;
+    }
+    label, button { letter-spacing: 0.25em; }
+    button { margin: 30px 0 0 ; }
+    label { margin-bottom: 5px; }
+  }
+  nav.tab-bar { background-color: #FFF; }
+  .flow {
+    text-align: center;
+    padding: 0 0 20px;
+    @media #{$large-up} {
+      text-align: left;
+    }
+    @media #{$small-only} {
+      padding: 25px 0;
+    }
+  }
+  #hero {
+    width: 100%;
+    text-align: center;
+    color: #FFF !important;
+    padding: 40px 20px 25px;
+    background: $primary-color;
+    h1 {
+      color: #FFF;
+      padding: 20px 0 0 0;
+      margin: auto;
+      line-height: 1.25;
+      span.heading-break {
+        display: block;
+      }
+      @media screen and (min-width: 768px) {
+        span.heading-break {
+          display: inline;
+        }
+      }
+    }
+    p.lead { margin-top: 40px; }
+    img { width: 500px; }
+
+    a.dropdown {
+      border: 1px solid #FFF;
+      line-height: 1.25;
+      font-size: 2.75rem;
+      text-transform: none;
+      margin: 0;
+    }
+
+    ul.f-dropdown {
+      font-size: 2em;
+      line-height: 1em;
+    }
+
+    .trinket-slide {
+      position: relative;
+
+      .trinket-overlay {
+        &.hide {
+          display: none;
+        }
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: rgba(0,0,0,0.25);
+        display: table;
+        width: 100%;
+        height: 356px;
+        overflow: hidden;
+        font-size: 4em;
+        &>div {
+          display: table-cell;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+  .codeInput.editable {
+    height:150px;
+  }
+  .codeEditor {
+    margin-bottom: 40px;
+    button {
+      float: right;
+      margin: 20px 0;
+    }
+    textarea#code, .codeOutput {
+      height: 320px;
+      border: 1px solid #CCC;
+    }
+    #editorTheme {
+      margin: 20px 0;
+      width: 150px;
+      float: left;
+    }
+    canvas {
+      padding: 20px;
+    }
+    #code {
+      height: 320px;
+      text-align: left;
+    }
+  }
+  #create {
+    padding: 20px 0 0;
+    img {
+      margin: 17% 0;
+      width: 100%;
+      @media #{$medium-only} {
+        width: 400px;
+        margin: 5% 0;
+      }
+    }
+  }
+  #ipythonnb {
+    img { border: 1px solid #d4d4d4;}
+  }
+  #join {
+    padding: 40px 0;
+    text-align: center;
+  }
+  #logo-embed {
+    margin: 0 auto;
+    background: $primary-color;
+    width: 143px;
+    height: 143px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 145px;
+    font-size: 80px;
+    color: white
+  }
+  #logo-user {
+    margin: 0 auto;
+    background: $secondary-color;
+    width: 143px;
+    height: 143px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 145px;
+    font-size: 80px;
+    color: white
+  }
+
+  .course-list {
+    * {
+      vertical-align: middle;
+    }
+    li {
+      width: 100%;
+      border: 1px solid #d4d4d4;
+      margin: 0.5rem 0.75rem 0.5rem 0;
+      padding: 0.5rem 0 0.5rem 0.5rem;
+      cursor: pointer;
+
+      &:first-child {
+        margin-top: 0 !important;
+      }
+
+      &:hover {
+        border: 1px solid $primary-color;
+        background-color: $blue-40;
+      }
+    }
+    a {
+      font-size: 1.4rem;
+    }
+  }
+
+  .featured-course-list {
+    li {
+      width: 100%;
+      border: 1px solid #d4d4d4;
+      margin-bottom: 0.6rem;
+
+      .course-title {
+        background-color: #eeeeee;
+        border-bottom: 1px solid #d4d4d4;
+        padding: 0.6rem;
+      }
+      .course-description {
+        padding: 0.6rem;
+      }
+    }
+  }
+
+  #trinket-types-landing {
+    &>li .trinket-type {
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 182px;
+      cursor: pointer;
+      vertical-align: top;
+      border: solid 1px #eee;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+      &:hover {
+        box-shadow: 0 0 2px 2px rgba($primary-color, 0.5);
+      }
+      .trinket-type-image {
+        padding: 10px;
+        height: 182px;
+      }
+    }
+    .trinket-label {
+      border-top: 1px solid #d4d4d4;
+      padding-top: 8px;
+      width: 100%;
+      display: inline-block;
+      text-align: center;
+      margin: 0 auto;
+      font-weight: bold;
+      a { color: inherit }
+    }
+  }
+
+  #trinket-interviews-landing {
+    li {
+      padding: 0;
+      margin: 8px;
+      cursor: pointer;
+    }
+    &>li {
+      display: inline-block;
+      margin: 10px 30px;
+      width: 180px;
+      height: 180px;
+      border: solid 1px #eee;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      vertical-align: middle;
+
+      border-radius: 50%;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      position: relative;
+
+      &:hover {
+        box-shadow: 0 0 2px 2px rgba($primary-color, 0.5);
+      }
+    }
+  }
+  .book-image {
+    padding-left: 25%;
+  }
+  .resources {
+    img {
+      margin-bottom: .25em;
+    }
+    a {
+      color: black;
+      &:hover .book-item {
+        box-shadow: 0 0 15px rgba(0, 0, 100, 0.4);
+      }
+    }
+    .book-item {
+      padding-top: 1em;
+      padding-bottom: .25em;
+    }
+  }
+}

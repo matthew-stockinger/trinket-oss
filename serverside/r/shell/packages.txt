@@ -1,0 +1,16 @@
+ggplot2
+zoo
+jsonlite
+dplyr
+tidyr
+stringr
+lubridate
+qtl
+nycflights13
+readr
+moderndive
+mosaic
+gapminder
+ISLR
+infer
+ggplot2movies

@@ -1,0 +1,222 @@
+{% extends "embed/base.html" %}
+
+{% block head_styles %}
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css">
+{% endblock %}
+
+{% block toolbar_options %}
+{% if outputOnly %}
+  {% include "embed/default-toolbar.html" %}
+{% else %}
+<a class="menu-button item {{'' if toggleCode else 'show-for-small-only'}} allow-original" data-action="code.edit" data-tooltip title="Edit the code.">
+  <i class="fa fa-pencil"></i>
+  <label class="show-for-large-up">Code</label>
+</a>
+<a class="menu-button item allow-original" data-action="code.run" data-tooltip title="View the result.">
+  <i class="fa fa-play"></i>
+  <label class="show-for-large-up">Run</label>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block upload_modal %}
+{% if not outputOnly %}
+{% include "includes/uploadModal.html" %}
+{% endif %}
+{% endblock %}
+
+{% block embed_content %}
+  <input id="start-value" type='hidden' value='{{start if start else "code"}}'/>
+  <div id="editor">
+    <iframe id="blocklyIframe" src="/embed/glowscript-blocks-iframe"></iframe>
+  </div>
+
+  {% if not outputOnly %}
+  <div id="dragbar"></div>
+  {% endif %}
+
+  <div id="codeOutput" class="codeOutput hide" data-interface="output">
+
+    {% if outputOnly %}
+    <div id="outputTabs" class="{{ outputTabs }} {% if hideGeneratedCode %}hideGeneratedCode{% endif %}">
+      <div class="active menu-button {{ outputTabs }}" id="codeOutputTab" data-action="output.view"><i class="fa fa-play"></i> Run</div>
+      <div class="menu-button {% if hideGeneratedCode %}hideGeneratedCode{% endif %} {{ outputTabs }}" id="codeViewTab" data-action="code.view"><i class="fa fa-terminal"></i> View Code</div>
+    </div>
+
+    <div id="outputContainer" class="{{ outputTabs }} {% if outputTabs == 'noTabs' %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="loadingContent" class="hide">
+        <span><i class="fa fa-spinner fa-spin"></i> Loading</span>
+      </div>
+      <iframe id="glowscriptOutput"></iframe>
+    </div>
+
+    <div id="blocklyCodeContainer" class="hide"></div>
+
+    {% else %}
+
+    <div id="outputTabs" class="{{ outputTabs }} {% if outputTabs == 'noTabs' %}withoutTabs{% else %}withTabs{% endif %}">
+      <div class="{% if not showInstructions %}active {% endif %}menu-button {{ outputTabs }}"
+        id="codeOutputTab" data-action="output.view"><i class="fa fa-play"></i> Run</div>
+      <div class="menu-button {% if hideGeneratedCode %}hideGeneratedCode{% endif %} {{ outputTabs }}"
+        id="codeViewTab" data-action="code.view"><i class="fa fa-terminal"></i> View Code</div>
+      <div class="{% if showInstructions %}active {% endif %}menu-button {% if hideInstructions or (not isOwner and not trinket.description) %}hideInstructions{% endif %} {{ outputTabs }}"
+        id="instructionsTab" data-action="instructions.view"><i class="fa fa-list"></i> Instructions</div>
+    </div>
+
+    <div id="outputContainer" class="{{ outputTabs }} {% if outputTabs == 'noTabs' %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="loadingContent" class="hide">
+        <span><i class="fa fa-spinner fa-spin"></i> Loading</span>
+      </div>
+      <iframe id="glowscriptOutput"></iframe>
+    </div>
+
+    <div id="blocklyCodeContainer" class="hide"></div>
+
+    {% include "includes/embed-instructions.html" %}
+    {% endif %}
+
+  {% raw %}
+  <textarea id="glowscriptTemplate" class="hide">
+    <html>
+      <head>
+        <style>
+        html, body {
+          margin: 0;
+          padding: 0;
+        }   
+        div#glowscript {
+          width: 100%;
+          margin: 0 auto;
+          text-align: center;
+        }   
+        </style>
+        <link type="text/css" href="{{url}}/{{prefix}}components/glowscript/css/redmond/IDE/jquery-ui.custom.css" rel="stylesheet" />
+        <link type="text/css" href="{{url}}/{{prefix}}components/glowscript/css/ide.css" rel="stylesheet" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.3/MathJax.js?config=TeX-AMS_HTML"></script>
+        {{jqueryList}}
+        <script type="text/javascript" src="{{url}}/{{prefix}}components/glowscript/package/glow.{{version}}.min.js"></script>
+        <script type="text/javascript" src="{{url}}/{{prefix}}components/glowscript/package/RSrun.{{version}}.min.js"></script>
+        <script type="text/javascript" src="{{url}}/{{prefix}}components/glowscript/package/RScompiler.{{version}}.min.js"></script>
+      </head>
+      <body>
+        <div id="loading">Loading your GlowScript program</div>
+        <div id="glowscript"></div>
+
+<script id="glowscript_source" type="text/plain">{{prog}}</script>
+
+        <script type="text/javascript">
+          var prog = $('#glowscript_source').text()
+            , compiled, main_func;
+
+          try {
+            compiled = window.glowscript_compile(prog, { lang : '{{lang}}', version : '{{version}}' });
+          } catch(e) {
+            window.parent.postMessage(JSON.stringify({ "glowscript.error" : e.message, type : "compile" }), "*");
+          }
+
+          function eval_script(x) {
+            return eval(x);
+          }
+
+          if (compiled) {
+            main_func = eval_script(compiled);
+            window.userMain = main_func;
+          }
+
+          $("#loading").remove()
+          window.__context = {
+            glowscript_container : $('#glowscript')
+          };
+
+          if (window.userMain && typeof window.userMain === "function") {
+            window.userMain(function(err) {
+              if (err) {
+                window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message, type : "runtime" }), "*");
+              }
+            });
+          }
+
+          window.addEventListener('message', function(e) {
+            if (e.data === "glowscript.snapshot") {
+              var scene = window.scene;
+              if (!scene) {
+                for (var c = 0; c < canvas.activated.length; c++) {
+                  if (canvas.activated[c] !== null) {
+                    scene = canvas.activated[c]
+                    break;
+                  }
+                }
+              }
+              if (scene) {
+                (scene.__renderer || scene.renderer).screenshot(function (err, img) {
+                  if (!err) {
+                    $(img).load(function () {
+                      // Rescale the image to 128px max dimension and save it as a screenshot
+                      var targetSize = 270;
+                      var aspect = img.width / img.height;
+                      var w = aspect >= 1 ? targetSize : targetSize * aspect;
+                      var h = aspect >= 1 ? targetSize / aspect : targetSize;
+
+                      var canvas = document.createElement("canvas");
+                      canvas.width = w;
+                      canvas.height = h;
+                      var cx = canvas.getContext('2d');
+                      cx.drawImage(img, 0, 0, w, h);
+                      var snapshot = canvas.toDataURL("image/png");
+
+                      window.parent.postMessage(JSON.stringify({ snapshot: snapshot }), "*");
+                    });
+                  }
+                });
+              }
+              else {
+                var glowscript_graph = $.find('.glowscript-canvas-wrapper canvas');
+                if (glowscript_graph[0] && typeof glowscript_graph[0].toDataURL == "function") {
+                  var snapshot = glowscript_graph[0].toDataURL("image/png");
+                  window.parent.postMessage(JSON.stringify({ snapshot: snapshot }), "*");
+                }
+              }
+            }
+          });
+        </script>
+      </body>
+    </html>
+  </textarea>
+  {% endraw %}
+  </div>
+{% endblock %}
+
+{% block body_scripts %}
+  {% if not outputOnly %}
+  {{ component('ace-builds', 'src-min-noconflict/ace.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-modelist.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-language_tools.js') | safe }}
+  {% endif %}
+
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+
+  {% if not outputOnly %}
+  <script src="{{ '/components/marked/lib/marked.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-markdown.js' | cachePrefix }}"></script>
+  {% endif %}
+
+  {{ component('filereader', 'filereader.js') | safe }}
+
+  {% include "embed/glowscript-blocks-config.html" %}
+  {% set js = extra_js.concat([
+       '/components/jq-console/jqconsole.min.js',
+       '/js/util/guid.js',
+       '/js/embed/analytics/activity-log.js',
+       '/js/embed/blocks/shared.js',
+       '/js/embed/glowscript-blocks.js'
+     ])
+  %}
+
+  {% if outputOnly %}
+    {{ cachify_js('embed-glowscript-blocks-output', js) | safe }}
+  {% else %}
+    {{ cachify_js('embed-glowscript-blocks', js) | safe }}
+  {% endif %}
+{% endblock %}

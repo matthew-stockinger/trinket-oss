@@ -1,0 +1,77 @@
+<header id="course-nav" class="page-menu" ui-scrollfix="45">
+  <div class="course-subnav clearfix row gutterless">
+    <section ng-cloak ng-show="course" class="left">
+      <nav class="title breadcrumbs">
+        <a href="/home"><i class="fa fa-home"></i></a>
+        <a ng-click="backToCourse()">{{ course.name }}</a>
+        <a ng-click="viewDashboard()">Dashboard</a>
+        <a class="current">{{ student.displayName }}</a>
+      </nav>
+    </section>
+    <div class="right">
+      <a ng-disabled="!prev.student" ng-class="{disabled:!prev.student}" ng-click="viewStudent(prev.student)" class="button small">Previous</a>
+      <a ng-disabled="!next.student" ng-class="{disabled:!next.student}" ng-click="viewStudent(next.student)" class="button small">Next</a>
+    </div>
+  </div>
+</header>
+
+<div id="course-content" class="dashboard-content dashboard-list" ui-scrollfix="45">
+  <div ng-if="loading" class="row dashboard-container">
+    <div class="small-12 columns text-center">
+      <h2><i class="fa fa-spinner fa-spin"></i> Loading</h2>
+    </div>
+  </div>
+
+  <div ng-if="!loading" ng-repeat="lesson in course.lessons" class="row dashboard-container">
+    <div class="small-12 columns">
+      <div class="row">
+        <div class="small-12 columns">
+          <h4><div data-tooltip class="draft-circle in-dashboard has-tip" title="Marked as draft" ng-if="lesson.isDraft">&nbsp;</div> {{ lesson.name }}</h4>
+        </div>
+      </div>
+
+      <div ng-repeat="material in lesson.materials" class="row material-row submission-row" ng-class="{'clickable':material.type === 'assignment' && isUserSubmissionViewable(submissions[ material.id ]), 'row-open':material.type === 'assignment' && viewingSubmission.id === submissions[ material.id ].id}">
+        <div class="small-12 columns" id="assignment-row-{{ material.id }}">
+          <div class="row assignment-info">
+            <div ng-switch="material.type" ng-click="toggleAssignment(material)" ng-class="material.type === 'assignment' ? 'small-6' : 'small-12'" class="columns material-name">
+              <i ng-switch-when="page" class="fa fa-file-text-o fa-fw"></i>
+              <i ng-if="material.type === 'assignment' && usingDates(material)" class="fa fa-clock-o fa-fw"></i>
+              <i ng-switch-when="assignment" class="fa fa-pencil-square-o fa-fw"></i>
+
+              <div data-tooltip class="draft-circle in-dashboard has-tip" title="Marked as draft" ng-if="material.isDraft">&nbsp;</div>
+
+              <span ng-switch-when="assignment">{{ material.name }}</span>
+              <span ng-switch-when="page" class="not-assignment">{{ material.name }}</span>
+            </div>
+            <div ng-if="material.type === 'assignment'" ng-click="toggleAssignment(material)" class="small-5 columns">
+              <section ng-if="submissions[ material.id ]">
+                <i ng-class="stateDisplay[ submissions[ material.id ].state ].icon" class="fa fa-fw"></i>
+                {{ stateDisplay[ submissions[ material.id ].state ].text }}
+                <span title="{{ submissions[ material.id ].lastUpdated }}">{{ submissions[ material.id ][ stateDisplay[submissions[ material.id ].state].dateField ] | formatDate }}</span>
+              </section>
+              <section ng-if="!submissions[ material.id ]">
+                <i ng-class="stateDisplay['not-started'].icon" class="fa fa-fw"></i>
+                {{ stateDisplay['not-started'].text }}
+              </section>
+            </div>
+            <div ng-if="material.type === 'assignment'" class="small-1 columns">
+              <a class="dashboard-actions-link right" data-dropdown="material-{{ material.id }}"><i class="fa fa-ellipsis-v"></i></a>
+
+              <ul id="material-{{ material.id }}" class="f-dropdown" data-options='align:left' data-dropdown-content>
+                <li>
+                  <a ng-click="viewAssignment(lesson, material)">View Assignment</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div ng-if="material.type === 'assignment'" class="row collapsed" ng-class="{'show-feedback-row':viewingSubmission.id === submissions[ material.id ].id}">
+            <div class="small-12 columns">
+              <trinket-feedback ng-if="viewingSubmission.id === submissions[ material.id ].id" material="material" submission="submissions[ material.id ]" cancel="cancelFeedback" can-send-feedback="canSendFeedback"></trinket-feedback>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

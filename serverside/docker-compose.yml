@@ -1,0 +1,138 @@
+services:
+  # Nginx reverse proxy - single entry point
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:80"
+      # Uncomment for SSL:
+      # - "8443:443"
+    volumes:
+      - python-generated:/var/www/generated/python:ro
+      - java-generated:/var/www/generated/java:ro
+      - r-generated:/var/www/generated/r:ro
+      - pygame-generated:/var/www/generated/pygame:ro
+      # Uncomment for SSL certificates:
+      # - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on: []  # Will be populated by profiles
+
+  # Python 3 - Manager 8100, Shell 8110
+  python3-shell:
+    build: ./python/shell
+    profiles: ["python3"]
+    # Internal only - no external port
+    expose:
+      - "8010"
+    volumes:
+      - python-sessions:/tmp/sessions
+    # Production security options (uncomment for hardened deployment):
+    # mem_limit: 500m
+    # mem_reservation: 375m
+    # cpus: 1.0
+    # cpu_shares: 512
+    # pids_limit: 50
+    # read_only: true
+    # tmpfs:
+    #   - /tmp:size=100m
+
+  python3-manager:
+    build: ./python/manager
+    profiles: ["python3"]
+    # Internal only - nginx proxies to this
+    expose:
+      - "8100"
+    volumes:
+      - python-generated:/tmp/python-generated
+    depends_on:
+      - python3-shell
+    environment:
+      - NODE_ENV=production
+
+  # Java - Manager 8200, Shell 8210
+  java-shell:
+    build: ./java/shell
+    profiles: ["java"]
+    expose:
+      - "8010"
+    volumes:
+      - java-sessions:/tmp/sessions
+    # Production security options (uncomment for hardened deployment):
+    # mem_limit: 500m
+    # mem_reservation: 375m
+    # cpus: 1.0
+    # cpu_shares: 512
+    # pids_limit: 50
+
+  java-manager:
+    build: ./java/manager
+    profiles: ["java"]
+    expose:
+      - "8200"
+    volumes:
+      - java-generated:/tmp/java-generated
+    depends_on:
+      - java-shell
+    environment:
+      - NODE_ENV=production
+
+  # R - Manager 8300, Shell 8310
+  r-shell:
+    build: ./r/shell
+    profiles: ["r"]
+    expose:
+      - "8010"
+    volumes:
+      - r-sessions:/tmp/sessions
+    # Production security options (uncomment for hardened deployment):
+    # mem_limit: 500m
+    # mem_reservation: 375m
+    # cpus: 1.0
+    # cpu_shares: 512
+    # pids_limit: 50
+
+  r-manager:
+    build: ./r/manager
+    profiles: ["r"]
+    expose:
+      - "8300"
+    volumes:
+      - r-generated:/tmp/r-generated
+    depends_on:
+      - r-shell
+    environment:
+      - NODE_ENV=production
+
+  # Pygame - Manager 8400, Worker 8010 + VNC 6080
+  pygame-worker:
+    build: ./pygame/worker
+    profiles: ["pygame"]
+    expose:
+      - "8010"   # Shell socket.io
+      - "6080"   # noVNC WebSocket
+    volumes:
+      - pygame-sessions:/tmp/pygame
+    # Production security options (uncomment for hardened deployment):
+    # mem_limit: 1g
+    # mem_reservation: 750m
+    # cpus: 2.0
+
+  pygame-manager:
+    build: ./pygame/manager
+    profiles: ["pygame"]
+    expose:
+      - "8100"
+    volumes:
+      - pygame-generated:/tmp/pygame-generated
+    depends_on:
+      - pygame-worker
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  python-sessions:
+  python-generated:
+  java-sessions:
+  java-generated:
+  r-sessions:
+  r-generated:
+  pygame-sessions:
+  pygame-generated:

@@ -1,0 +1,75 @@
+<form name="featured" class="featured-course-form">
+  <fieldset class="featured-course-list">
+    <legend>Featured Courses</legend>
+    <section id="featured">
+    {% for course in data.courses %}
+      <div id="featured-{{ course.id }}" class="row course-row-container" data-id="{{ course.id }}" data-page="{{ course.page }}">
+        <div class="small-8 columns">
+          <div class="row course-row">
+            <div class="small-9 columns">
+              <a href="/{{ course.ownerSlug }}/courses/{{ course.slug }}{% if course.page %}#/{{ course.page }}{% endif %}" target="_blank">{{ course.name }}{% if course.page %} {{ course.page }}{% endif %}</a>
+            </div>
+            <div class="small-3 columns">
+             <a data-course-id="{{ course.id }}" data-page="{{ course.page }}" class="right remove-featured-course"><i class="fa fa-times-circle caution"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    </section>
+    <div id="new-course-featured" class="row new-featured-course-inputs">
+      <div class="small-2 columns">
+        <input type="text" name="ownerSlug" placeholder="owner slug" />
+      </div>
+      <div class="small-2 columns">
+        <input type="text" name="slug" placeholder="course slug" />
+      </div>
+      <div class="small-3 columns">
+        <input type="text" name="page" placeholder="course page (optional)" />
+      </div>
+      <div class="small-3 columns end">
+        <button type="submit" class="button tiny secondary">Add Course</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+
+{% raw %}
+<script id="added-course" type="text/html">
+<div id="featured-{{courseId}}" class="row course-row-container" data-id="{{courseId}}" data-page="{{coursePage}}">
+  <div class="small-8 columns">
+    <div class="row course-row">
+      <div class="small-9 columns">
+        <a href="{{courseUrl}}" target="_blank">{{courseName}}</a>
+      </div>
+      <div class="small-3 columns ">
+       <a data-course-id="{{courseId}}" data-page="{{coursePage}}" class="right remove-featured-course"><i class="fa fa-times-circle caution"></i></a>
+      </div>
+    </div>
+  </div>
+</div>
+</script>
+{% endraw %}
+
+{% block extra_js %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
+<script>
+$(document).ready(function() {
+  Sortable.create($('#featured').get(0), {
+    group: 'featured',
+    onEnd: function(evt) {
+      if (evt.oldIndex !== evt.newIndex) {
+        $.post('/api/admin/featured-course/move', {
+            currentIndex : evt.oldIndex
+          , newIndex     : evt.newIndex
+          , courseId     : $(evt.item).data('id')
+          , page         : $(evt.item).data('page')
+        }).done(function(result) {
+          console.log("result:", result);
+        });
+      }
+    }
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+//
+// FOUNDATION SETTINGS FOR EMBEDDED TRINKETS 
+// The full settings can be found in public/components/foundation/scss/foundation/_settings.scss
+//
+// WARNING: You'll need to check for updates to the variables names for upgrades to foundation.
+//
+
+@import "public/components/foundation/scss/foundation/functions";
+
+$body-font-family: "Merriweather", Times, Georgia, serif;
+$primary-color: #008AFF;   // blue
+$secondary-color: #26BF12; // green
+$success-color: #26BF12;   // green
+$tertiary-color: #FFDA00; //yellow
+
+$input-font-size: rem-calc(16);
+$input-error-message-padding: rem-calc(9);
+
+$off-canvas-width: 220px;
+
+$icon-bar-bg: #FFF;
+$icon-bar-font-color: #525252;
+$icon-bar-hover-color: $primary-color;
+$icon-bar-icon-color: #525252;
+$icon-bar-active-color: $primary-color;
+
+$f-dropdown-font-size:    1em;
+$f-dropdown-list-padding: 0 0.5em;
+$f-dropdown-line-height: 2em;
+
+$code-error-message-color: #FFCCCC;
+$code-error-message-border: #FF0000;
+
+$info-message-color: #a0d3e8;

@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block body_id %}home{% endblock %}
+
+{% block content %}
+{% if user and user.roles %}
+  <input id="roles" type='hidden' value='{{ user.roles | encrypt }}'>
+{% endif %}
+{% if flash.warning %}
+<section class="row">
+  <div class="small-12 columns">
+    <div data-alert class="alert-box warning radius">
+      {{ flash.warning }}
+      <a href="#" class="close">&times;</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% if flash.info %}
+<section class="row">
+  <div class="small-12 columns">
+    <div data-alert class="alert-box success radius">
+      {{ flash.info }}
+      <a href="#" class="close">&times;</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+<section id="recent-trinkets" class="row">
+  <div class="clearfix">
+    <h2 class="left">My Recent Trinkets</h2>
+    <nav class="right">
+      <new-trinket></new-trinket>
+    </nav>
+  </div>
+  <p>Trinkets are interactive examples you can put on any site.  Create or edit your trinkets here:</p>
+  <ul class="medium-block-grid-3 small-block-grid-1">
+  {% for trinket in trinkets %}
+    <li class="item" title="{% if trinket.name == "" %}{% else %}{{ trinket.name }}{% endif %}">
+      <a href="/library/trinkets/{{ trinket.shortCode }}">
+        <img src="{{ trinket.snapshot }}">
+        <div class="overlay">
+          Click To Edit
+          <div class="homeLabel">
+            {% if trinket.name == "" %}<i>Untitled</i>{% else %}{{ trinket.name }}{% endif %}
+          </div>
+        </div>
+      </a>
+    </li>
+  {% endfor %}
+  </ul>
+  <section class="row">
+    <div class="columns small-12">
+      <a href="/library/trinkets" class="right button">View All My Trinkets&nbsp;<i class="fa fa-arrow-circle-right"></i></a>
+    </div>
+  </section>
+</section>
+{% if config.features.courses != false %}
+<hr>
+
+{% raw %}
+<section ng-controller="CoursesController">
+  <div class="row clearfix">
+    <div class="small-12 medium-8 columns">
+      <h2 class="left">My Courses</h2>
+
+      <div ng-hide="courses" class="row">
+        <div class="small-12 columns">
+          <h2><i class="fa fa-spinner fa-spin"></i> Loading Courses</h2>
+        </div>
+      </div>
+
+      <div ng-cloak ng-show="courses && !courses.length && featuredCourses && featuredCourses.length" class="row">
+        <div class="small-12 columns">
+          <p>Get started with Trinket Courses by trying one of our featured courses!</p>
+        </div>
+      </div>
+
+      <div ng-cloak ng-show="courses && courses.length" class="row">
+        <div class="small-12 columns">
+          <ul class="no-bullet course-list">
+            <li ng-repeat="course in courses | orderBy:'name'" ng-click="gotoCourse(course); $event.stopPropagation()">
+              {{ course.name }} <span ng-show="course.role" class="secondary-label label round">{{ course.role }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div ng-cloak ng-show="archived && archived.length" class="row">
+        <div class="small-12 columns">
+          <a ng-click="showArchived=!showArchived" style="display: inline-block; margin-bottom: 8px">
+            {{ showArchived ? "Hide" : "Show" }} Archived Courses ({{ archived.length }})
+          </a>
+          <ul ng-show="showArchived" class="no-bullet course-list">
+            <li ng-repeat="course in archived | orderBy:'name'" ng-click="gotoCourse(course); $event.stopPropagation()">
+              {{ course.name }} <span ng-show="course.role" class="secondary-label label round">{{ course.role }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div ng-cloak ng-show="courses" class="row">
+        <div class="small-12 columns">
+          <a ng-show="canCreateCourse" class="button" href="/courses/new"><i class="fa fa-plus-circle"></i> New Course</a>
+          <join-course courses-by-id="coursesById" courses="courses"></join-course>
+        </div>
+      </div>
+    </div>
+
+    <div ng-cloak ng-show="featuredCourses && featuredCourses.length" class="small-12 medium-4 columns">
+      <h2>Featured Courses</h2>
+      <div class="row">
+        <div class="small-12 columns featured-course">
+          <ul class="no-bullet featured-course-list">
+            <li ng-repeat="course in featuredCourses">
+              <div class="row course-title collapse">
+                <div class="small-12">
+                  <a href="{{ course.courseUrl }}"><strong>{{ course.name }}</strong></a>
+                </div>
+              </div>
+              <div class="row course-description">
+                <div class="small-12 columns">
+                  {{ course.description }}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endraw %}
+{% endif %}
+
+{% if flash.acceptedCourseInvitation %}
+<div id="classWelcomeModal" class="reveal-modal small" data-reveal>
+  <h2>Congratulations!</h2>
+  <p>You've joined <strong>{{ flash.acceptedCourseInvitation.course.name }}</strong>.</p>
+  <p><a class="button secondary" href="/{{ flash.acceptedCourseInvitation.course.ownerSlug }}/courses/{{ flash.acceptedCourseInvitation.course.slug }}">Go to Course</a></p>
+  <hr>
+  <p>
+    You'll also find a link to {{ flash.acceptedCourseInvitation.course.name }} in the list of courses on your Home page.
+  </p>
+  <p>Questions or suggestions? Click the <i class="fa fa-question-circle"></i> Help link at the top of the page next to your username.</p>
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  {% if flash.acceptedCourseInvitation %}
+    $("#classWelcomeModal").foundation('reveal', 'open');
+  {% endif %}
+</script>
+{% endblock %}

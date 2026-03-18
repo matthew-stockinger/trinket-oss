@@ -1,0 +1,17 @@
+<!-- for navbar -->
+<button ng-cloak ng-if="navbar && !toolbar && !noLabel" id="{{ searchLabelId }}" class="button small" ng-click="toggleSearchInput()">
+  <i ng-class="loadingTrinkets ? 'fa fa-circle-o-notch fa-spin' : buttonIcon"></i>
+</button>
+<!-- for toolbar -->
+<a ng-cloak ng-if="toolbar && !noLabel" id="{{ searchLabelId }}" ng-click="toggleSearchInput()" title="Insert Trinket">
+  <i ng-class="loadingTrinkets ? 'fa fa-circle-o-notch fa-spin' : 'trinket-key'"></i>
+</a>
+<div class="search-input" ng-class="{focus:searchInputOpen, active:searchInputActive}">
+  <input type="text" id="{{ inputId }}" ng-model="trinketSearchValue" placeholder="{{ placeholderText }}"
+         typeahead="trinkets for trinkets in searchTrinkets($viewValue)"
+         typeahead-loading="loadingTrinkets" typeahead-template-url="searchResultsTemplate.html"
+         typeahead-on-select="onSelectResult($item)" typeahead-wait-ms="400" />
+</div>
+<script type="text/ng-template" id="searchResultsTemplate.html">
+  <a class="trinket-list-with-lang lang-{{ match.model.lang }}" bind-html-unsafe="match.model.name | typeaheadHighlight:query"></a>
+</script>

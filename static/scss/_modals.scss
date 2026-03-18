@@ -1,0 +1,37 @@
+#embedModal, #shareModal, #emailModal, #publishModal {
+  position: fixed;
+  overflow: auto;
+  &.reveal-modal {
+    padding: 1.5rem;
+  }
+  input {
+    font-size: rem-calc(14px);
+  }
+  .faux-input {
+    font-size: rem-calc(14px);
+    margin-bottom: 0px;
+  }
+  select {
+    font-size: rem-calc(14px);
+  }
+  .modal-title {
+    font-size: rem-calc(27px);
+    font-weight: 900;
+    margin-bottom: rem-calc(12px);
+  }
+  fieldset {
+    margin-bottom: 0px;
+  }
+  #share-pro-tip {
+    margin-top: rem-calc(12px);
+  }
+  #slug-icon-status {
+    line-height: 2.5rem;
+  }
+}
+
+#emailModal {
+  .first-row {
+    margin-bottom: rem-calc(12px);
+  }
+}

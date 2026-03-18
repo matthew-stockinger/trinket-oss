@@ -1,0 +1,4 @@
+.icon-key_icon {
+    *zoom: expression(this.runtimeStyle['zoom'] = '1', this.innerHTML = '&#xe900;');
+}
+

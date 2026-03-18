@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="small-12 columns">
+    <p><i class="fa fa-exclamation-circle caution"></i> Deleting your account is permanent and cannot be undone. Please be certain you are ready to delete your account.</p>
+  </div>
+</div>
+<div class="row">
+  <div class="small-12 columns">
+    <a data-reveal-id="confirmDeleteAccountModal" class="button caution">Delete my Trinket Account</a>
+  </div>
+</div>
+<div id="confirmDeleteAccountModal" class="reveal-modal" data-reveal>
+  <div id="delete-account-messages"></div>
+  <div class="row">
+    <div class="small-12 columns">
+      <h2>Are you sure?</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <p>If you are certain you want to delete your Trinket account, please enter your username below to confirm.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <input type="text" id="account-username" value="" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <a id="delete-confirmed" class="button danger disabled">Delete Account</a>
+    </div>
+  </div>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+{% block extra_js %}
+<script>
+$('#account-username').keyup(function() {
+  var entered = $(this).val().trim();
+
+  if (entered === $('#whoami').val()) {
+    $('#delete-confirmed').removeClass('disabled');
+  }
+  else {
+    $('#delete-confirmed').addClass('disabled');
+  }
+});
+$('#delete-confirmed').click(function() {
+  if ($(this).hasClass('disabled')) {
+    return;
+  }
+
+  var entered = $('#account-username').val().trim();
+
+  $.ajax({
+      url    : '/api/users?username=' + encodeURIComponent(entered)
+    , method : 'DELETE'
+  })
+  .done(function(result) {
+    window.location.href = '/account-deleted';
+  })
+  .fail(function(err) {
+    $('#delete-account-messages').notify(
+      'There was a problem deleting your account. Please check your info and try again.'
+      , { position : 'top center', className : 'alert' }
+    );
+  });
+});
+</script>
+{% endblock %}

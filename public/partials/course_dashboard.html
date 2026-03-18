@@ -1,0 +1,114 @@
+<header id="course-nav" class="page-menu" ui-scrollfix="45">
+  <div class="course-subnav clearfix row gutterless">
+    <section ng-cloak ng-show="course" class="left">
+      <nav class="title breadcrumbs">
+        <a href="/home"><i class="fa fa-home"></i></a>
+        <a ng-click="backToCourse()">{{ course.name }}</a>
+        <a class="current">Dashboard</a>
+      </nav>
+      <section id="dashboard-list-options">
+        <section id="list-menus">
+          <button class="button small" data-dropdown="dashboard-view-options">
+            <i class="{{ viewOptions[viewType].class }}"></i> <span class="show-for-xlarge-up">{{ viewOptions[viewType].label }}</span> <i class="fa fa-caret-down"></i>
+          </button>
+          <ul id="dashboard-view-options" class="tiny f-dropdown" data-dropdown-content>
+            <li ng-repeat="(key, option) in viewOptions">
+              <a ng-click="changeView(key)"><i class="{{ option.class }}"></i> <span class="show-for-large-up">View {{ option.label }}</span></a>
+            </li>
+          </ul>
+        </section>
+      </section>
+    </section>
+  </div>
+</header>
+
+<div id="course-content" class="dashboard-content dashboard-list" ui-scrollfix="45" ng-switch="viewType">
+  <div ng-switch-when="assignment" ng-repeat="lesson in course.lessons" class="row dashboard-container">
+    <div class="small-12 columns">
+      <div class="row">
+        <div class="small-12 columns">
+          <h4 ng-class="{'first-lesson':$first}"><div data-tooltip class="draft-circle in-dashboard has-tip" title="Marked as draft" ng-if="lesson.isDraft">&nbsp;</div> {{ lesson.name }}</h4>
+          <div ng-if="$first && hiddenCount" class="right hidden-user-count">({{ hiddenCount }} hidden)</div>
+        </div>
+      </div>
+      <div ng-repeat="material in lesson.materials" class="row material-row course-dashboard">
+        <div ng-switch="material.type" ng-class="material.type === 'assignment' ? 'small-4' : 'small-12'" class="columns material-name">
+          <i ng-switch-when="page" class="fa fa-file-text-o fa-fw"></i>
+          <i ng-if="material.type === 'assignment' && usingDates(material)" class="fa fa-clock-o fa-fw"></i>
+          <i ng-switch-when="assignment" class="fa fa-pencil-square-o fa-fw"></i>
+
+          <div data-tooltip class="draft-circle in-dashboard has-tip" title="Marked as draft" ng-if="material.isDraft">&nbsp;</div>
+
+          <a ng-switch-when="assignment" ng-click="viewAssignment(lesson, material)">{{ material.name }}</a>
+          <span ng-switch-when="page" class="not-assignment">{{ material.name }}</span>
+        </div>
+        <div ng-if="material.type === 'assignment'" class="small-8 columns">
+          <assignment-dashboard ng-if="assignmentsOverview[material.id]" assignment="assignmentsOverview[material.id]"></assignment-dashboard>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-switch-when="student" class="row dashboard-container">
+    <div class="small-12 columns">
+      <!-- todo: better loading visual -->
+      <div ng-show="students.length" ng-repeat="student in students | orderBy:'displayName'" class="row student-row course-dashboard">
+        <div class="small-4 columns student-name">
+          <img class="avatar" ng-src="{{ student.avatar }}" /> <a ng-click="viewStudent(student)">{{ student.displayName }}</a>
+          <span ng-if="student.deleted" class="secondary-label label round" title="This user deleted their account.">deleted</span>
+        </div>
+        <div class="small-7 columns">
+          <assignment-dashboard total-key="'assignment-count'" assignment="studentsOverview[student.userId]"></assignment-dashboard>
+        </div>
+        <div class="small-1 columns">
+          <a class="dashboard-actions-link with-chart right" data-dropdown="user-{{ student.username }}"><i class="fa fa-ellipsis-v"></i></a>
+          <ul id="user-{{ student.username }}" class="f-dropdown" data-options="align:left" data-dropdown-content>
+            <li><a ng-click="updateUserView(student, 'dashboard', 'hide')"><i class="fa fa-fw fa-dashboard alert"></i> Hide from Dashboard</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- hidden users here -->
+  <div ng-show="hiddenStudents.length" class="row hidden-users-header">
+    <div class="small-12 collapse">
+      <fieldset ng-class="{'border-on':showHidden}" class="border">
+        <legend class="clickable-legend" ng-click="showHidden = !showHidden"><i ng-class="{'hide':showHidden}" class="fa fa-chevron-right"></i> Hidden from Dashboard ({{ hiddenStudents.length }})</legend>
+
+        <div class="row hidden-users collapsed" ng-class="{'show-hidden-users':showHidden}">
+          <div class="small-12 columns">
+            <div ng-repeat="student in hiddenStudents | orderBy:'displayName'" class="row student-row course-dashboard">
+              <div class="small-4 columns student-name">
+                <img class="avatar" ng-src="{{ student.avatar }}" /> {{ student.displayName }}
+                <span ng-if="student.deleted" class="secondary-label label round" title="This user deleted their account.">deleted</span>
+              </div>
+              <div class="small-7 columns">
+                <assignment-dashboard total-key="'assignment-count'" assignment="studentsOverview[student.userId]"></assignment-dashboard>
+              </div>
+              <div class="small-1 columns">
+                <a class="dashboard-actions-link with-chart right" data-dropdown="user-{{ student.username }}"><i class="fa fa-ellipsis-v"></i></a>
+                <ul id="user-{{ student.username }}" class="f-dropdown" data-options="align:left" data-dropdown-content>
+                  <li><a ng-click="updateUserView(student, 'dashboard', 'show')"><i class="fa fa-fw fa-dashboard"></i> Show on Dashboard</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+  <div ng-cloak ng-show="course" class="row chart-legend">
+    <div class="small-12 columns">
+      <p class="legend-label">Legend</p>
+      <div class="chart-wrapper">
+        <div class="chart-segment completed" style="width: 25%" title="Feedback Sent"><span class="show-for-small-only">&nbsp;</span><span class="show-for-medium-up">Returned</span>
+        </div><div class="chart-segment submitted" style="width: 25%" title="Submitted"><span class="show-for-small-only">&nbsp;</span><span class="show-for-medium-up">Submitted</span>
+        </div><div class="chart-segment started" style="width: 25%" title="Started"><span class="show-for-small-only">&nbsp;</span><span class="show-for-medium-up">Started</span>
+        </div><div class="chart-segment not-started" style="width: 25%" title="Not Started"><span class="show-for-small-only">&nbsp;</span><span class="show-for-medium-up">Not&nbsp;Started</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

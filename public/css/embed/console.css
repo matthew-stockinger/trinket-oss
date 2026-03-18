@@ -1,0 +1,58 @@
+@media only screen and (max-width: 525px) {
+  .button-description {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .long-title {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 370px) {
+  .medium-title {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  #head .tab {
+    padding: 0 5px;
+  }
+}
+
+#message {
+  margin-left: 10px;
+}
+
+/* The console container element */
+#console {
+  position: absolute;
+  left: 0;
+  right: 0;
+  min-width: 278px;
+  top: 35px;
+  bottom: 0;
+}
+/* The inner console element. */
+.jqconsole {
+    padding: 5px;
+}
+/* The cursor. */
+.jqconsole-cursor {
+    background-color: gray;
+}
+/* The cursor color when the console looses focus. */
+.jqconsole-blurred .jqconsole-cursor {
+    background-color: #666;
+}
+
+.jqconsole-output.error {
+  margin:0;
+}
+
+.jqconsole-output {
+  color: #008AFF;
+  line-height: 1.5em;
+}

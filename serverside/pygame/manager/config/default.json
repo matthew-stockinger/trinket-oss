@@ -1,0 +1,11 @@
+{
+  "manager": {
+    "port": 8100,
+    "host": "0.0.0.0",
+    "workerUrl": "http://localhost:8010",
+    "genDir": "/tmp/pygame-generated",
+    "genUrl": "http://localhost:8080/pygame-generated",
+    "vncPath": "/pygame-vnc/websockify",
+    "corsOrigins": ["http://localhost:3000", "http://localhost:3001", "http://localhost:8080"]
+  }
+}

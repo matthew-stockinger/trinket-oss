@@ -1,0 +1,97 @@
+trinket-assignment {
+  .trinket-assignment {
+    position: relative;
+    z-index: 0;
+
+    .row {
+      max-width: unset;
+    }
+
+    &.preview {
+      margin-bottom: 1rem;
+    }
+
+    #submission-list.f-dropdown {
+      max-width: 300px;
+    }
+
+    .other-version {
+      position: relative;
+      border: 1px solid #d4d4d4;
+      padding: 24px 24px 18px 24px !important;
+
+      .closer {
+        position: absolute;
+        top: -16px;
+        right: -8px;
+        font-size: 1.2rem;
+        background-color: #ffffff;
+        padding-left: 8px;
+      }
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #d4d4d4;
+    z-index: 1;
+  }
+
+  .start-assignment, .loading-assignment {
+    z-index: 2;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    width: 90%;
+    text-align: center;
+
+    @media #{$medium-up} {
+      white-space: nowrap;
+    }
+
+    span {
+      font-size: 40px;
+    }
+
+    .submission-warning {
+      margin-top: 1.25rem;
+      font-size: 110%;
+    }
+  }
+
+  .button {
+    margin-bottom: 0;
+  }
+
+  .submit-button {
+    float: left;
+    margin-right: 20px;
+  }
+
+  .assignment-notices {
+    display: block;
+    overflow: hidden;
+  }
+
+  .assignment-warning {
+    margin: 0.75rem 0;
+    color: $warning-message-color;
+    font-weight: 600;
+    padding: 0.5rem;
+  }
+  .assignment-error {
+    margin: 0.75rem 0;
+    color: darken($error-message-color, 20%);
+    font-weight: 600;
+    padding: 0.5rem;
+  }
+
+  @import "assignments-common";
+}

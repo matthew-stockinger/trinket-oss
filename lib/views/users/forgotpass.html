@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="row">
+    <div class="large-12 columns">
+      <h1>Forgot Password</h2>
+      {% if emailEnabled %}
+      <form id="password-reset-form" action="/send-pass-reset" method="post">
+        <input type="text" name="email" placeholder="Email"/>
+        <button class="g-recaptcha button" data-sitekey="{{ config.app.recaptcha.sitekey }}" data-callback="submitPasswordResetForm" data-badge="bottomleft">Send Instructions</button>
+      </form>
+      {% else %}
+      <p>Password reset is not available because email is not configured on this server.</p>
+      <p>Please contact your administrator to reset your password.</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

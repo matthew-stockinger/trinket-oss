@@ -1,0 +1,132 @@
+<div class="row">
+  <div class="small-12 columns">
+    <p>Server-side trinket backends provide Python 3, Java, R, and Pygame execution.</p>
+  </div>
+</div>
+
+{% set serversideConfig = config.app.serverside %}
+{% set hasServerside = config.features.trinkets.python3 or config.features.trinkets.java or config.features.trinkets.R or config.features.trinkets.pygame %}
+
+{% if not hasServerside %}
+<div class="row">
+  <div class="small-12 columns">
+    <div class="alert-box info">
+      No server-side languages are currently enabled. Enable them in your configuration under <code>features.trinkets</code>.
+    </div>
+  </div>
+</div>
+{% else %}
+
+<div class="row">
+  <div class="small-12 columns">
+    <table id="serverside-stats">
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Status</th>
+          <th>Active Connections</th>
+          <th>Available Workers</th>
+          <th>Mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if config.features.trinkets.python3 %}
+        <tr data-lang="python3" data-api="{{ serversideConfig.python3.api.default }}">
+          <td>Python 3</td>
+          <td class="status"><i class="fa fa-spinner fa-spin"></i> Checking...</td>
+          <td class="active">-</td>
+          <td class="available">-</td>
+          <td class="mode">-</td>
+        </tr>
+        {% endif %}
+        {% if config.features.trinkets.java %}
+        <tr data-lang="java" data-api="{{ serversideConfig.java8.api.default }}">
+          <td>Java</td>
+          <td class="status"><i class="fa fa-spinner fa-spin"></i> Checking...</td>
+          <td class="active">-</td>
+          <td class="available">-</td>
+          <td class="mode">-</td>
+        </tr>
+        {% endif %}
+        {% if config.features.trinkets.R %}
+        <tr data-lang="r" data-api="{{ serversideConfig.r3.api.default }}">
+          <td>R</td>
+          <td class="status"><i class="fa fa-spinner fa-spin"></i> Checking...</td>
+          <td class="active">-</td>
+          <td class="available">-</td>
+          <td class="mode">-</td>
+        </tr>
+        {% endif %}
+        {% if config.features.trinkets.pygame %}
+        <tr data-lang="pygame" data-api="{{ serversideConfig.pygame.api.default }}">
+          <td>Pygame</td>
+          <td class="status"><i class="fa fa-spinner fa-spin"></i> Checking...</td>
+          <td class="active">-</td>
+          <td class="available">-</td>
+          <td class="mode">-</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-12 columns">
+    <h5>Configuration</h5>
+    <p>Stats are fetched from the configured API endpoints. For local development, ensure the serverside containers are running.</p>
+    <pre><code>cd serverside && docker compose --profile python3 --profile java --profile r --profile pygame up -d</code></pre>
+  </div>
+</div>
+
+{% endif %}
+
+<script type="text/javascript">
+$(function() {
+  // Stats URL base - for local dev, serverside nginx is on port 8080
+  // This can be overridden in config for production deployments
+  var statsBase = '{{ config.app.serverside.statsBase | default("") }}';
+
+  function fetchStats() {
+    $('#serverside-stats tbody tr').each(function() {
+      var $row = $(this);
+      var lang = $row.data('lang');
+      var api = $row.data('api');
+
+      // Build stats URL
+      var statsUrl;
+      if (statsBase) {
+        // Use configured stats base (for production with external URLs)
+        statsUrl = statsBase + '/' + lang + '/stats.json';
+      } else {
+        // Use API URL directly (for local dev)
+        statsUrl = api + '/stats.json';
+      }
+
+      $.ajax({
+        url: statsUrl,
+        timeout: 5000,
+        dataType: 'json'
+      })
+      .done(function(data) {
+        $row.find('.status').html('<span class="label success">Online</span>');
+        $row.find('.active').text(data.active || 0);
+        $row.find('.available').text(data.available || 1);
+        $row.find('.mode').text(data.mode || 'unknown');
+      })
+      .fail(function(xhr, status, error) {
+        $row.find('.status').html('<span class="label alert">Offline</span>');
+        $row.find('.active').text('-');
+        $row.find('.available').text('-');
+        $row.find('.mode').text('-');
+      });
+    });
+  }
+
+  // Initial fetch
+  fetchStats();
+
+  // Refresh stats every 30 seconds
+  setInterval(fetchStats, 30000);
+});
+</script>

@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block body_class %}course{% endblock %}
+
+{% block banner %}{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="large-12 columns">
+      <h2>Create your course</h2>
+      <h3 class="subheader">Basic information about your new hands-on course.</h3>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    {% if flash.failure and flash.failure.message %}
+    <div data-alert class="alert-box alert radius">
+      {{ flash.failure.message }} <a href="#" class="close">&times;</a>
+    </div>
+    {% endif %}
+    <div class="large-10 medium-10 small-12 columns">
+      <form action="/courses" method="post" id="add-course">
+        <div class="row">
+          <div class="large-12 columns">
+            <label for="course-name">What's the Course name?</label>
+            <input type="text" name="name" id="course-name" value="{{ flash.payload.name }}" autofocus required />
+            {% if flash.validation.name %}
+              <small class="error">{{ flash.validation.name }}</small>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <label for="course-description">What Description should show up on the page?</label>
+            <textarea name="description" id="course-description" rows="4" cols="50"
+              placeholder="Include additional information students need to know about this course." required>{{ flash.payload.description }}</textarea>
+            {% if flash.validation.description %}
+              <small class="error">{{ flash.validation.description }}</small>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <label for="course-type">Is this course public or private?</label>
+            <select name="courseType" id="course-type">
+              <option {% if flash.payload and flash.payload.courseType == "public" %}selected{% endif %} value="public">
+                Public - anyone with the URL will be able to view the course
+              </option>
+              <option {% if flash.payload and flash.payload.courseType == "private" %}selected{% endif %} value="private">
+                Private - only you and those to whom you grant access will be able to view the course
+              </option>
+              <option {% if flash.payload and flash.payload.courseType == "open" %}selected{% endif %} value="open">
+                Open - anyone can make a copy of this course and edit their own copy
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <label for="content-default">Should course content be published or draft when created?</label>
+            <select name="contentDefault" id="content-default">
+              <option {% if flash.payload and flash.payload.contentDefault == "publish" %}selected{% endif %} value="publish">
+                Published - pages and assignments will be published when created
+              </option>
+              <option {% if flash.payload and flash.payload.contentDefault == "draft" %}selected{% endif %} value="draft">
+                Draft - pages and assignments will be marked as draft when created
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="large-12 columns">
+            <a id="save-course-button" class="button small primary"><i class="fa fa-save"></i>&nbsp;save</a>
+            <a class="button small caution" href="/home">cancel</a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$('#save-course-button').on('click', function(event) {
+  event.preventDefault();
+  $('form#add-course').submit();
+});
+</script>
+{% endblock %}

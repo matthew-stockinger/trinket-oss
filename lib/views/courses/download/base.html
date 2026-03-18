@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" media="all" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/normalize.min.css">
+    <style type="text/css">
+    {% include "courses/download/course.css" %}
+    </style>
+  </head>
+  <body id="{% block body_id %}{% endblock %}" class="{% block body_class %}{% endblock %}">
+    <div class="nav-wrapper">
+      <nav class="top-bar" data-topbar data-topbar data-options="is_hover: false">
+        <ul class="title-area">
+          <li class="name">
+            <a href="/">
+              {% if config.app.logo %}<img src="{{ config.app.logo }}" alt="{{ config.app.siteName }}" />{% else %}{{ config.app.siteName }}{% endif %}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <section id="main-content">
+    {% block content %}{% endblock %}
+    </section>
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      extensions: ["tex2jax.js","[siunitx]/siunitx.js"],
+      messageStyle: "none",
+      tex2jax: {inlineMath: [['$(',')$'], ['\\(','\\)']]},
+      jax: ["input/TeX", "output/CommonHTML"],
+      TeX: {extensions: ["AMSmath.js","AMSsymbols.js", "sinuitx.js"]}
+    });
+    MathJax.Ajax.config.path['siunitx']  = "{{ '/components/Mathjax-siunitx' | cachePrefix }}";
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  </body>
+</html>

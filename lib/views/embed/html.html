@@ -1,0 +1,133 @@
+{% import "includes/embed-settings.html" as settings_block %}
+
+{% extends "embed/base.html" %}
+
+{% block head_styles %}
+{% if not outputOnly %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css">
+{% endif %}
+{% endblock %}
+
+{% block embed_lang %}{% if trinket.displayOnly %}html_display_only{% else %}{{ lang }}{% endif %}{% endblock %}
+
+{% block toolbar_options %}
+{% if outputOnly %}
+  {% include "embed/default-toolbar.html" %}
+{% elif not trinket.displayOnly %}
+<a class="menu-button item {{'' if toggleCode else 'show-for-small-only'}} allow-original" data-action="code.edit" title="Edit the code.">
+  <i class="fa fa-pencil"></i>
+  <label class="show-for-large-up">Code</label>
+</a>
+<a class="run-it menu-button item button split allow-original"
+   data-action="code.{{'run' if runMode == 'run' else 'autorun'}}" title="Run your code."
+   role="button" aria-labelledby="html_label" tabindex="0">
+  <i id="html-run-icon" class="fa {{'fa-repeat' if not runMode or runMode != 'autorun' else 'fa-play'}}"></i>
+  <label id="html_label" class="show-for-large-up">{{'Click to Run' if runMode == 'run' else 'Autorun'}}</label>
+  <span data-dropdown="run-options" data-options="align:bottom" role="menu"></span>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block run_options %}
+{% if not outputOnly %}
+<ul id="run-options" class="f-dropdown" data-dropdown-content>
+  <li><a class="menu-button" data-action="code.autorun" data-button="autorun"><i class="fa fa-repeat"></i>Autorun</a></li>
+  <li><a class="menu-button" data-action="code.run" data-button="run"><i class="fa fa-play"></i>Click to Run</a></li>
+</ul>
+{% endif %}
+{% endblock %}
+
+{% block settings_modal %}
+{{ settings_block.settings(user.settings.htmlTab, "HTML", false, user, trinket, draft) }}
+{% endblock %}
+
+{% block embed_content %}
+  <input id="start-value" type='hidden' value='{{start if start else ("code" if outputOnly else "result")}}'/>
+
+  <input id="runMode-value" type='hidden' value='{{runMode if runMode else "autorun"}}'/>
+
+  <div id="editor" class="code-editor hide" data-interface="editor"></div>
+
+  {% if not outputOnly %}
+  <div id="dragbar"></div>
+  {% endif %}
+
+  <div id="codeOutput" class="codeOutput hide" data-interface="output">
+    {% if outputOnly %}
+    <iframe id="htmlOutput" {% if config.sandbox.mode == 'local' %}sandbox="{{config.sandbox.local.permissions or 'allow-scripts allow-forms allow-modals allow-popups'}}"{% endif %} {% if snapshot %}scrolling="no"{% endif %}></iframe>
+
+    {% else %}
+
+    <div id="errorConnecting" class="hide">
+      <p>Sorry, we had a problem displaying your page.<br /><br />Try clicking Autorun or Run again and if it continues let us know.</p>
+    </div>
+
+    <div id="outputTabs" class="{% if hideInstructions or (not isOwner and not trinket.description) %}hideInstructions{% endif %}">
+      <div class="{% if not showInstructions %}active {% endif %}menu-button" id="codeOutputTab" data-action="output.view">Result</div>
+      <div class="{% if showInstructions %}active {% endif %}menu-button" id="instructionsTab" data-action="instructions.view"><i class="fa fa-list"></i> Instructions</div>
+    </div>
+
+    <div id="outputContainer" class="{% if hideInstructions or (not isOwner and not trinket.description) %}withoutTabs{% else %}withTabs{% endif %}">
+      <iframe id="htmlOutput" {% if config.sandbox.mode == 'local' %}sandbox="{{config.sandbox.local.permissions or 'allow-scripts allow-forms allow-modals allow-popups'}}"{% endif %} {% if snapshot %}scrolling="no"{% endif %}></iframe>
+    </div>
+
+    {% include "includes/embed-instructions.html" %}
+    {% endif %}
+  </div>
+
+  {% if not outputOnly %}
+  <script id="assets-howto-message" type="text/template">
+    <p>
+      Images can be reference using a relative url.
+    </p>
+    <p>
+      For example, if you upload an image named "amazing.png", you can reference
+      it in an image tag like this:
+    </p>
+    <pre><code>&lt;img src="amazing.png"&gt;</code></pre>
+    <p>
+      You may also use it in css or in javascript with the same "amazing.png" path.
+    </p>
+  </script>
+  {% endif %}
+{% endblock %}
+
+{% block body_scripts %}
+  {% if not trinket.displayOnly and not outputOnly %}
+  {{ component('ace-builds', 'src-min-noconflict/ace.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-modelist.js') | safe }}
+  {% endif %}
+
+  {% if not outputOnly %}
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.0.1/min/dropzone.min.js"></script>
+  <script src="{{ '/components/marked/lib/marked.js' | cachePrefix }}"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+  <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-markdown.js' | cachePrefix }}"></script>
+  {% endif %}
+
+  <script type="text/javascript">
+    window.trinketSandboxConfig = {
+        subdomain : '{{config.sandbox.url.serverSubdomain}}'
+      , domain    : '{{config.sandbox.url.domain}}'
+      , protocol  : '{{config.sandbox.url.protocol}}'
+      , mode      : '{{config.sandbox.mode or "local"}}'
+      , localPermissions : '{{config.sandbox.local.permissions or "allow-scripts allow-forms allow-modals allow-popups"}}'
+      , assetsEnabled : {{ 'true' if config.features.assets else 'false' }}
+    };
+  </script>
+
+  {{ component('jquery-ui', 'jquery-ui.min.js') | safe }}
+  {% set js = extra_js.concat([
+       '/js/plugins/asset-browser.js',
+       '/js/plugins/code-editor.js',
+       '/js/embed/html.js'
+     ])
+  %}
+
+  {% if outputOnly %}
+    {{ cachify_js('embed-html-output', js) | safe }}
+  {% else %}
+    {{ cachify_js('embed-html', js) | safe }}
+  {% endif %}
+{% endblock %}

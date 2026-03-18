@@ -1,0 +1,69 @@
+{% if config.app.recaptcha and config.app.recaptcha.sitekey %}
+<script src='https://www.google.com/recaptcha/api.js'></script>
+{% endif %}
+<script>
+function submitRecaptchaForm(formId) {
+  document.getElementById(formId).submit();
+}
+function submitContactForm() {
+  submitRecaptchaForm('contact-form');
+}
+function submitReportContentForm() {
+  document.getElementById('report-content-form').submit();
+}
+function submitPasswordResetForm() {
+  submitRecaptchaForm('password-reset-form');
+}
+function submitEmailForm(recaptcha) {
+  if (window.TrinketApp) {
+    window.TrinketApp.onSendEmailClick(recaptcha);
+  } else {
+    submitEmailModalForm(recaptcha);
+  }
+}
+function submitSignUpShortForm() {
+  submitRecaptchaForm('sign-up-short');
+}
+function submitSignUpLongForm() {
+  submitRecaptchaForm('sign-up-long');
+}
+function submitSignUpIndexForm() {
+  submitRecaptchaForm('sign-up-index');
+}
+function submitSignUpInterestForm() {
+  submitRecaptchaForm('interest-signup-form');
+}
+function submitEducatorForm() {
+  submitRecaptchaForm('submit-educator');
+}
+function submitM0RegistrationForm() {
+  $('#registration-form').trigger('submit');
+}
+function emailVerificationForm() {
+  $.ajax({
+    method: "POST",
+    url: "/api/users/verify-email",
+    data: { 'g-recaptcha-response': grecaptcha.getResponse() }
+  })
+  .done(function(result) {
+    if (result.success) {
+      $('#account').notify(
+        "Verification email sent."
+        , { position : 'top center', className : 'success' }
+      );
+    }
+    else {
+      $('#account').notify(
+        "There was a problem sending the verification email. Please try again."
+        , { position : 'top center', className : 'alert' }
+      );
+    }
+  })
+  .fail(function(err) {
+    $('#account').notify(
+      "There was a problem sending the verification email. Please try again."
+      , { position : 'top center', className : 'alert' }
+    );
+  });
+}
+</script>

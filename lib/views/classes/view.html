@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block body_id %}course-view{% endblock %}
+
+{% block body_class %}course{% endblock %}
+
+{% block banner %}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+
+{% block ng_app %}trinket.classPage{% endblock %}
+
+{% block content %}
+  {% if not course.id %}
+  <div class="row">
+    <h2>Course is unavailable or does not exist.</h2>
+  </div>
+  {% if courses.length %}
+  <div class="row">
+    <p>Check out one of these features courses:</p>
+    <ul>
+      {% for course in courses %}
+      <li><a href='{{ host({ slug: course.ownerSlug }) }}{{ subdomain({ slug: course.ownerSlug }, course) }}'>{{course.name}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  {% else %}
+  <div ng-cloak ng-controller="pageControl" ng-init="courseId='{{course.id}}';userId='{{user.id}}';">
+  {% raw %}
+    <header id="course-nav" class="page-menu" ui-scrollfix="45">
+      <div id="material-nav">
+        <div id="class-progress">
+          <div class="percentage" ng-style="{width:progress*100+'%'}"></div>
+        </div>
+      </div>
+
+      <div class="course-subnav clearfix row gutterless">
+        <section class="left">
+          <nav class="title breadcrumbs">
+            <a href="//{% endraw %}{{ config.app.url.hostname }}{% raw %}/home" aria-label="Go Home"><i class="fa fa-home"></i></a>
+            <a class="current">{{ course.name }}</a>
+          </nav>
+        </section>
+        <div class="right">
+          {% endraw %}{% if canViewSubmissions or canEdit or canCopy %}
+            <a class="button small dropdown-blue" data-dropdown="course-actions" id="course-actions-button"><i class="fa fa-cog"></i> <div class="show-for-large-up">Course</div></a>
+            <ul id="course-actions" class="f-dropdown small" data-dropdown-content>
+            {% if canViewSubmissions %}
+              <li><a ng-click="viewDashboard()"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+            {% endif %}
+            {% if canEdit %}
+              <li><a ng-click="editMaterial()"><i class="fa fa-pencil fa-fw"></i> Edit Course</a></li>
+            {% elif canCopy %}
+              <li><a ng-click="copyCourse()"><i class="fa fa-copy fa-fw"></i> Make a Copy of this Course</a></li>
+            {% endif %}
+            </ul>
+          {% endif %}{% raw %}
+          <a href class="prev button small" ng-click="previousMaterial()" ng-disabled="!havePreviousMaterial()" aria-label="Previous Page">
+            <i class="fa fa-angle-left"></i>
+          </a>
+          <a href class="next button small" ng-click="nextMaterial()" ng-disabled="!haveNextMaterial()" aria-label="Next Page">
+            <i class="fa fa-angle-right"></i>
+          </a>
+        </div>
+      </div>
+    </header>
+    <div id="course-content" ui-scrollfix="45" ng-class="{open:menuOpen}">
+      <a id="outline-expander" ng-click="menuOpen=!menuOpen" aria-label="Toggle Outline">
+        <i class="fa" ng-class="{'fa-bars':!menuOpen,'fa-times':menuOpen}"></i>
+      </a>
+      <aside id="outline" ng-attr-aria-hidden="{{ menuOpen ? false : true }}">
+        <div class="info" aria-label="Course Description">
+          <p>{{ course.description }}</p>
+        </div>
+        <div>
+          <ul class="outline-list lessons" aria-label="Course Outline" role="navigation">
+            <li class="outline-list-item lesson" ng-repeat="lesson in course.lessons" ng-class="{past:lesson.isPast,current:lesson.isCurrent,future:lesson.isFuture}">
+              <div class="lesson-title clearfix">
+                <span class="lesson-name">
+                  {{ lesson.name }}
+                </span>
+              </div>
+              <ul class="outline-list materials">
+                <li ng-repeat="material in lesson.materials" class="outline-list-item material" id="{{lesson.slug}}-{{material.slug}}" ng-class="{past:material.isPast,current:material.isCurrent,future:material.isFuture}">
+                  <div class="material-title clearfix" ng-click="goToMaterial(material)">
+                    <span class="material-name">
+                      <i ng-if="usingDates(material)" class="fa fa-fw fa-clock-o dates-active-icon"></i>
+                      <i class="fa fa-fw" ng-class="material.type == 'assignment' ? 'fa-pencil-square-o' : 'fa-file-text-o'"></i> {{ material.name }}
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </aside>
+      <div id="material-content" role="Main">
+        <div id="material">
+          <h1 class="subheader" aria-label="{{ material.name }}">
+            <i ng-if="usingDates(material)" class="fa fa-fw fa-clock-o"></i>
+            <i class="fa fa-fw" ng-class="material.type == 'assignment' ? 'fa-pencil-square-o' : 'fa-file-text-o'"></i>
+            {{ material.name }}
+          </h1>
+          <div ng-hide="material.noContent" ng-bind-html="content()" class="content"></div>
+          <div ng-switch="material.type" ng-show="material.noContent" class="content">
+            <p ng-switch-when="page">No content has been added to this page yet.</p>
+            <p ng-switch-when="assignment">No instructions have been added to this assignment yet.</p>
+  {% endraw %}
+    {% if canEdit %}
+            <a ng-show="material.slug && material.type === 'page'" href="/{{course.ownerSlug}}/courses/{{course.slug}}{% raw %}#/{{lesson.slug}}/{{material.slug}}/edit{% endraw %}">Click here to add content to your page.</a>
+            <a ng-show="!material.slug && course.slug" href="/{{course.ownerSlug}}/courses/{{course.slug}}">Click here to add content to your course.</a>
+    {% endif %}
+  {% raw %}
+          </div>
+          <trinket-assignment ng-if="material.trinket.trinketId" material="material" assignment-trinket="{{ material.trinket }}" submissions-allowed="submissionsAllowed" user-id="userId"></trinket-assignment>
+        </div>
+      </div>
+    </div>
+  {% endraw %}
+    {% if canCopy %}
+    <div id="copyCourseNameDialog" class="reveal-modal tiny" data-reveal role="dialog">
+      <h3><i class="fa fa-copy"></i> {{ course.name }}</h3>
+      <div class="row">
+        <div class="small-12 columns">
+          <p>Looks like you may already have a copy of this course. If you'd like another copy please enter a new name.</p>
+        </div>
+      </div>
+      <form name="course-copy-name" ng-submit="copyCourse()">
+        <div class="row">
+          <div class="small-12 columns">
+            <label>Course name</label>
+            <input type="text" name="course-name" ng-model="courseCopyName" />
+          </div>
+        </div>
+      </form>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+    {% endif %}
+  {% raw %}
+  </div>
+  {% endraw %}
+  {% if user and user.roles %}
+  <input id="roles" type='hidden' value='{{ user.roles | encrypt }}'>
+  {% endif %}
+  {% if flash.firstVisit %}
+    <div id="congratsModal" class="reveal-modal small" data-reveal>
+      <h2>Well Done!</h2>
+      <hr>
+      <h4>From here, keep editing this page, or create your own.</h4>
+      <p>Questions or suggestions? Click the question mark in the lower right corner.</p>
+      <a class="close-reveal-modal">&#215;</a>
+    </div>
+  {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+  {% for script in config.app.ngapps.classPage %}
+    <script src="{{ script | cachePrefix }}"></script>
+  {% endfor %}
+  <script>
+    {% if flash.firstVisit %}
+      $("#congratsModal").foundation('reveal', 'open');
+    {% endif %}
+  </script>
+{% endblock %}
+
+{% block footer %}{% endblock %}

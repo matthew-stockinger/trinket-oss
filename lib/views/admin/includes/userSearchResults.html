@@ -1,0 +1,25 @@
+{% if q and not data %}
+<p>No matches found for <strong>{{ q }}</strong>.</p>
+{% elif data %}
+<table width="100%">
+  <thead>
+    <tr>
+      <td>Username</td>
+      <td>Email</td>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in data %}
+    <tr>
+      <td>
+        <img class="avatar-medium" src="{{ user.avatar }}" />
+        &nbsp;&nbsp;<a href="/admin/users?q={{ user.username }}">{{ user.username }}</a>
+      </td>
+      <td>{{ user.email }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% include "admin/includes/userSearchForm.html" %}

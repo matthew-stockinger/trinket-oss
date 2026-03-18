@@ -1,0 +1,207 @@
+<div ng-if="material.trinket.submissionsDue.enabled" class="row">
+  <div class="small-12 columns">
+    Due by {{ material.trinket.submissionsDue.dateValue | localDate }}
+  </div>
+</div>
+
+<div class="assignment-versions-container" ng-if="previousSubmissions.length">
+  <div ng-repeat="submission in previousSubmissions" class="row collapse">
+    <div class="small-12 columns">
+      <div class="row">
+        <div class="small-12 columns" ng-click="toggleSubmission(submission)">
+          Submission #{{ $index + 1 }} &mdash; <span title="{{ submission.submittedOn | localDate }}">{{ submission.submittedOn | formatDate }}</span>
+        </div>
+      </div>
+      <div class="row collapsed" ng-class="{'show-row':showSubmission[submission.id]}">
+        <div class="small-12 columns">
+          <div class="row">
+            <div class="small-12 columns">
+              <iframe class="previous-submission"
+                      ng-if="showSubmission[submission.id]"
+                      ng-src="{{ submissionSrc[ submission.id ] }}"
+                      width="100%" height="400" frameborder="0" marginwidth="0" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <!-- student comments -->
+          <div class="row">
+            <div class="small-12 columns">
+              <strong>Comments from student:</strong><br />{{ submission.comments[0].commentText }}
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="row">
+            <div class="small-12 columns">
+              <span title="{{ submission.lastUpdated | localDate }}">Feedback sent {{ submission.lastUpdated | formatDate }}</span>
+            </div>
+          </div>
+
+          <!-- feedback plus revision -->
+          <div class="row" ng-if="submission.includeRevision">
+            <div class="small-12 columns">
+              <strong>Revision:</strong>
+              <iframe ng-src="{{ submission.revisionIframe }}"
+                      width="100%" height="400" frameborder="0" marginwidth="0" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="small-12 columns">
+              <strong>Comments to student:</strong><br />{{ submission.feedback.commentText }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row trinket-feedback">
+  <div class="small-12 columns">
+    <div class="previous-submission" ng-if="previousSubmissions.length"><strong>Submission #{{ previousSubmissions.length + 1 }}:</strong></div>
+    <iframe ng-class="{'previous-submission':!previousSubmissions.length}"
+            ng-src="{{ submissionIframe }}"
+            width="100%" height="400"
+            frameborder="0" marginwidth="0" allowfullscreen></iframe>
+  </div>
+</div>
+<!-- show feedback form or previous comment(s) -->
+<div ng-switch="state" class="row">
+  <div ng-if="canSendFeedback()" ng-switch-when="submitted" class="small-12 columns">
+    <div class="row">
+      <div class="small-12 columns">
+        <strong>Comments from student:</strong><br />{{ submission.comments[0].commentText }}
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="small-12 columns">
+        <input type="checkbox"
+               name="includeRevision"
+               ng-model="feedbackForm.includeRevision"
+               id="includeRevision"
+               ng-disabled="!revisionMade"
+               ng-class="{disabled:!revisionMade}"
+               ng-change="submissionOptChange('includeRevision')" />
+        <label for="includeRevision" ng-class="{disabled:!revisionMade}">Include revision in feedback to student</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <input type="checkbox"
+               name="allowResubmit"
+               ng-model="feedbackForm.allowResubmit"
+               id="allowResubmit"
+               ng-change="submissionOptChange('allowResubmit')" />
+        <label for="allowResubmit">Allow student to submit again</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <label>Comments to student</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 columns">
+        <div ui-ace="{ useWrapMode : true, onChange : autosaveComments }" class="feedback-editor" ng-model="feedbackForm.comments"></div>
+      </div>
+      <div class="small-6 columns" ng-bind-html="displayFeedback(feedbackForm.comments)"></div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <a ng-click="sendFeedback()" ng-class="{disabled:!canSubmit}" class="button small secondary"><i class="fa" ng-class="sendingFeedback ? 'fa-circle-o-notch fa-spin' : 'fa-reply'"></i> Send Feedback</a>
+        <a ng-click="cancelFeedback()" class="button small caution">Cancel</a>
+      </div>
+    </div>
+  </div>
+  <div ng-switch-when="submittedLate" class="small-12 columns">
+    <a ng-click="acceptSubmission()" ng-class="{disabled:!canAccept}" class="button small secondary"><i class="fa" ng-class="acceptingSubmission ? 'fa-circle-o-notch fa-spin' : 'fa-cloud-upload'"></i> Accept Submission</a>
+  </div>
+  <div ng-switch-when="completed" class="small-12 columns">
+    <div class="row">
+      <div class="small-12 columns">
+        <strong>Comments from student:</strong><br />{{ submission.comments[0].commentText }}
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="small-11 columns">
+        <p>
+          <span ng-if="submission.submissionOpts.includeRevision"><i class="fa fa-check"></i> Revision available for student.</span>
+          <span ng-if="!submission.submissionOpts.includeRevision"><i class="fa fa-ban"></i> Revision not available for student.</span>
+
+          <span ng-if="submission.submissionOpts.allowResubmit"><i class="fa fa-check"></i> Student can submit again.</span>
+          <span ng-if="!submission.submissionOpts.allowResubmit"><i class="fa fa-ban"></i> Student cannot submit again.</span>
+        </p>
+      </div>
+      <div class="small-1 columns">
+        <a class="right" ng-if="canSendFeedback()" ng-click="editCompleted()"><i class="fa fa-pencil"></i> Edit</a>
+      </div>
+    </div>
+    <div ng-if="submission.submissionOpts.includeRevision" class="row">
+      <div class="small-12 columns">
+        <iframe ng-src="{{ revisionIframe }}"
+                width="100%" height="400" frameborder="0" marginwidth="0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div ng-repeat="comment in submission.comments | filter:{ commentType:'feedback' }:true" class="row">
+      <div class="small-4 comment-info columns">
+        <img class="avatar" ng-src="{{ comment.avatar }}" /> {{ comment.displayName }}<br />
+        <span class="submission-commented">{{ comment.commented | formatDate }}</span>
+      </div>
+      <div class="small-8 columns" ng-bind-html="displayFeedback(comment.commentText)"></div>
+    </div>
+  </div>
+  <div ng-switch-when="editing" class="small-12 columns">
+    <div class="row">
+      <div class="small-12 columns">
+        <strong>Comments from student:</strong><br />{{ submission.comments[0].commentText }}
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="small-12 columns">
+        <input type="checkbox"
+               name="includeRevision"
+               ng-model="feedbackForm.includeRevision"
+               id="includeRevision"
+               ng-disabled="!revisionMade"
+               ng-class="{disabled:!revisionMade}" />
+        <label for="includeRevision" ng-class="{disabled:!revisionMade}">Include revision in feedback to student</label>
+        <input type="checkbox"
+               name="allowResubmit"
+               ng-model="feedbackForm.allowResubmit"
+               id="allowResubmit" />
+        <label for="allowResubmit">Allow student to submit again</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <iframe id="rev-{{ revisionId }}" ng-src="{{ revisionIframe }}"
+                width="100%" height="400" frameborder="0" marginwidth="0" allowfullscreen></iframe>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <label>Comments to student</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-6 columns">
+        <div ui-ace="{ useWrapMode : true }" class="feedback-editor" ng-model="feedbackForm.comments"></div>
+      </div>
+      <div class="small-6 columns" ng-bind-html="displayFeedback(feedbackForm.comments)"></div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <a ng-click="sendFeedback()"
+           ng-class="{disabled:!canUpdate}"
+           class="button small secondary"><i class="fa" ng-class="sendingFeedback ? 'fa-circle-o-notch fa-spin' : 'fa-reply'"></i> Update Feedback</a>
+        <a ng-click="cancelEdit()" class="button small caution">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>

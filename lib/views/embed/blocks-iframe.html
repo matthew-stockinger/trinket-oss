@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% set js = [
+         '/components/blockly/blockly_compressed.js',
+         '/components/blockly/python_compressed.js',
+         '/components/blockly/blocks_compressed.js',
+         '/components/blockly/msg/js/en.js',
+         '/js/embed/blocks/turtle.js',
+         '/js/embed/blocks/more_text.js',
+         '/js/embed/blocks/matplotlib.js'
+       ]
+    %}
+    {{ cachify_js('embed-blocks-iframe', js) | safe }}
+    <style>
+      html, body {
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+      }
+      .blocklySvg {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script type="text/javascript">
+      var intervalId;
+      function init() {
+        Blockly.inject(document.body, {
+          path     : '../../components/blockly/',
+          toolbox  : document.getElementById('toolbox'),
+          trashcan : true,
+          zoom : {
+            controls : true,
+            enabled : true
+          }
+        });
+
+        // hack to prevent new variable from adding
+        // change [var] by [num] block which uses the
+        // python Numbers module which skulpt doesn't support
+        Blockly.Blocks['math_change'] = undefined;
+
+        intervalId = setInterval(function() {
+          if (window.parent.blocklyLoaded) {
+            window.parent.blocklyLoaded(Blockly);
+            clearInterval(intervalId);
+          }
+        }, 1000);
+      }
+
+      // http://tobyho.com/2012/07/27/taking-over-console-log/
+      function takeOverConsole() {
+        var console = window.console;
+        if (!console) return;
+
+        function intercept(method) {
+          var original = console[method];
+          console[method] = function() {
+            // post message to parent
+            var messageKey             = "Blockly." + method;
+            var messageDetails         = {};
+            messageDetails[messageKey] = arguments[0];
+            window.parent.postMessage(JSON.stringify(messageDetails), "*");
+
+            if (original.apply) {
+              // Do this for normal browsers
+              original.apply(console, arguments);
+            }
+            else {
+              // Do this for IE
+              var message = Array.prototype.slice.apply(arguments).join(' ');
+              original(message);
+            }
+          }
+        }
+        var methods = ['warn', 'error'];
+        for (var i = 0; i < methods.length; i++) {
+          intercept(methods[i]);
+        }
+      }
+      takeOverConsole();
+    </script>
+  </head>
+  <body onload="init()">
+    {% include "includes/blocks/turtle.xml" %}
+  </body>
+</html>

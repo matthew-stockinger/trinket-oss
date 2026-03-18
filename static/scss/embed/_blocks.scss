@@ -1,0 +1,561 @@
+@-webkit-keyframes blinker {
+  from { opacity: 1.0; }
+  to { opacity: 0.0; }
+}
+
+@-moz-keyframes blinker {
+  from { opacity: 1.0; }
+  to { opacity: 0.0; }
+}
+
+@-ms-keyframes blinker {
+  from { opacity: 1.0; }
+  to { opacity: 0.0; }
+}
+
+@-o-keyframes blinker {
+  from { opacity: 1.0; }
+  to { opacity: 0.0; }
+}
+
+#embed_content_blocks {
+  #reset-output {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 1.5rem;
+    color: #525252;
+    &:hover {
+      color: #323232;
+    }
+  }
+
+  .jqconsole-ansi-bold {
+    font-weight: bold!important;
+  }
+
+  .jqconsole-ansi-lighter {
+    font-weight: lighter!important;
+  }
+
+  .jqconsole-ansi-italic {
+    font-style: italic!important;
+  }
+
+  .jqconsole-ansi-underline {
+    text-decoration: underline!important;
+  }
+
+  .jqconsole-ansi-blink {
+    -webkit-animation-name: blinker;
+    -moz-animation-name: blinker;
+    -ms-animation-name: blinker;
+    -o-animation-name: blinker;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    -ms-animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -ms-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -o-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -moz-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    -o-animation-duration: 1s;
+    -ms-animation-duration: 1s;
+  }
+
+  .jqconsole-ansi-blink-rapid {
+    -webkit-animation-name: blinker;
+    -moz-animation-name: blinker;
+    -ms-animation-name: blinker;
+    -o-animation-name: blinker;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    -ms-animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -ms-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -o-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -moz-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -webkit-animation-duration: 0.5s;
+    -moz-animation-duration: 0.5s;
+    -o-animation-duration: 0.5s;
+    -ms-animation-duration: 0.5s;
+  }
+
+
+  .jqconsole-ansi-hidden {
+    visibility:hidden!important;
+  }
+
+  .jqconsole-ansi-line-through {
+    text-decoration: line-through;
+  }
+
+  .jqconsole-ansi-color-black {
+    color: black!important;
+  }
+
+  .jqconsole-ansi-color-red {
+    color: red!important;
+  }
+
+  .jqconsole-ansi-color-green {
+    color: green!important;
+  }
+
+  .jqconsole-ansi-color-yellow {
+    color: yellow!important;
+  }
+
+  .jqconsole-ansi-color-blue {
+    color: blue!important;
+  }
+
+  .jqconsole-ansi-color-magenta {
+    color: magenta!important;
+  }
+
+  .jqconsole-ansi-color-cyan {
+    color: cyan!important;
+  }
+
+  .jqconsole-ansi-color-white {
+    color: white!important;
+  }
+
+  .jqconsole-ansi-background-color-black {
+    background-color: black!important;
+  }
+
+  .jqconsole-ansi-background-color-red {
+    background-color: red!important;
+  }
+
+  .jqconsole-ansi-background-color-green {
+    background-color: green!important;
+  }
+
+  .jqconsole-ansi-background-color-yellow {
+    background-color: yellow!important;
+  }
+
+  .jqconsole-ansi-background-color-blue {
+    background-color: blue!important;
+  }
+
+  .jqconsole-ansi-background-color-magenta {
+    background-color: magenta!important;
+  }
+
+  .jqconsole-ansi-background-color-cyan {
+    background-color: cyan!important;
+  }
+
+  .jqconsole-ansi-background-color-white {
+    background-color: white!important;
+  }
+
+  .jqconsole-ansi-framed {
+    border: 1px solid!important;
+  }
+
+  .jqconsole-ansi-overline {
+    text-decoration: overline!important;
+  }
+
+  #graphic-wrap {
+    &:not(.snapshot) {
+      position: relative;
+      height: 0;
+      overflow: auto;
+    }
+
+    &.snapshot {
+      width: 320px;
+      height: 320px;
+      overflow: hidden;
+    }
+  }
+
+  #console-wrap {
+    height: 100%;
+    position: relative;
+  }
+
+  #unittest-wrap {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+  }
+
+  span.error {
+    margin-top: 0;
+    font-size: inherit;
+  }
+
+  #codeOutput {
+    position: relative;
+    overflow: auto;
+  }
+
+  #output-dragbar {
+    height: 9px;
+    cursor: row-resize;
+    background-color: #ddd;
+    background-image: url("#{$img_prefix}/resizey.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-top: 1px solid #b4b4b4;
+    border-bottom: 1px solid #b4b4b4;
+  }
+
+  /* The console container element */
+  #console-output {
+    width: 100%;
+    height: 100%;
+  }
+  /* The inner console element. */
+  .jqconsole {
+      padding: 10px;
+      white-space: pre-wrap;
+      line-height: 1.2em;
+      font-size: 1.2em;
+  }
+
+  .jqconsole-header {
+    color: $primary-color;
+    img {
+      height: 1em;
+    }
+  }
+
+  /* The cursor. */
+  /* blinking cursor when asking for user input */
+  .console-active .jqconsole-cursor {
+    background-color: gray;
+    -webkit-animation-name: blinker;
+    -moz-animation-name: blinker;
+    -ms-animation-name: blinker;
+    -o-animation-name: blinker;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    -ms-animation-iteration-count: infinite;
+    -o-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -ms-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -o-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -moz-animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    -o-animation-duration: 1s;
+    -ms-animation-duration: 1s;
+  }
+
+  /* The cursor color when the console looses focus. */
+  .console-active .jqconsole-blurred .jqconsole-cursor {
+    background-color: #DDD;
+    -webkit-animation-name: none;
+    -moz-animation-name: none;
+    -ms-animation-name: none;
+    -o-animation-name: none;
+  }
+  /* The current prompt text color */
+  .jqconsole-prompt {
+      color: #0d0;
+  }
+  /* The command history */
+  .jqconsole-old-prompt {
+      color: #0b0;
+      font-weight: normal;
+  }
+  /* The text color when in input mode. */
+  .jqconsole-input {
+      color: $primary-color;
+  }
+  /* Previously entered input. */
+  .jqconsole-old-input {
+      color: lighten($primary-color, 20%);
+      font-weight: normal;
+  }
+  /* The text color of the output. */
+  .jqconsole-output {
+      color: white;
+  }
+
+  .turtle-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0);
+    z-index: 100;
+    &.hide {
+      display: none;
+    }
+  }
+
+  #honeypot {
+    position: absolute;
+    width: 1px;
+    border: none;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #outputContainer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    &.withTabs {
+      top: 32px;
+    }
+    &.withoutTabs {
+      top: 0;
+    }
+  }
+
+  #blocklyCodeContainer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    top: 32px;
+    font-size: 16px;
+    overflow: scroll;
+
+     #createPythonLink {
+       position: absolute;
+       top: 8px;
+       right: 8px;
+       font-size: rem-calc(13px);
+     }
+
+    .blocks-codeview-message {
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  #instructionsContainer {
+    position: absolute;
+    top: 32px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #fff;
+    padding: 10px 10px 32px 10px;
+
+    &.editor {
+      padding: 0;
+    }
+
+    #instructionsActions {
+      position: absolute;
+      top: 4px;
+      right: 12px;
+    }
+    #instructionsToolbar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 4px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+
+  #blocklyIframe {
+    width: 100%;
+    height: 100%;
+    border-style: solid;
+    border-color: #ddd;
+    border-width: 0 1px 1px 0;
+  }
+
+  #outputTabs {
+    display: block !important;
+    width: 100%;
+    height: 32px;
+    line-height: 32px;
+    background-color: #eee;
+    border-bottom: 1px solid #d4d4d4;
+    text-align: center;
+    overflow: hidden;
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    .active {
+      background-color: #fff;
+    }
+
+    #codeOutputTab {
+      float: left;
+      cursor: pointer;
+      text-overflow: ellipsis;
+
+      &.twoTabs {
+        width: 50%;
+      }
+      &.threeTabs {
+        width: 33%;
+      }
+    }
+
+    #codeViewTab {
+      border-left: 1px solid #d4d4d4;
+      float: left;
+      cursor: pointer;
+      text-overflow: ellipsis;
+
+      &.twoTabs {
+        width: 50%;
+      }
+      &.threeTabs {
+        width: 33%;
+      }
+    }
+    #codeViewTab.hideGeneratedCode {
+      display: none !important;
+    }
+
+    #instructionsTab {
+      border-left: 1px solid #d4d4d4;
+      float: left;
+      cursor: pointer;
+      text-overflow: ellipsis;
+
+      &.twoTabs {
+        width: 50%;
+      }
+      &.threeTabs {
+        width: 34%;
+      }
+    }
+    #instructionsTab.hideInstructions {
+      display: none !important;
+    }
+  }
+
+  #outputTabs.noTabs {
+    display: none !important;
+  }
+
+  &.mode-output {
+    #codeOutput {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+    #editor {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      margin-top: -9999px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &.mode-standard {
+    @media #{$medium-up} {
+      #codeOutput, #editor, #dragbar {
+        display: block !important;
+        position: relative;
+        height: 100%;
+      }
+
+      #codeOutput {
+        width: auto;
+        overflow: hidden;
+      }
+
+      #editor {
+        float: left;
+        text-align: left;
+        width: 59%;
+        overflow-y: hidden;
+      }
+
+      #dragbar {
+        width: 9px;
+        cursor: col-resize;
+        background-color: #ddd;
+        background-image: url("#{$img_prefix}/resizex.png");
+        background-repeat: no-repeat;
+        background-position: center;
+        border-left: 1px solid #b4b4b4;
+        border-right: 1px solid #b4b4b4;
+        float: left;
+      }
+    }
+
+    @media #{$small-only} {
+      #codeOutput, #editor {
+        float: none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  &.mode-snapshot {
+    #codeOutput {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 320px;
+      height: 320px;
+      overflow: hidden;
+    }
+    #outputTabs {
+      display: none !important;
+    }
+  }
+
+  &.mode-toggle {
+    #codeOutput, #editor {
+      float: none;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .block-selected {
+    background-color: #fc3;
+  }
+
+  #uploadModal {
+    i.success {
+      color: $success-color;
+    }
+    i.warning {
+      color: $warning-color;
+    }
+    i.alert {
+      color: $alert-color;
+    }
+  }
+}

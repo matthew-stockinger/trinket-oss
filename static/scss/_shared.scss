@@ -1,0 +1,374 @@
+.button {
+  color: $primary-color;
+  border: 1px solid $primary-color;
+  background: #FFF;
+  text-transform: capitalize;
+
+  &:hover {
+    color: darken($primary-color, 10%);
+    border: 1px solid darken($primary-color, 10%);
+    background: lighten($primary-color, 40%);
+  }
+
+  &.disabled,&.disabled:hover,&.disabled:focus {
+    color: $primary-color;
+    background: lighten($primary-color, 40%);
+    border: 1px solid $primary-color;
+    opacity: $button-disabled-opacity;
+  }
+
+  &.primary {
+    color: #FFF;
+    border: 1px solid $primary-color;
+    background: $primary-color;
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+  }
+
+  &.guide {
+    text-transform: uppercase;
+    color: #FFF;
+    border: 1px solid $secondary-color;
+    background: $secondary-color;
+    &:hover {
+      background: darken($secondary-color, 10%);
+    }
+    &.disabled,&.disabled:hover,&.disabled:focus {
+      color: $secondary-color;
+      background: lighten($secondary-color, 40%);
+      border: 1px solid $secondary-color;
+      opacity: $button-disabled-opacity;
+    }
+  }
+
+  &.secondary, &.success {
+    border: 1px solid $secondary-color !important;
+    &:hover:not(.disabled):not(.faux-button) {
+      color: darken($secondary-color, 10%) !important;
+      border: 1px solid darken($secondary-color, 10%) !important;
+      background: lighten($secondary-color, 40%) !important;
+    }
+
+    &.light {
+      color: $secondary-color !important;
+      background: $white !important;
+      &:hover:not(.disabled):not(.faux-button) {
+        color: darken($secondary-color, 20%) !important;
+        border: 1px solid darken($secondary-color, 10%) !important;
+        background: lighten($secondary-color, 40%) !important;
+      }
+    }
+  }
+
+  &.caution {
+    background: #FFF;
+    border: 1px solid $alert-color;
+    color: $alert-color;
+    &:hover {
+      color: darken($alert-color, 10%);
+      border: 1px solid darken($alert-color, 10%);
+      background: lighten($alert-color, 40%);
+    }
+  }
+
+  &.danger {
+    color: #FFF;
+    border: 1px solid $alert-color;
+    background: $alert-color;
+    &:hover {
+      background: darken($alert-color, 10%);
+    }
+  }
+
+  &.caution,&.danger {
+    &.disabled,&.disabled:hover,&.disabled:focus {
+      color: $alert-color;
+      background: lighten($alert-color, 40%);
+      border: 1px solid $alert-color;
+      opacity: $button-disabled-opacity;
+    }
+  }
+
+  &.bottom {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+.faux-button {
+  @extend .button;
+  &.secondary, &.success {
+    &:hover {
+      background: $secondary-color;
+    }
+  }
+  &:hover {
+    cursor: default;
+  }
+}
+
+.fa {
+  &.success {
+    color: $success-color;
+  }
+  &.warning {
+    color: $warning-color;
+  }
+  &.caution, &.alert {
+    color: $alert-color;
+  }
+  &.neutral {
+    color: #636363;
+  }
+}
+
+span.beta {
+  vertical-align: super;
+  font-size: 0.75em;
+  color: $primary-color;
+  &:before {
+    content: 'beta';
+  }
+}
+
+a:hover span.beta {
+  color: #DDD;
+}
+
+span.new-feature {
+  vertical-align: super;
+  font-size: 0.75em;
+  font-weight: bold;
+  color: $success-color;
+  &:before {
+    content: 'New!';
+  }
+}
+
+pre {
+  border: 1px solid $silver;
+  padding: 0.5em;
+  margin: 0 0 1em 0;
+  background-color: $ghost;
+  font-family: monospace;
+  white-space: pre;
+
+  code {
+    padding: 0;
+    margin: 0;
+    background-color: $ghost;
+  }
+}
+
+code {
+  border: none;
+  background-color: $vapor;
+}
+
+.faux-input {
+  padding: 8px 10px 6px;
+  -webkit-appearance: none;
+  border-radius: 0;
+  background-color: #ffffff;
+  font-family: inherit;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  color: rgba(0,0,0,0.75);
+  display: block;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  height: 2.4375rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.15s linear;
+  cursor: pointer;
+  overflow: auto;
+
+  &.textarea {
+    height: 3.9rem;
+  }
+}
+
+.compact-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  input {
+    margin: 0;
+  }
+  label.inline {
+    padding: 0;
+  }
+}
+
+.agreement-text {
+  font-size: 75%;
+  color: lighten(#222, 50%);
+}
+
+.small-logo {
+  width: 8rem;
+}
+
+i.disabled-icon {
+  color: #ddd;
+}
+
+label.disabled {
+  color: lighten(#4d4d4d, 20%);
+}
+
+.shared-modal {
+  ul#my-folders-list {
+    list-style-type: none;
+    margin-left: 0;
+
+    li.folder-item {
+      border-top: 1px solid #ccc;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+
+      span {
+        margin-left: 0.3rem;
+      }
+    }
+    li.folder-item:first-child {
+      border-top: none;
+    }
+  }
+}
+
+.notifyjs-foundation-base {
+  white-space: nowrap;
+  background-color: #a0d3e8;
+  border-color: #74bfdd;
+  color: #4f4f4f;
+  border-radius: 3px;
+
+  border-style: solid;
+  border-width: 1px;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-bottom: 1.11111rem;
+  padding: 0.77778rem 1.33333rem 0.77778rem 0.77778rem;
+  transition: opacity 300ms ease-out;
+
+  a.text-link {
+    color: white;
+    text-decoration: underline;
+  }
+}
+.notifyjs-foundation-success {
+  background-color: $success-color;
+  border-color: #21a40f;
+  color: #FFFFFF;
+}
+.notifyjs-foundation-warning {
+  background-color: #f08a24;
+  border-color: #de770f;
+  color: #FFFFFF;
+}
+.notifyjs-foundation-alert {
+  background-color: #f04124;
+  border-color: #de2d0f;
+  color: #FFFFFF;
+}
+
+.valign-middle {
+    display: table;
+
+    > .columns {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    > .columns, > [class*="column"] + [class*="column"]:last-child {
+        float: none;
+    }
+}
+
+// Bubbles ul/li styles for marketing landing pages
+.bubbles {
+  li {
+    padding: 0;
+    margin: 8px;
+    cursor: pointer;
+  }
+  &>li {
+    display: inline-block;
+    margin: 10px 30px;
+    width: 180px;
+    height: 180px;
+    border: solid 1px #eee;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    vertical-align: middle;
+
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    position: relative;
+
+    &:hover {
+      box-shadow: 0 0 2px 2px rgba($primary-color, 0.5);
+    }
+  }
+}
+
+.alert-box.info {
+  color: #333;
+}
+
+.trinket-stat {
+  text-align: center;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  font-size: 1.2em;
+  white-space: nowrap;
+  label {
+    text-transform: capitalize;
+    display: inline-block;
+  }
+  .badge {
+    margin-left: -12px;
+    vertical-align: 12px;
+    display: inline-block;
+    text-align: center;
+    min-width: 20px !important;
+    padding: 1px 4px !important;
+    color: white !important;
+    font-size: 12px !important;
+    background: #D60000 !important;
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FD7C7E), color-stop(100%, #D60000)) !important;
+    background-image: -webkit-linear-gradient(top, #FD7C7E, #D60000) !important;
+    background-image: -moz-linear-gradient(top, #FD7C7E, #D60000);
+    background-image: -ms-linear-gradient(top, #FD7C7E, #D60000);
+    background-image: -o-linear-gradient(top, #FD7C7E, #D60000);
+    background-image: linear,top,#FD7C7E,#D60000;
+    -webkit-border-radius: 15px !important;
+    border-radius: 15px !important;
+    -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.4);
+    line-height: 14px !important;
+    border: 2px solid white !important;
+  }
+}
+
+img.avatar {
+  border-radius: 500px;
+  max-height: 25px;
+  max-width: 25px;
+  margin-right: 5px;
+  width: 25px;
+}
+
+.row-margin {
+  margin-bottom: 10px;
+}
+
+@import "modals";

@@ -1,0 +1,22 @@
+{% if config.app.auth.google and config.app.auth.google.clientID %}
+<div class="row">
+  <div class="small-12 columns text-center login-div">
+    <a
+      class="login-button save-form"
+      {% if not skipAuthInit %}data-auth-init="Google"{% endif %}
+      href="/auth/google{% if loginNext %}?next={{ loginNext }}{% endif %}"
+    >
+      <img
+        class="plain" id="google-image"
+        src="{{ '/img/icons/google/btn_google_signin_dark_normal_web@2x.png' | cachePrefix }}"
+        alt="Sign In with Google" title="Sign In with Google"
+      />
+    </a>
+  </div>
+</div>
+<div class="row">
+  <div class="medium-8 medium-offset-2 small-12 columns text-center">
+    <p class="decorated"><span>or</span></p>
+  </div>
+</div>
+{% endif %}

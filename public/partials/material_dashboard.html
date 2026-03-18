@@ -1,0 +1,121 @@
+<header id="course-nav" class="page-menu" ui-scrollfix="45">
+  <div class="course-subnav clearfix row gutterless">
+    <section ng-cloak ng-show="course" class="left">
+      <nav class="title breadcrumbs">
+        <a href="/home"><i class="fa fa-home"></i></a>
+        <a ng-click="backToPage()">{{ course.name }}</a>
+        <a ng-click="viewDashboard()">Dashboard</a>
+        <a class="current">{{ material.name }}</a>
+      </nav>
+    </section>
+    <div class="right">
+      <a ng-disabled="!prev.assignment" ng-class="{disabled:!prev.assignment}" ng-click="viewAssignment(prev.assignment.lesson, prev.assignment.material)" class="button small">Previous</a>
+      <a ng-disabled="!next.assignment" ng-class="{disabled:!next.assignment}" ng-click="viewAssignment(next.assignment.lesson, next.assignment.material)" class="button small">Next</a>
+    </div>
+  </div>
+</header>
+
+<div id="course-content" class="dashboard-content dashboard-list" ui-scrollfix="45">
+  <div class="row instructions-card" ng-click="showInstructions=!showInstructions">
+    <div class="small-12 columns">
+      <span>Assignment Instructions</span>
+
+      <div class="row collapsed" ng-class="{'show-instructions-row':showInstructions}">
+        <div class="small-12 columns" ng-bind-html="material.markup"></div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="usingDates(material)" class="row">
+    <div class="small-12 columns">
+      <p><i class="fa fa-clock-o"></i> Due by {{ material.trinket.submissionsDue.dateValue | localDate }}</p>
+    </div>
+  </div>
+
+  <div ng-if="loading && !loadingError" class="row dashboard-container">
+    <div class="small-12 columns text-center">
+      <h2><i class="fa fa-spinner fa-spin"></i> Loading</h2>
+    </div>
+  </div>
+
+  <div ng-if="!loading && loadingError" class="row dashboard-container">
+    <div class="small-12 columns">
+      <p>We're having trouble loading these student submissions. Please refresh the page or <a class="contact-us-link" href="/contact">message us</a> if the problem continues.</p>
+    </div>
+  </div>
+
+  <div ng-if="!loading && !loadingError" ng-repeat="user in users | orderBy:'displayName'" class="row user-row" ng-class="{'clickable':user.state === 'submitted' || user.state === 'completed', 'row-open':viewingSubmission.user === user.userId}">
+    <div class="small-12 columns" id="student-row-{{ user.userId }}">
+      <div class="row user-info">
+        <div class="small-6 columns" ng-click="toggleStudent(user)">
+          <img class="avatar" ng-src="{{ user.avatar }}" /> <span class="student-name">{{ user.displayName }}</span>
+          <span ng-if="user.deleted" class="secondary-label label round" title="This user deleted their account.">deleted</span>
+        </div>
+        <div class="small-5 columns" ng-click="toggleStudent(user)">
+          <i ng-class="stateDisplay[user.state].icon" class="fa fa-fw"></i>
+          {{ stateDisplay[user.state].text }} <span ng-if="user.state !== 'not-started'" title="{{ user.lastUpdated | localDate }}">{{ user[ stateDisplay[user.state].dateField ] | formatDate }}</span>
+        </div>
+        <div class="small-1 columns">
+          <a class="dashboard-actions-link right" data-dropdown="user-{{ user.username }}"><i class="fa fa-ellipsis-v"></i></a>
+
+          <ul id="user-{{ user.username }}" class="f-dropdown" data-options='align:left' data-dropdown-content>
+            <li>
+              <a ng-click="viewStudent(user)">View Student</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row collapsed" ng-class="{'show-feedback-row':viewingSubmission.user === user.userId}">
+        <div class="small-12 columns">
+          <trinket-feedback ng-if="viewingSubmission.user === user.userId" material="material" submission="user" cancel="cancelFeedback" can-send-feedback="canSendFeedback"></trinket-feedback>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- hidden users here -->
+  <div ng-show="hiddenUsers.length" class="row hidden-users-header">
+    <div class="small-12 collapse">
+      <fieldset ng-class="{'border-on':showHidden}" class="border">
+        <legend class="clickable-legend" ng-click="showHidden = !showHidden"><i ng-class="{'hide':showHidden}" class="fa fa-chevron-right"></i> Hidden from Dashboard ({{ hiddenUsers.length }})</legend>
+        <div class="hidden-users collapsed" ng-class="{'show-hidden-users':showHidden}">
+
+          <div ng-repeat="user in hiddenUsers | orderBy:'displayName'" class="row user-row" ng-class="{'clickable':user.state === 'submitted' || user.state === 'completed', 'row-open':viewingSubmission.user === user.userId}">
+            <div class="small-12 columns" id="student-row-{{ user.userId }}">
+              <div class="row user-info">
+                <div class="small-6 columns" ng-click="toggleStudent(user)">
+                  <img class="avatar" ng-src="{{ user.avatar }}" /> <span class="student-name">{{ user.displayName }}</span>
+                  <span ng-if="user.deleted" class="secondary-label label round" title="This user deleted their account.">deleted</span>
+                </div>
+                <div class="small-6 columns" ng-click="toggleStudent(user)">
+                  <i ng-class="stateDisplay[user.state].icon" class="fa fa-fw"></i>
+                  {{ stateDisplay[user.state].text }} <span ng-if="user.state !== 'not-started'" title="{{ user.lastUpdated | localDate }}">{{ user[ stateDisplay[user.state].dateField ] | formatDate }}</span>
+                </div>
+                <div ng-if="false" class="small-1 columns"> <!-- add action here to move user into view? -->
+                  <a class="dashboard-actions-link right" data-dropdown="user-{{ user.username }}"><i class="fa fa-ellipsis-v"></i></a>
+
+                  <ul id="user-{{ user.username }}" class="f-dropdown" data-options='align:left' data-dropdown-content>
+                    <li>
+                      <a ng-click="viewStudent(user)">View Student</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="row collapsed" ng-class="{'show-feedback-row':viewingSubmission.user === user.userId}">
+                <div class="small-12 columns">
+                  <trinket-feedback ng-if="viewingSubmission.user === user.userId" material="material" submission="user" cancel="cancelFeedback" can-send-feedback="canSendFeedback"></trinket-feedback>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </fieldset>
+    </div>
+  </div>
+
+</div>

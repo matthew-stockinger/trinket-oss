@@ -1,0 +1,19 @@
+{% set shareTitle = "Put Python Anywhere on the Web" %}
+{% set shareUrl   = config.url + "/python3/" + trinket.shortCode %}
+
+{% extends "trinket/python/base.html" %}
+
+{% block title %}{{ trinket.name if trinket.name else "Your Python Trinket" }}{% endblock %}
+{% block trinket_heading %}Put Interactive Python 3 Anywhere on the Web{% endblock %}
+{% block trinket_category %}python3{% endblock %}
+{% block trinket_share_type %}python3{% endblock %}
+{% block trinket_type %}python3{% endblock %}
+
+{% block trinket_subheading %}
+{% endblock %}
+
+{% block trinket_height %}500{% endblock %}
+
+{% block python3_plug %}{% endblock %}
+
+{% block signup_block %}{% endblock %}

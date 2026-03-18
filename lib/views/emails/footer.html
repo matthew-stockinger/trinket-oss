@@ -1,0 +1,1 @@
+{% if inviterName or not skipReplyMessage %}<p style="line-height:1.0; font-size: 0.8em;">{% if inviterName %}This email was sent on behalf of {{inviterName}}.{% endif %}{% if inviterName and not skipReplyMessage %} {% endif %}{% if not skipReplyMessage %}Please reply to this email if you have any questions.{% endif %}</p>{% endif %}

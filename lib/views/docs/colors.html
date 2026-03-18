@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% import "includes/colors.html" as colors %}
+
+{% block title %}Colors{% endblock %}
+
+{% block body_id %}colors{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="small-12 columns">
+    <h2>Colors</h2>
+    <h3 class="subheader">Click on a color below to see its turtle name, CSS name, hex code, or RGB values.</h3>
+  </div>
+</div>
+<hr />
+<div class="row">
+{% set num = 0 %}
+{% for color in colors.colors %}
+  <div class="small-2 medium-1 columns end swatch">
+    <div class="color-swatch" data-dropdown="drop{{num}}" aria-controls="drop{{num}}" aria-expanded="false" style="background-color:{{ color.cssname }}"></div>
+  </div>
+  <div id="drop{{num}}" data-dropdown-content class="f-dropdown content" aria-hidden="true" tabindex="-1">
+    <table class="show-for-medium-up">
+      <thead>
+        <tr>
+        <td>Turtle name:</td>
+        <td>CSS name:</td>
+        <td>Hex:</td>
+        <td>R:</td>
+        <td>G:</td>
+        <td>B:</td>
+      </tr>
+      </thead>
+      <tr>
+        <td><div class="faux-input">{{ color.tkname }}</div></td>
+        <td><div class="faux-input">{{ color.cssname }}</div></td>
+        <td><div class="faux-input">{{ color.hex }}</div></td>
+        <td><div class="faux-input">{{ color.r }}</div></td>
+        <td><div class="faux-input">{{ color.g }}</div></td>
+        <td><div class="faux-input">{{ color.b }}</div></td>
+      </tr>
+    </table>
+    <table class="show-for-small-only">
+      <tr>
+        <td class="table-heading">Turtle name:</td>
+        <td><div class="faux-input">{{ color.tkname }}</div></td>
+      </tr>
+      <tr>
+        <td class="table-heading">CSS name:</td>
+        <td><div class="faux-input">{{ color.cssname }}</div></td>
+      </tr>
+      <tr>
+        <td class="table-heading">Hex:</td>
+        <td><div class="faux-input">{{ color.hex }}</div></td>
+      </tr>
+      <tr>
+        <td class="table-heading">R:</td>
+        <td><div class="faux-input">{{ color.r }}</div></td>
+      </tr>
+      <tr>
+        <td class="table-heading">G:</td>
+        <td><div class="faux-input">{{ color.g }}</div></td>
+      </tr>
+      <tr>
+        <td class="table-heading">B:</td>
+        <td><div class="faux-input">{{ color.b }}</div></td>
+      </tr>
+    </table>
+  {% set num = num + 1 %}
+  </div>
+
+{% else %}
+  <div>
+    <p>Oops! Looks like something went wrong.</p>
+  </div>
+{% endfor %}
+</div>
+
+{% endblock %}

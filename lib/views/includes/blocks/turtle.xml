@@ -1,0 +1,172 @@
+<xml id="toolbox" style="display: none">
+  <category name="Turtle">
+    <block type="draw_move">
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">10</field>
+        </block>
+      </value>
+    </block>
+    <block type="draw_turn">
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">90</field>
+        </block>
+      </value>
+    </block>
+    <block type="draw_shape"></block>
+    <block type="draw_pen"></block>
+    <block type="draw_color">
+      <value name="COLOR">
+        <block type="colour_picker"></block>
+      </value>
+    </block>
+    <block type="draw_write">
+      <value name="STRING">
+        <block type="text"></block>
+      </value>
+    </block>
+    <block type="draw_circle">
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">100</field>
+        </block>
+      </value>
+    </block>
+    <block type="goto">
+      <value name="X">
+        <block type="math_number">
+          <field name="NUM">0</field>
+        </block>
+      </value>
+      <value name="Y">
+        <block type="math_number">
+          <field name="NUM">0</field>
+        </block>
+      </value>
+    </block>
+    <block type="draw_pos"></block>
+    <block type="draw_stamp"></block>
+    <block type="begin_fill"></block>
+    <block type="end_fill"></block>
+    <block type="draw_speed">
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">0</field>
+        </block>
+      </value>
+    </block>
+  </category>
+  <category name="Colors">
+    <block type="colour_picker"></block>
+    <block type="colour_random"></block>
+    <block type="colour_rgb"></block>
+    <block type="colour_blend"></block>
+  </category>
+  <category name="Variables" custom="VARIABLE"></category>
+  <category name="Lists">
+    <block type="lists_create_empty"></block>
+    <block type="lists_create_with"></block>
+    <block type="lists_repeat"></block>
+    <block type="lists_length"></block>
+    <block type="lists_isEmpty"></block>
+    <block type="lists_indexOf"></block>
+    <block type="lists_getIndex"></block>
+    <block type="lists_setIndex"></block>
+    <block type="lists_getSublist"></block>
+    <block type="lists_isIn"></block>
+  </category>
+  <category name="Loops">
+    <block type="controls_repeat"></block>
+    <block type="controls_repeat_ext"></block>
+    <block type="controls_whileUntil"></block>
+    <block type="controls_for"></block>
+    <block type="controls_forEach"></block>
+    <block type="controls_flow_statements"></block>
+  </category>
+  <category name="Numbers">
+    <block type="math_number"></block>
+    <block type="math_arithmetic"></block>
+    <block type="math_single"></block>
+    <block type="math_convert"></block>
+    <block type="math_trig"></block>
+    <block type="math_constant"></block>
+    <block type="math_number_property"></block>
+    <block type="math_round"></block>
+    <block type="math_on_list"></block>
+    <block type="math_modulo"></block>
+    <block type="math_constrain"></block>
+    <block type="math_random_int"></block>
+    <block type="math_random_float"></block>
+  </category>
+  <category name="Text">
+    <block type="text_print"></block>
+    <block type="text"></block>
+    <block type="text_unicode"></block>
+    <block type="text_string"></block>
+    <block type="text_join"></block>
+    <block type="text_append"></block>
+    <block type="text_length"></block>
+    <block type="text_isEmpty"></block>
+    <block type="text_indexOf"></block>
+    <block type="text_charAt"></block>
+    <block type="text_getSubstring"></block>
+    <block type="text_changeCase"></block>
+    <block type="text_trim"></block>
+    <block type="text_prompt"></block>
+    <block type="text_prompt_ext"></block>
+  </category>
+  <category name="Logic">
+    <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="logic_operation"></block>
+    <block type="logic_negate"></block>
+    <block type="logic_boolean"></block>
+    <block type="logic_null"></block>
+    <block type="lists_isIn"></block>
+  </category>
+  <category name="Functions" custom="PROCEDURE"></category>
+  <category name="Plotting">
+    <block type="pyplot_plot"></block>
+    <block type="pyplot_title">
+      <value name="STRING">
+        <block type="text"></block>
+      </value>
+    </block>
+    <block type="pyplot_xlabel">
+      <value name="STRING">
+        <block type="text"></block>
+      </value>
+    </block>
+    <block type="pyplot_ylabel">
+      <value name="STRING">
+        <block type="text"></block>
+      </value>
+    </block>
+    <block type="pyplot_show"></block>
+    <block type="numpy_linspace">
+      <value name="VALUE">
+        <block type="math_number">
+          <field name="NUM">50</field>
+        </block>
+      </value>
+    </block>
+    <block type="numpy_arange">
+      <value name="START">
+        <block type="math_number">
+          <field name="NUM">0</field>
+        </block>
+      </value>
+      <value name="STEP">
+        <block type="math_number">
+          <field name="NUM">1</field>
+        </block>
+      </value>
+    </block>
+    <block type="numpy_array"></block>
+    <block type="numpy_sin"></block>
+    <block type="numpy_cos"></block>
+    <block type="numpy_tan"></block>
+    <block type="numpy_exp"></block>
+  </category>
+</xml>

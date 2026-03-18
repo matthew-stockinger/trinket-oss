@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  {% block base_href %}{% endblock %}
+  <meta charset="utf-8">
+  <title>{% block title %}{{ config.app.siteName }}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{% block meta_description %}{% endblock %}">
+  <meta name="author" content="{% block meta_author %}{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}{% endblock %}">
+  {% block extra_meta %}{% endblock %}
+  <link rel="icon" href="/img/icons/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ '/img/icons/apple-touch-icon-144x144-precomposed.png' | cachePrefix }}">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ '/img/icons/apple-touch-icon-114x114-precomposed.png' | cachePrefix }}">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ '/img/icons/apple-touch-icon-72x72-precomposed.png' | cachePrefix }}">
+  <link rel="apple-touch-icon-precomposed" href="{{ '/img/icons/apple-touch-icon-precomposed.png' | cachePrefix }}">
+  {% for stylesheet in config.app.assets.css %}
+    <link rel="stylesheet" type="text/css" media="all" href="{{ stylesheet | cachePrefix }}">
+  {% endfor %}
+  {% block extra_css %}{% endblock %}
+  <script type="text/javascript">
+    trinket = {
+      config : {
+        apphostname    : '{{config.app.url.hostname}}{% if config.app.url.port and config.app.url.port != 80 and config.app.url.port != 443 %}:{{config.app.url.port}}{% endif %}',
+        usersubdomains : {{config.app.usersubdomains}},
+        protocol       : '{{config.app.url.protocol}}',
+        cachePrefix    : '{{config.app.cachePrefix}}',
+        prefixes       : {{ config.app.prefixes | json | safe }},
+        components     : {{ config.app.components | json | safe }},
+        vendorHost     : '{{ config.aws.buckets.vendorassets.host }}',
+        trinketTypes   : [
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.python %}
+          { lang : 'python',     image : '{{config.aws.buckets.appassets.host}}/python.png',     label : 'Python'                                     },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.python3 %}
+          { lang : 'python3',    image : '{{config.aws.buckets.appassets.host}}/python.png',     label : 'Python3' },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.pygame %}
+          { lang : 'pygame',     image : '{{config.aws.buckets.appassets.host}}/python.png',     label : 'Pygame' },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.java %}
+          { lang : 'java',       image : '{{config.aws.buckets.appassets.host}}/java.png',       label : 'Java' },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.R %}
+          { lang : 'R',          image : '{{config.aws.buckets.appassets.host}}/R.png',          label : 'R' },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.blocks %}
+          { lang : 'blocks',     image : '{{config.aws.buckets.appassets.host}}/blocks.png',     label : 'Blocks'                                     },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.html %}
+          { lang : 'html',       image : '{{config.aws.buckets.appassets.host}}/html.png',       label : 'HTML'                                       },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.glowscript %}
+          { lang : 'glowscript', image : '{{config.aws.buckets.appassets.host}}/glowscript.png', label : 'Web VPython'                                },
+          {% endif %}
+          {% if config.features and config.features.trinkets and config.features.trinkets['glowscript-blocks'] %}
+          { lang : 'glowscript-blocks', image : '{{config.aws.buckets.appassets.host}}/glowscript.png', label : 'Web VPython Blocks'                  },
+          {% endif %}
+          {% if not config.features or not config.features.trinkets or config.features.trinkets.music %}
+          { lang : 'music',      image : '{{config.aws.buckets.appassets.host}}/music.png',      label : 'Music'                                      },
+          {% endif %}
+        ],
+        autorun           : ["{{ config.app.autorun      | join('","') | safe }}"],
+        outputOnly        : ["{{ config.app.outputOnly   | join('","') | safe }}"],
+        toggleCode        : ["{{ config.app.toggleCode   | join('","') | safe }}"],
+        downloadable      : ["{{ config.app.downloadable | join('","') | safe }}"],
+        uploadable        : ["{{ config.app.uploadable   | join('","') | safe }}"],
+        hideGeneratedCode : ["{{ config.app.hideGeneratedCode | join('","') | safe }}"],
+        runOption         : {{ config.app.runOption      | json        | safe }},
+        emailEnabled      : {{ 'true' if emailEnabled else 'false' }}
+      }
+    };
+  </script>
+  {% for script in config.app.assets.jshead %}
+    <script src="{{ script | cachePrefix }}"></script>
+  {% endfor %}
+  {% include "includes/recaptcha.html" %}
+  {% block extra_head %}{% endblock %}
+</head>
+<body ng-app="{% block ng_app %}trinket.main{% endblock %}" id="{% block body_id %}{% endblock %}"
+      {% block body_data %}{% endblock %}
+      class="{% if user %}loggedin{% else %}loggedout{% endif %} {% block body_class %}{% endblock %}">
+
+  {% if flash.siteMessage %}
+  <div data-alert class="alert-box info site-message">
+   {{ flash.siteMessage }}
+   <a href="#" class="close">&times;</a>
+  </div>
+  {% endif %}
+
+  <!-- for positioning footer at bottom of screen on short pages -->
+  <div class="main-content-wrapper">
+
+  <input id="whoami" type="hidden" value="{{user.username if user else ''}}">
+  {% if flash.requested %}
+  <input id="requestedLogin" type="hidden" value="{{flash.requested}}">
+  {% endif %}
+  {% block announcement_banner %}{% endblock %}
+  {% block nav %}
+    <div class="nav-wrapper">
+      <nav class="top-bar" data-topbar data-options="is_hover: false" role="navigation" role="menubar" aria-label="Main Navigation">
+        <ul class="title-area">
+          <li class="name">
+            <a href="/" role="button" aria-label="Index Page">
+              {% if config.app.logo %}<img src="{{ config.app.logo | cachePrefix }}" alt="{{ config.app.siteName }}" />{% else %}{{ config.app.siteName }}{% endif %}
+            </a>
+          </li>
+          <li class="toggle-topbar menu-icon"><a href="#"><span></span></a></li>
+        </ul>
+        <section class="top-bar-section">
+          {% if user %}
+          <ul>
+            <li><a href="/home" aria-label="Go Home"><i class="fa fa-home"></i> Home </a>
+          </ul>
+          {% endif %}
+          <ul class="right">
+            {% block navlinks %}
+              <li><a href="/about"> <i class="fa fa-info-circle"></i> <span><span class="hide-for-medium-only">About </span></span></a></li>
+              <li><a href="/help"> <i class="fa fa-question-circle"></i> <span><span class="hide-for-medium-only">Help </span></span></a></li>
+            {% endblock %}
+            {% if user %}
+              <li class="has-dropdown" role="navigation" id="trinket-user-menu">
+                <a class="dropdown-btn" role='button' aria-controls="user_dropdown" aria-label="Open User Menu">
+                  <img id="nav-user-avatar" src="{{ userAvatarSrc }}" alt="Photo of {{ user.name }}" class="avatar">
+                  <span id="userdata" data-user-id="{{ user.id }}">{{ user.username }}</span>
+                </a>
+                <ul id="user_dropdown" class="dropdown"  role="menu" aria-label="User Menu">
+                  <li role="menuitem">
+                    <a href="/home">
+                      <i class="fa fa-home"></i> Home
+                    </a>
+                  </li>
+                  <li class="divider" role="presentation"></li>
+                  <li role="menuitem">
+                    <a href="/library/trinkets">
+                      My Trinkets
+                    </a>
+                  </li>
+                  <li class="has-dropdown" role="menuitem" >
+                    <a role="button" aria-controls="new_trinket_list">New Trinket</a>
+                    <ul id="new_trinket_list" class="dropdown" role="group" role="menu">
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.python %}
+                      <li><a href="/library/trinkets/create?lang=python"><i class="lang-sprite lang-sprite-python"></i> Python</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.python3 %}
+                      <li><a href="/library/trinkets/create?lang=python3"><i class="lang-sprite lang-sprite-python"></i> Python3</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.pygame %}
+                      <li><a href="/library/trinkets/create?lang=pygame"><i class="lang-sprite lang-sprite-pygame"></i> Pygame</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.R %}
+                      <li><a href="/library/trinkets/create?lang=R"><i class="lang-sprite lang-sprite-R"></i> R</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.blocks %}
+                      <li><a href="/library/trinkets/create?lang=blocks"><i class="lang-sprite lang-sprite-blocks"></i> Blocks</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.html %}
+                      <li><a href="/library/trinkets/create?lang=html"><i class="lang-sprite lang-sprite-html"></i> HTML</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.glowscript %}
+                      <li><a href="/library/trinkets/create?lang=glowscript"><i class="lang-sprite lang-sprite-glowscript"></i> Web VPython</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.java %}
+                      <li><a href="/library/trinkets/create?lang=java"><i class="lang-sprite lang-sprite-java"></i> Java</a></li>
+                      {% endif %}
+                      {% if not config.features or not config.features.trinkets or config.features.trinkets.music %}
+                      <li><a href="/library/trinkets/create?lang=music"><i class="lang-sprite lang-sprite-music"></i> Music</a></li>
+                      {% endif %}
+                    </ul>
+                  </li>
+                  <li class="divider" role="presentation"></li>
+                  <li><a href="/account"><i class="fa fa-gear"></i> My Settings</a></li>
+                  {% if user.hasRole("admin") or user.loggedInAs() %}
+                  <li><a href="/admin"><i class="fa fa-lock"></i> Admin</a></li>
+                  {% endif %}
+                  <li class="divider" role="presentation"></li>
+                  <li><a href="/help">Help</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="/logout">
+                  <i class="fa fa-sign-out"></i> Sign Out
+                </a>
+              </li>
+            {% else %}
+              {% block signup %}
+              <li><a href="/signup{% block nextAfterSignUp %}{% endblock %}">Sign Up</a></li>
+              {% endblock %}
+              <li><a href="/login{% block nextAfterSignIn %}{% endblock %}">Log In <i class="fa fa-sign-in"></i></a></li>
+            {% endif %}
+          </ul>
+        </section>
+      </nav>
+    </div>
+  {% endblock %}
+
+  {% block banner %}
+  {% endblock %}
+  {% block hero %}{% endblock %}
+
+  <section id="main-content" role="main">
+    {% block content %}{% endblock %}
+  </section>
+
+    {% if footer or not user %}
+    <!-- for positioning footer at bottom of screen on short pages -->
+    <div class="push"></div>
+    {% endif %}
+
+  </div> <!-- end main-content-wrapper -->
+
+  {% block footer %}
+    {% if footer or not user %}
+    <footer style="padding: 15px 0; text-align: center; background: #f5f5f5; border-top: 1px solid #ddd; color: #666;">
+      <div class="row">
+        <div class="small-12 columns">
+          <p style="margin: 0;">
+            <a href="https://github.com/trinketapp/trinket-oss" style="color: #333;"><i class="fa fa-github"></i> Open Source on GitHub</a>
+            &nbsp;&middot;&nbsp;
+            CC0 1.0
+          </p>
+        </div>
+      </div>
+    </footer>
+    {% endif %}
+  {% endblock %}
+
+  <div trinket-language></div>
+
+  {% block extra_html %}{% endblock %}
+
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    messageStyle : "none",
+    jax: ["input/TeX", "output/CommonHTML"],
+    tex2jax      : {
+      inlineMath     : [['$(',')$'], ['\\(','\\)']],
+      ignoreClass    : "mathjax-ignore",
+      processEscapes : true
+    },
+    TeX          : {
+      extensions : ["[siunitx]/siunitx.js"]
+    }
+  });
+  MathJax.Ajax.config.path['siunitx']  = "{{ '/components/Mathjax-siunitx' | cachePrefix }}";
+  </script>
+  {% for script in config.app.assets.jsbody %}
+    <script src="{{ script | cachePrefix }}"></script>
+  {% endfor %}
+  {% for script in config.app.ngapps.main %}
+    <script src="{{ script | cachePrefix }}"></script>
+  {% endfor %}
+
+  {% block foundation_init %}
+  <script>$(document).foundation()</script>
+  {% endblock %}
+
+  <script>
+      $(document).on('open', '#newTrinketModal', function() {
+        $('.has-dropdown').removeClass('hover');
+      });
+      $('*[data-auth-init]').click(function(event) {
+        event.preventDefault();
+        var href     = $(this).attr('href');
+        var provider = $(this).data('auth-init');
+
+        try {
+          gtag('event', 'auth_started', {
+            'location': window.location.pathname,
+            'provider': provider,
+            'event_callback': function() {
+              window.location.href = href;
+            }
+          });
+        } catch(e) {
+          console.log('gtag auth_started e:', e);
+          window.location.href = href;
+        }
+      });
+      {% if flash.auth %}
+        try {
+          gtag('event', 'auth_complete', {
+            'location': window.location.pathname,
+            'provider': flash.auth,
+          });
+        } catch(e) {
+          console.log('gtag flash.auth e:', e)
+        }
+      {% endif %}
+
+      $.notify.addStyle('foundation', {
+        html : '<div><span data-notify-html></span></div>'
+      });
+      $.notify.defaults({
+          position  : 'bottom center'
+        , arrowShow : false
+        , style     : 'foundation'
+        , gap       : 0
+      });
+  </script>
+  {% block extra_js %}{% endblock %}
+  {% include "includes/preBodyClose.html" %}
+</body>
+</html>

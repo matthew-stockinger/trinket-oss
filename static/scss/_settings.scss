@@ -1,0 +1,71 @@
+//
+// FOUNDATION SETTINGS FOR TRINKET
+// The full settings can be found in public/components/foundation/scss/foundation/_settings.scss
+//
+// WARNING: You'll need to check for updates to the variables names for upgrades to foundation.
+//
+
+@import "public/components/foundation/scss/foundation/functions";
+
+$green: #26BF12;
+$blue: #008AFF;
+$yellow: #FFDA00;
+$blue-40: lighten($blue, 40%);
+
+$body-font-family: "Merriweather", Times, Georgia, serif;
+$primary-color: $blue;
+$secondary-color: $green;
+$success-color: $green;
+
+$success-message-color: #d9edf7;
+$error-message-color: #FFCCCC;
+$error-message-border: #FF0000;
+$warning-message-color: #f08a24;
+$warning-message-border: #de770f;
+
+$draft-yellow: #ffb515;
+
+$input-font-size: rem-calc(16);
+$input-error-message-padding: rem-calc(9);
+
+$off-canvas-width: 350px;
+
+$topbar-bg-color: #EEE;
+$topbar-bg: $topbar-bg-color;
+
+$topbar-dropdown-bg: #EEE;
+$topbar-dropdown-link-color: #333;
+$topbar-dropdown-toggle-color: #333;
+
+$topbar-link-color: #333;
+$topbar-link-color-active: #333;
+$topbar-link-bg-hover: $primary-color;
+
+$topbar-menu-link-color: #333;
+$topbar-menu-icon-color: #333;
+$topbar-menu-link-color-toggled: #333;
+$topbar-menu-icon-color-toggled: #333;
+
+$topbar-divider-border-bottom: solid 1px #CCC;
+$topbar-divider-border-top: solid 1px #CCC;
+
+$tab-border-radius: 8px;
+
+$header-font-family: join("Lato", $body-font-family);
+$header-font-weight: 900;
+
+$h3-font-size: rem-calc(22);
+$h4-font-size: rem-calc(18);
+$h5-font-size: rem-calc(16);
+$h6-font-size: 1rem;
+
+$subheader-line-height: 1.8;
+
+$crumb-bg: scale-color(#EEE, $lightness: 55%);
+$crumb-padding: rem-calc(14 28 15 28);
+$crumb-font-size: rem-calc(16);
+$crumb-font-transform: initial;
+
+$price-title-bg: $primary-color;
+$price-title-size: rem-calc(32);
+$price-money-size: rem-calc(20);

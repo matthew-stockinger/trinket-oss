@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    {% set js = [
+         '/components/glowscript-blocks/blockly_uncompressed.js',
+         '/components/glowscript-blocks/generators/python.js',
+         '/components/glowscript-blocks/generators/python/logic.js',
+         '/components/glowscript-blocks/generators/python/loops.js',
+         '/components/glowscript-blocks/generators/python/math.js',
+         '/components/glowscript-blocks/generators/python/text.js',
+         '/components/glowscript-blocks/generators/python/lists.js',
+         '/components/glowscript-blocks/generators/python/colour.js',
+         '/components/glowscript-blocks/generators/python/variables.js',
+         '/components/glowscript-blocks/generators/python/shapes.js',
+         '/components/glowscript-blocks/generators/python/vector.js',
+         '/components/glowscript-blocks/generators/python/procedures.js',
+         '/components/glowscript-blocks/generators/python/graphs.js',
+         '/components/glowscript-blocks/msg/messages.js',
+         '/components/glowscript-blocks/blocks/shapes.js',
+         '/components/glowscript-blocks/blocks/vector.js',
+         '/components/glowscript-blocks/blocks/logic.js',
+         '/components/glowscript-blocks/blocks/loops.js',
+         '/components/glowscript-blocks/blocks/math.js',
+         '/components/glowscript-blocks/blocks/text.js',
+         '/components/glowscript-blocks/blocks/lists.js',
+         '/components/glowscript-blocks/blocks/colour.js',
+         '/components/glowscript-blocks/blocks/variables.js',
+         '/components/glowscript-blocks/blocks/procedures.js',
+         '/components/glowscript-blocks/blocks/graphs.js'
+       ]
+    %}
+
+    <!-- use cachePrefix below to ensure cache busting of updates until cachify_js is working
+    {{ cachify_js('embed-glowscript-blocks-iframe', js) | safe }}
+    -->
+
+    {% for jsfile in js -%}
+    <script src="{{ jsfile | cachePrefix }}" type="text/javascript"></script>
+    {% endfor -%}
+
+    <style>
+      html, body {
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        height: 100%;
+      }
+      .blocklySvg {
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script type="text/javascript">
+    trinket = {
+      config : {
+        cachePrefix : '{{config.app.cachePrefix}}',
+        prefixes    : {{ config.app.prefixes | json | safe }},
+        testing     : {% if config.isTest %}true{% else %}false{% endif %}
+      }
+    };
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+    <script type="text/javascript">
+      var intervalId;
+      function init() {
+        var toolbox = trinketConfig.prefix('/components/glowscript-blocks/trinket.xml');
+        $('#toolbox').load(toolbox, function() {
+          Blockly.inject(document.body, {
+            path     : '../../components/glowscript-blocks/',
+            toolbox  : document.getElementById('toolbox'),
+            trashcan : true,
+            zoom : {
+              controls : true,
+              enabled : true
+            }
+          });
+          intervalId = setInterval(function() {
+            if (window.parent.blocklyLoaded) {
+              window.parent.blocklyLoaded(Blockly);
+              clearInterval(intervalId);
+            }
+          }, 1000);
+        });
+      }
+    </script>
+  </head>
+  <body onload="init()">
+    <xml id="toolbox" style="display: none"></xml>
+  </body>
+</html>

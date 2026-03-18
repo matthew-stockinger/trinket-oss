@@ -1,0 +1,146 @@
+{% extends "embed/base.html" %}
+
+{% block head_styles %}
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css">
+{% endblock %}
+
+{% block toolbar_options %}
+{% if outputOnly %}
+  {% include "embed/default-toolbar.html" %}
+{% else %}
+<a class="menu-button item {{'' if toggleCode else 'show-for-small-only'}} allow-original" data-action="code.edit" data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="Edit the code.">
+  <i class="fa fa-pencil"></i>
+  <label class="show-for-large-up">Code</label>
+</a>
+<a class="menu-button item allow-original" data-action="code.run" data-tooltip aria-haspopup="true" title="View the result." data-options="disable_for_touch:true">
+  <i class="fa fa-play"></i>
+  <label class="show-for-large-up">Run</label>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block upload_modal %}
+{% if not outputOnly %}
+{% include "includes/uploadModal.html" %}
+{% endif %}
+{% endblock %}
+
+{% block embed_content %}
+  <input id="start-value" type='hidden' value='{{start if start else "code"}}'/>
+
+  <div id="editor" class="hide" data-interface="editor">
+    <iframe id="blocklyIframe" src="/embed/blocks-iframe"></iframe>
+  </div>
+
+  <div id="dragbar"></div>
+
+  <div id="codeOutput" class="codeOutput hide" data-interface="output">
+
+    {% if outputOnly %}
+    <div id="outputTabs" class="{{ outputTabs }} {% if hideGeneratedCode %}hideGeneratedCode{% endif %}">
+      <div class="active menu-button {{ outputTabs }}" id="codeOutputTab" data-action="output.view"><i class="fa fa-play"></i> Run</div>
+      <div class="menu-button {% if hideGeneratedCode %}hideGeneratedCode{% endif %} {{ outputTabs }}" id="codeViewTab" data-action="code.view"><i class="fa fa-terminal"></i> View Code</div>
+    </div>
+
+    <div id="outputContainer" class="{{ outputTabs }} {% if outputTabs == 'noTabs' %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="graphic-wrap" class="hide {% if snapshot %}snapshot{% endif %}">
+        <div id="graphic"></div>
+      </div>
+      <div id="output-dragbar" class="hide" data-action="resize"></div>
+      <div id="console-wrap" class="hide">
+        <div id="console-output"></div>
+      </div>
+    </div>
+    <div id="blocklyCodeContainer" class="hide">
+      <div id="blocklyPythonCode"></div>
+    </div>
+
+    {% else %}
+
+    <div id="outputTabs" class="{{ outputTabs }} {% if outputTabs == 'noTabs' %}withoutTabs{% else %}withTabs{% endif %}">
+      <div class="{% if not showInstructions %}active {% endif %}menu-button {{ outputTabs }}"
+        id="codeOutputTab" data-action="output.view"><i class="fa fa-play"></i> Run</div>
+      <div class="menu-button {% if hideGeneratedCode %}hideGeneratedCode{% endif %} {{ outputTabs }}"
+        id="codeViewTab" data-action="code.view"><i class="fa fa-terminal"></i> View Code</div>
+      <div class="{% if showInstructions %}active {% endif %}menu-button {% if hideInstructions or (not isOwner and not trinket.description) %}hideInstructions{% endif %} {{ outputTabs }}"
+        id="instructionsTab" data-action="instructions.view"><i class="fa fa-list"></i> Instructions</div>
+    </div>
+
+    <div id="outputContainer" class="{{ outputTabs }} {% if outputTabs == 'noTabs' %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="graphic-wrap" class="hide">
+        <div id="graphic"></div>
+      </div>
+      <div id="output-dragbar" class="hide" data-action="resize"></div>
+      <div id="console-wrap" class="hide">
+        <div id="console-output"></div>
+        <a id="reset-output" title="clear output"><i class="fa fa-ban"></i></a>
+      </div>
+    </div>
+
+    <div id="blocklyCodeContainer" class="hide">
+      <div id="blocklyPythonCode"></div>
+      <a id="createPythonLink" class="hide menu-button" data-action="code.pythonfromblocks">Create Python Trinket</a>
+    </div>
+
+    {% include "includes/embed-instructions.html" %}
+    {% endif %}
+
+  </div>
+
+  {% if not outputOnly %}
+  <div id="runFirstModal" class="reveal-modal small" data-reveal data-css-top="20" data-offset="200">
+    <h2>Run your code first!</h2>
+    <p class="lead">
+      It looks like you haven't tried running your new code.
+    </p>
+    <p>Try clicking
+    <a id="modalRun" class="button tiny"><i class="fa fa-play"></i>&nbsp;Run</a>
+    and if you like the result, try sharing again.</p>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block body_scripts %}
+  {% if not outputOnly %}
+  {{ component('ace-builds', 'src-min-noconflict/ace.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-modelist.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-language_tools.js') | safe }}
+  {% endif %}
+
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+
+  {% if config.app.embed.skulpt.local %}
+  <script type="text/javascript" src="/components/skulpt/skulpt{% if config.app.embed.skulpt.min %}.min{% endif%}.js"></script>
+  <script type="text/javascript" src="/components/skulpt/skulpt-stdlib.js"></script>
+  {% else %}
+  <script type="text/javascript" src="{{ config.aws.buckets.cdn.host }}{{ '-skulpt.min.js' | cachePrefix('skulpt') }}"></script>
+  <script type="text/javascript" src="{{ config.aws.buckets.cdn.host }}{{ '-skulpt-stdlib.js' | cachePrefix('skulpt') }}"></script>
+  {% endif %}
+
+  {% if not outputOnly %}
+  <script src="{{ '/components/marked/lib/marked.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-markdown.js' | cachePrefix }}"></script>
+  {% endif %}
+
+  {{ component('filereader', 'filereader.js') | safe }}
+
+  {% set js = extra_js.concat([
+       '/components/jq-console/jqconsole.min.js'
+     ], config.app.embed.common.skulpt_js, [
+       '/js/embed/blocks/shared.js',
+       '/js/embed/blocks.js'
+     ])
+  %}
+
+  {% if outputOnly %}
+    {{ cachify_js('embed-blocks-output', js) | safe }}
+  {% else %}
+    {{ cachify_js('embed-blocks', js) | safe }}
+  {% endif %}
+{% endblock %}
+
+{% block fontsize %}{% endblock %}

@@ -1,0 +1,75 @@
+<div class="library-subnav clearfix row gutterless" data-magellan-expedition="fixed">
+  <section class="left">
+    <nav class="title breadcrumbs">
+      <a href="/home"><i class="fa fa-home"></i></a>
+      <a ui-sref="list">My Trinkets</a>
+      <a class="current">
+        <span ng-if="isOwner" editable-text="folder.name"
+              e-maxlength="50"
+              onbeforesave="updateName($data)"
+              buttons="no"
+              blur="submit">{{ folder.name }}</span>
+        <span ng-if="!isOwner">{{ folder.name }}</span>
+      </a>
+    </nav>
+    <section id="listview-options">
+      <trinket-search on-select="addSelectedTrinket" placeholder-text="add trinkets by name or instructions" button-icon="fa fa-plus fa-fw"></trinket-search>
+    </section>
+  </section>
+  <section class="right">
+    <a class="button small caution right" title="Delete Folder" data-reveal-id="delete-folder" data-reveal><i class="fa fa-trash-o"></i></a>
+  </section>
+</div>
+<div id="folder-list-messages"></div>
+<div class="row" ng-show="!items"><h2><i class="fa fa-spinner fa-spin"></i>&nbsp;Loading...</h2></div>
+<div class="row" ng-show="items && !items.length">
+  <h2>No trinkets have been added to this folder.</h2>
+</div>
+<div ng-show="items.length">
+  <ul id="trinkets-list" infinite-scroll="moreTrinkets()" infinite-scroll-distance='1' class="{{viewType}}-view">
+    <li ng-repeat="item in items" ng-click="gotoTrinket(item.shortCode)">
+      <a class="snapshot" ng-class="{titled: item.name}" ui-sref="detail({shortCode: item.shortCode})">
+        <img ng-class="{'set-height': item.lang != 'glowscript' && item.lang != 'glowscript-blocks'}" ng-src="{{item.snapshot}}" alt="{{item.snapshot}}">
+        <h3 ng-class="{titled: item.name}" class="title trinket-list-with-lang {{viewType}}-view lang-{{item.lang}} trinketLabel">{{item.name || 'Untitled'}}</h3>
+      </a>
+      <div class="trinket-stats">
+        <div ng-if="item.lastView.viewedOn" class="trinket-last-date">
+          Last viewed {{ item.lastView.viewedOn | formatDate }}
+        </div>
+        <div ng-if="!item.lastView.viewedOn" class="trinket-last-date">
+          Last updated {{ item.lastUpdated | formatDate }}
+        </div>
+        <ul class="small-block-grid-5" ng-init="stats=[
+               {metric:'runs',       icon:'hand-o-up', title:'interactions'},
+               {metric:'forks',      icon:'code-fork', title:'remixes'},
+               {metric:'views',      icon:'code',      title:'views'},
+               {metric:'social',     icon:'users',     title:'shares'}
+              ]">
+          <li class="trinket-stat"
+              title="{{item.metrics[stat.metric] || '0'}} {{stat.title}}"
+              ng-repeat="stat in stats">
+            <i class="fa fa-{{stat.icon}}"></i>
+            <div class="badge"
+                 ng-if="item.metrics[stat.metric]">
+              {{item.metrics[stat.metric] | formatNum}}
+            </div>
+          </li>
+          <li class="trinket-stat" title="{{ item.published ? 'Published' : '' }}">
+            <i ng-if="item.published" class="fa fa-book" ng-class="{success:item.published}"></i>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div id="delete-folder" class="reveal-modal" data-reveal role="dialog" close="closeDeleteModal">
+  <h2 id="delete-folder-title">{{ folder.name }}</h2>
+  <h3 class="subheader">Are you sure you want to delete this folder?</h3>
+  <p>Deleting this folder is permanent and cannot be undone. Any trinkets in this folder will show up in your list &mdash; they will <strong>not</strong> be deleted.</p>
+  <label>Please enter the name of this folder below to confirm.</label>
+  <input type="text" ng-model="confirmFolderName" ng-change="compareNamesForDelete(confirmFolderName)" />
+  <a id="delete-folder-confirmed" class="button danger small" ng-click="remove()" ng-class="{disabled: notConfirmed}">Yes, delete this folder</a>
+  <a id="cancel-delete-folder" class="button caution small close-modal">Nevermind, do not delete this folder</a>
+  <a class="close-reveal-modal">&#215;</a>
+</div>

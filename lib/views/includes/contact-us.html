@@ -1,0 +1,4 @@
+{% macro link(user, text='', class='') -%}
+<a class="{{ class }}"
+   href="https://github.com/trinketapp/trinket-oss/issues">{{ text if text else 'open an issue on GitHub'}}</a>
+{%- endmacro %}

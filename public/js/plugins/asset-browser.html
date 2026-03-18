@@ -1,0 +1,135 @@
+<div class="asset-viewer">
+  <div id="asset-viewer-contents" class="contents">
+    <div class="clearfix">
+      <h4 class="left" data-replace-text="Files">Images</h4>
+      <a class="button small right" events="click:view.addimage.show"><i class="fa fa-plus"></i> <span data-replace-text="File">Image</span> Library</a>
+    </div>
+
+    <p>
+      <span data-replace-text="Files">Images</span> listed here are available to use in your code in this trinket.
+      Click the <span data-replace-text="File">Image</span> Library button to include more or upload new <span data-replace-text="files">images</span>.
+    </p>
+
+    <!-- <a class="button small" events="click:view.add-link.show"><i class="fa fa-link">Link</i></a> -->
+
+    <div id="asset-list-wrapper">
+      <div class="howto-container hide">
+        <dl class="accordion" data-accordion>
+          <dd class="accordion-navigation">
+            <a href="#howto"><i class="fa fa-question-circle"></i> How To Use <span data-replace-text="Files">Images</span></a>
+            <div id="howto" class="howto-message content">
+            </div>
+          </dd>
+        </dl>
+      </div>
+
+      <ul id="trinket-asset-list" class="list-view asset-list">
+        <li class="asset template" template-id="imageInfo">
+          <section class="asset-container left">
+            <img class="thumbnail" width="80" height="80">
+            <div class="title"></div>
+          </section>
+          <div class="right">
+            <a class="controls" events="click:assets.remove"><i class="fa fa-trash caution"></i></a>
+            <div class="confirm-controls hide">
+              <strong>Remove this <span data-replace-text="file">image</span>?</strong><br />
+              <a class="button tiny danger" events="click:assets.confirm"><i class="fa fa-trash-o"></i> Remove</a>
+              <a class="button tiny caution" events="click:assets.cancel">Cancel</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="template contents-overlay" template-id="addImage">
+    <div class="clearfix">
+      <h4 class="left"><span data-replace-text="File">Image</span> Library</h4>
+      <div class="right">
+        <a id="show-upload-button" class="button small" events="click:view.upload.show"><i class="fa fa-upload"></i> Upload New <span data-replace-text="File">Image</span></a>
+        <a class="button small addimage-done">Done</a>
+      </div>
+    </div>
+
+    <div id="upload-assets" class="dropzone hide text-center">
+      <p>Drop <span data-replace-text="files">images</span> here to upload</p>
+      <p>or</p>
+      <a id="select-to-upload" class="button small">Click to Select <span data-replace-text="Files">Images</span></a>
+      <a class="close-upload" events="click:view.upload.hide"><i class="fa fa-times"></i></a>
+      <div id="preview-container" class="dropzone-previews"></div>
+    </div>
+
+    <div id="upload-guest" class="dropzone hide">
+      <!--<p>Log in or create a free account to upload new <span data-replace-text="files">images</span>.</p>-->
+      <p>Log in to upload new <span data-replace-text="files">images</span>.</p>
+      <form id="assetAccount">
+        <span class="message"></span>
+        <div class="row">
+          <div class="small-4 columns text-center">
+            <input type="text" name="email" value="" placeholder="Email" />
+          </div>
+          <div class="small-4 columns text-center">
+            <input type="password" name="password" value="" placeholder="Password" />
+          </div>
+          <div class="small-4 columns">
+            <a class="button tiny success" id="assetLogin" name="assetLogin" data-action="login">Log In</a>
+            <!--<a class="button tiny primary" id="assetCreateAccount" name="assetCreateAccount" data-action="signup">Create Account</a>-->
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div id="upload-nonguest">
+      <p>Click an <span data-replace-text="file">image</span> to use it in this trinket or add a new <span data-replace-text="file">image</span> using the upload button above.</p>
+    </div>
+
+    <div id="loadingContent" class="hide">
+      <span><i class="fa fa-spinner fa-spin"></i> Loading Your <span data-replace-text="Files">Images</span></span>
+    </div>
+
+    <ul id="library-asset-list" class="asset-list">
+      <li class="asset template" template-id="libraryImageInfo">
+        <section class="asset-container left" events="click:assets.toggle">
+          <img class="thumbnail" width="80" height="80">
+          <div class="title"></div>
+          <div class="demo hide">
+            <p>Part of the trinket public image library.</p>
+          </div>
+        </section>
+        <a class="owner-controls right" data-options='align:left'><i class="fa fa-ellipsis-v"></i></a>
+        <ul class="f-dropdown" data-dropdown-content>
+          <li class="hide if-not-hidden"><a data-event="image.remove"><i class="fa fa-trash fa-fw"></i> Hide from Library</a></li>
+          <!-- to do later... if-not-hidden if-not-used -->
+          <li class="hide"><a data-event="image.replace"><i class="fa fa-exchange fa-fw"></i> Replace <span data-replace-text="File">Image</span></a><span class="click-for-dropzone"></span></li>
+          <li class="hide if-hidden"><a data-event="image.restore"><i class="fa fa-trash fa-fw"></i> Show in Library</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <ul id="my-asset-list" class="asset-list"></ul>
+
+    <div class="upload-progress hide">
+      <div class="progress">
+        <span class="meter" style="width:0%">
+          <p class="percent">0%</p>
+        </span>
+      </div>
+    </div>
+
+    <div class="hidden-previews hide"></div>
+
+    <!-- hidden images -->
+    <hr class="have-hidden hide" />
+    <a events="click:view.hidden" class="have-hidden hide">View Hidden <span data-replace-text="Files">Images</span></a>
+    <ul id="hidden-asset-list" class="asset-list hide"></ul>
+  </div>
+
+  <!--
+  <div class="template overlay" template-id="imageLink">
+    <input type="text" placeholder="paste image url here">
+    <input type="text" placeholder="image name">
+    <input type="button" name="add">
+    <a class="closer"><i class="fa fa-times-circle-o"></i></a>
+  </div>
+  -->
+</div>

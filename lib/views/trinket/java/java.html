@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ trinket.name if trinket.name else "Your Java Trinket" }}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+{% block content %}
+  <div class="row fall-away hide">
+    <h2>Put Interactive Java Anywhere on the Web</h2>
+  </div>
+
+  <div id="trinket-row" class="preserve">
+    <div id="trinket-container" style="height: 500px">
+      <iframe id="trinket-iframe" src="/embed/java{% if trinket.id %}/{{trinket.id}}{% endif %}?sharePage=true&start=result&category=java&shareType=java{% if outputOnly %}&outputOnly=true{% endif %}{% if toggleCode %}&toggleCode=true{% endif %}{% if showInstructions %}&showInstructions=true{% endif %}{% if font %}&font={{font}}{% endif %}" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen></iframe>
+    </div>
+  </div>
+  <div class="row preserve text-center">
+    <a id="trinket-expand" class="button collapse hide"><i class="fa fa-expand"></i> Expand</a>
+    <a id="trinket-collapse" class="button collapse"><i class="fa fa-compress"></i> Collapse</a>
+  </div>
+  <div class="fall-away hide"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  var trinketHeight = $("#trinket-container").css("height");
+
+  $("#trinket-expand, #trinket-collapse").click(function(){
+    $(".fall-away, footer").toggleClass("hide");
+    $(".push").toggleClass("flat");
+    $("#trinket-collapse").toggleClass("hide");
+    $("#trinket-expand").toggleClass("hide");
+    $("#trinket-row").toggleClass("row");
+    $(window).scrollTop(0)
+  });
+
+  $("#trinket-expand").click(function(){
+    var h = window.innerHeight
+    $("#trinket-container").css("height", String(h -101) );
+  });
+
+  $("#trinket-collapse").click(function(){
+    $("#trinket-container").css("height", trinketHeight );
+  });
+
+  // Expand by default
+  $("footer").toggleClass("hide");
+  $(".push").toggleClass("flat");
+  var h = window.innerHeight
+  $("#trinket-container").css("height", String(h -101) );
+</script>
+{% endblock %}

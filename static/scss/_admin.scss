@@ -1,0 +1,145 @@
+#admin {
+  .tabs {
+    border-bottom: solid 1px #dddddd;
+    display: block;
+    height: 60px;
+    padding: 0;
+    margin-bottom: 0;
+  }
+
+  .tabs li {
+    display: block;
+    float: left;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tabs li a {
+    color: #6f6f6f;
+    display: block;
+    height: 60px;
+    line-height: 60px;
+    padding: 0px 38px;
+  }
+
+  .tabs li.active {
+    border-top: 3px solid $primary-color;
+    margin-top: -3px;
+  }
+
+  .tabs li.active a {
+    cursor: default;
+    color: #3c3c3c;
+    background: #fff;
+    border-left: 1px solid #dddddd;
+    border-right: 1px solid #dddddd;
+    font-weight: bold;
+  }
+
+  .tabs dd:first-child {
+    margin-left: 0;
+  }
+
+  .tabs-content {
+    display: block;
+    margin: 0 0 20px;
+    padding: 0;
+  }
+  .tabs-content > li {
+    display: none;
+  }
+  .tabs-content > li.active {
+    display: block;
+    border: solid 0 #dddddd;
+    border-width: 0 1px 1px 1px;
+    padding: 20px;
+  }
+
+  .avatar-medium {
+    max-width: 50px;
+    border-radius: 500px;
+  }
+
+  .featured-course-list {
+    * {
+      vertical-align: middle;
+    }
+    .course-row {
+      border: 1px solid #d4d4d4;
+      padding: 0.5rem 0 0.5rem 0.5rem;
+
+      &:hover {
+        background-color: lighten(#d4d4d4, 10%);
+      }
+    }
+
+    .new-featured-course-inputs {
+      padding-top: 1rem;
+    }
+  }
+
+  #organization-form {
+    .avatar {
+      max-width: 50px;
+    }
+    .equal-avatar {
+      line-height: 50px;
+      height: 50px;
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+    #avatar-previews, .inline-message {
+      margin-left: 2rem;
+      display: inline-block;
+    }
+    .button {
+      margin-top: 1rem;
+    }
+  }
+}
+
+table.rolesData {
+  width: 75%;
+  ul {
+    margin-bottom: 0;
+  }
+}
+
+textarea#rolesJSON {
+  height: 400px;
+}
+
+table.discountsData {
+  width: 100%;
+
+  .plan-circle {
+    width: 16px;
+    height: 16px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .connect-circle {
+    @extend .plan-circle;
+    background-color: $secondary-color;
+  }
+  .codeplus-circle {
+    @extend .plan-circle;
+    background-color: $blue;
+  }
+}
+
+#discount-form {
+  fieldset, .switch, .inline {
+    margin: 0;
+  }
+
+  span {
+    font-size: 1.25rem;
+  }
+}
+
+table.active-instances {
+  width: 100%;
+}

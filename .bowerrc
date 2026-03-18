@@ -1,0 +1,12 @@
+{
+  "directory": "public/components",
+  "ignoredDependencies": [
+    "core.js",
+    "fastclick",
+    "highcharts",
+    "jquery",
+    "jquery-placeholder",
+    "jquery.cookie",
+    "modernizr"
+  ]
+}

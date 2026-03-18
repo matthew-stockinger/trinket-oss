@@ -1,0 +1,53 @@
+#embed_content_console {
+  
+  #message {
+    margin-left: 10px;
+  }
+
+  /* The console container element */
+  #console {
+    width: 100%;
+    height: 100%;
+    min-width: 278px;
+
+    /* fix for android keyboard */
+    input:focus {
+      -webkit-box-sizing: content-box;
+      box-sizing: content-box;
+    }
+  }
+  /* The inner console element. */
+  .jqconsole {
+    padding: 5px;
+    white-space: pre-wrap;
+    border: none;
+    background: none;
+  }
+  /* The cursor. */
+  .jqconsole-cursor {
+      background-color: gray;
+  }
+  /* The cursor color when the console looses focus. */
+  .jqconsole-blurred .jqconsole-cursor {
+      background-color: #666;
+  }
+
+  .jqconsole-output.error {
+    margin:0;
+    color: white;
+  }
+
+  .jqconsole-output {
+    color: #008AFF;
+    line-height: 1.5em;
+  }
+
+  .mode-indicator {
+    display: none !important;
+  }
+
+  #brand {
+    background: none !important;
+    bottom: initial !important;
+  }
+}

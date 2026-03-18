@@ -1,0 +1,445 @@
+features:
+  courses: true   # Enable/disable courses feature entirely
+  assets: false   # Enable/disable asset uploads (requires S3 or compatible storage)
+  accessibilityToggle: false  # Show accessibility toggle in embed toolbar (for screen reader mode)
+  trinkets:
+    # Client-side languages - work out of the box
+    python: true       # Skulpt-based Python 2/3
+    html: true         # HTML/CSS/JS
+    blocks: false      # Block-based coding
+    glowscript: true   # 3D graphics with GlowScript/VPython
+    glowscript-blocks: false
+    console: false     # Python console/REPL
+    music: false       # EarSketch music coding
+    # Server-side languages - require additional backend services
+    python3: true      # Requires Python 3 backend
+    java: true         # Requires Java backend
+    pygame: true       # Requires Pygame backend
+    R: true            # Requires R backend
+
+app:
+  siteName: 'Trinket'
+  siteUrl: ''
+  supportEmail: ''
+  adminEmail: ''
+  logo: '/img/trinket-logo.png'
+  logoIcon: '/img/trinket-logo-circles.png'
+  hostname: 0.0.0.0
+  port: 3000
+  url:
+    protocol: https
+    hostname: trinket.dev
+    port:
+  start: true
+  usersubdomains: false
+  templates: lib/views/
+  staticPages: static
+  plugins:
+    session:
+      cookieOptions:
+        password: '' # cookie secret - set in local.yaml
+        isSecure: false # required for non-https applications
+        domain: .trinket.dev
+      maxCookieSize: 0 # ensures sessions are stored server-side
+      name: session # same as default but adding for cookie updates
+      cache:
+        cache: 'sessions'
+        expiresIn: 2147483647 # 32-bit restrictions and/or fixed with catbox upgrade
+    travelogue:
+      urls:
+        failureRedirect: '/login'
+        successRedirect: '/welcome'
+        excludePaths:
+          - js
+          - css
+          - fonts
+          - img
+          - partials
+  assets:
+    jshead:
+      - '//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js'
+      - '/components/dist/lodash.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.20/angular.min.js'
+      - '/js/trinket.js'
+      - '/js/trinket-config.js'
+      - '/js/trinket-roles.js'
+      - '/js/util/template.js'
+    jsbody:
+      - '//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js'
+      - '//ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-route.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/restangular/1.3.1/restangular.min.js'
+      - '/components/marked/lib/marked.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js'
+      - '/components/src-min-noconflict/ace.js'
+      - '/components/foundation/js/foundation.min.js'
+      - '/partials/directives/flash.js'
+      - '/partials/directives/trinket.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js'
+      - '/js/services/roles.js'
+      - '/partials/directives/join-course.js'
+      - '/partials/directives/courses.js'
+      - '/js/util/cache.js'
+      - '/js/debug.js'
+      - '/js/util/ng-text-select.js'
+      - '/js/util/text-select.js'
+      - '/js/trinket-share.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js'
+      - '//ajax.googleapis.com/ajax/libs/angularjs/1.3.20/angular-aria.min.js'
+    css:
+      - '//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css'
+      - '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
+      - '//cdnjs.cloudflare.com/ajax/libs/video.js/5.20.4/video-js.min.css'
+      - '/css/base.css'
+  components:
+    'ace-builds': 'v1.2.6.1rc2'
+    'anchor-js': '2.0.0'
+    'angular-file-saver': '1.1.3'
+    'angular-notifyjs': '0.1.0'
+    'angular-ui-router': '0.2.11'
+    'angular-ui-tree': '2.0.10'
+    'angular-ui-utils': '0.1.1'
+    'angular-xeditable': '0.1.8'
+    'bluebird': '3.5.1'
+    'd3': '3.4.11'
+    'filereader': '107f68c3b9'
+    'file-saver.js': '1.20150507.2'
+    'font-mfizz': '2.0.1'
+    'gsap': '1.15.0'
+    'jquery-ui': 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1'
+    'jsdiff': '1.0.8'
+    'jszip': '3.1.4'
+    'jszip-utils': 'dist'
+    'lazysizes': '1.5.0'
+    'lodash': '2.4.1'
+    'modernizr': '2.7.2'
+    'ng-file-upload': '1.2.6'
+    'ngInfiniteScroll': '1.1.2'
+    'notifyjs': '0.4.2'
+    'restangular': '1.3.1'
+    'speakingurl': '1.1.5'
+    'video.js': '5.20.4'
+    'yamljs': '0.1.5'
+  recaptcha:
+    sitekey: ''
+    secretkey: ''
+  log:
+    level: info
+    debug:
+      filename: '/tmp/debug.txt'
+      files: true
+      unauth: true
+      routehandlertiming: true
+  mail:
+    # SMTP settings for sending email (password reset, notifications, etc.)
+    from: ''      # sender address, e.g. noreply@example.com
+    host: ''      # SMTP host, e.g. smtp.example.com
+    port: 587     # SMTP port (587 for TLS, 465 for SSL, 25 for unencrypted)
+    user: ''      # SMTP username
+    pass: ''      # SMTP password
+    secure: false # true for port 465, false for other ports
+  cachePrefix: cache-prefix-
+  prefixes: # static routes
+    components:
+    js:
+    css:
+    img:
+    fonts:
+    partials:
+    skulpt:
+    models:
+  ngapps:
+    main:
+      - '/components/ng-file-upload.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-foundation/0.8.0/mm-foundation-tpls.min.js'
+      - '/components/angular-notifyjs.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.1/angular-moment.min.js'
+      - '/js/services/config.js'
+      - '/js/app.js'
+    courseEditor:
+      - '/components/ng-file-upload.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-ui-tree/2.22.6/angular-ui-tree.min.js'
+      - '/components/angular-scrollfix.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.1.8/js/xeditable.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-file-saver/1.1.3/angular-file-saver.bundle.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.20/angular-animate.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-foundation/0.8.0/mm-foundation-tpls.min.js'
+      - '/partials/directives/trinket-calendar.js'
+      - '/components/angular-notifyjs.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/jsdiff/1.0.8/diff.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-ui-ace/0.2.3/ui-ace.min.js'
+      - '/js/services/config.js'
+      - '/js/trinket-markdown.js'
+      - '/js/services/markdown.js'
+      - '/js/services/util.js'
+      - '/js/services/roles.js'
+      - '/partials/directives/focusMe.js'
+      - '/js/library/components/trinkets/trinket.js'
+      - '/js/library/components/trinkets/trinket-service.js'
+      - '/partials/directives/trinket-search.js'
+      - '/js/services/submissions.js'
+      - '/partials/directives/trinket-assignment.js'
+      - '/partials/directives/trinket-feedback.js'
+      - '/partials/directives/assignment-dashboard.js'
+      - '/js/courseEditor/course.js'
+      - '/js/courseEditor/app.js'
+      - '/js/courseEditor/controllers/root.js'
+      - '/js/courseEditor/controllers/materialControl.js'
+      - '/js/courseEditor/controllers/toolbarControl.js'
+      - '/js/courseEditor/controllers/usersControl.js'
+      - '/js/courseEditor/controllers/dashboardControl.js'
+      - '/js/courseEditor/controllers/assignmentEditorControl.js'
+    classPage:
+      - '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_CHTML'
+      - '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js'
+      - '/components/angular-scrollfix.js'
+      - '/components/angular-slugify.js'
+      - '/js/trinket-markdown.js'
+      - '/js/services/markdown.js'
+      - '/js/services/util.js'
+      - '/js/services/submissions.js'
+      - '/partials/directives/trinket-assignment.js'
+      - '/js/classPage/app.js'
+    library:
+      - '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-foundation/0.8.0/mm-foundation-tpls.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.11/angular-ui-router.min.js'
+      - '/js/services/config.js'
+      - '/js/services/util.js'
+      - '/js/services/roles.js'
+      - '/js/services/share.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/ngInfiniteScroll/1.3.0/ng-infinite-scroll.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular-xeditable/0.1.8/js/xeditable.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.20/angular-animate.min.js'
+      - '//cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js'
+      - '/partials/directives/trinket.js'
+      - '/partials/directives/trinket-search.js'
+      - '/js/components/foundation/reveal-directive.js'
+      - '/js/library/trinkets/create/create-controller.js'
+      - '/js/library/trinkets/detail/detail-controller.js'
+      - '/js/library/trinkets/detail/interactions/interactions-controller.js'
+      - '/js/library/trinkets/list/list-controller.js'
+      - '/js/library/trinkets/list/folder-list-controller.js'
+      - '/js/library/trinkets/copy/copy-controller.js'
+      - '/js/library/components/trinkets/trinket.js'
+      - '/js/library/components/trinkets/trinket-directive.js'
+      - '/js/library/components/trinkets/trinket-service.js'
+      - '/js/library/components/state/state.js'
+      - '/js/library/components/state/state-factory.js'
+      - '/js/library/components/folders/folder.js'
+      - '/js/library/components/folders/folder-service.js'
+      - '/js/library/components/folders/new-folder-directive.js'
+      - '/js/library/app.js'
+  extensionWhitelist:
+    ipynb: 'text/plain'
+  autorun:
+    - python
+    - glowscript
+    - blocks
+    - python3
+    - java
+    - glowscript-blocks
+    - R
+  outputOnly:
+    - python
+    - html
+    - glowscript
+    - blocks
+    - python3
+    - pygame
+    - java
+    - glowscript-blocks
+    - R
+  toggleCode:
+    - python
+    - html
+    - glowscript
+    - blocks
+    - python3
+    - pygame
+    - java
+    - glowscript-blocks
+    - R
+  toggleEditor:
+    - pygame
+  downloadable:
+    - python
+    - html
+    - python3
+    - pygame
+    - java
+    - blocks
+    - glowscript-blocks
+    - R
+    - pygame
+  uploadable:
+    - blocks
+    - glowscript-blocks
+  configurable:
+    - python
+    - pygame
+    - python3
+    - R
+    - glowscript
+    - html
+    - java
+  nodraft:
+    - console
+  notShareable:
+    - pygame
+  hideGeneratedCode:
+    - blocks
+    - glowscript-blocks
+  runOption:
+    python:
+      - run
+      - console
+    python3:
+      - run
+      - console
+    R:
+      - run
+      - console
+  glowscript:
+    defaultVersion: '3.2'
+    blocksVersion: '2.7'
+  embed:
+    proxy: 'http://127.0.0.1/proxy'
+    skulpt:
+      local: false # when true pulls from bower install instead of cdn
+      min: false # when true uses minified local copy of skulpt core
+    common:
+      skulpt_js:
+        - '/js/skulpt/signal.js'
+        - '/js/skulpt/wrapper.js'
+    logClientCodeError: true
+    logClientMetric: true
+    draftDebounce: 1000
+    autosaveDebounce: 1000
+    enableLogin: true
+    enableCopyRemix: true
+  auth:
+    google:
+      clientSecret:
+      clientID:
+      callbackURL:
+  serverside:
+    # Maps trinket lang param to config key
+    langmap:
+      python3: python3
+      R: r3
+      java: java8
+      pygame: pygame
+    # All server-side types go through nginx reverse proxy on port 8080
+    # Python 3
+    python3:
+      api:
+        default: 'http://localhost:8080/python3'
+    # Java
+    java8:
+      api:
+        default: 'http://localhost:8080/java'
+    # R
+    r3:
+      api:
+        default: 'http://localhost:8080/r'
+    # Pygame
+    pygame:
+      api:
+        default: 'http://localhost:8080/pygame'
+  xframeDeny:
+    - '/'
+    - '/login'
+    - '/signup'
+    - '/contact'
+    - '/educators'
+workers:
+  trinkets:
+    outputDir: '/tmp/' # should be readable by nginx
+    templateUrl: 'http://127.0.0.1/tmp/' # should be an nginx alias pointing to outputDir
+db:
+  mongo:
+    host: localhost
+    port: 27017
+    database: trinket
+    user:
+    pass:
+  mongoread:
+    host:
+    port: 27017
+    database: trinket
+    user:
+    pass:
+    opts: 'connectTimeoutMS=300000&socketTimeoutMS=300000'
+  redis:
+    app:
+      host: localhost
+      port: 6379
+      pass:
+    exports:
+      host: localhost
+      port: 6379
+    bullqueues:
+      - exports
+    sandbox:
+      host: localhost
+      port: 6379
+aws:
+  key: ''
+  keyId: ''
+  region: us-east-1
+  buckets:
+    userassets:
+      name: your-user-assets-bucket
+      host: 'https://your-assets-bucket.example.com'
+      thumbnail: 'thumb-%{s}'
+      thumbnailHost: 'https://your-thumbnails-bucket.example.com'
+      thumbnailBucket: your-thumbnails-bucket
+    snapshots:
+      name: your-snapshots-bucket
+      host: 'https://your-snapshots-bucket.example.com'
+    cdn:
+      name: your-cdn-bucket
+      host: 'https://your-cdn-bucket.example.com'
+    materials:
+      name: your-materials-bucket
+      host: 'https://your-materials-bucket.example.com'
+    useravatars:
+      name: your-avatars-bucket
+      host: 'https://your-avatars-bucket.example.com'
+    appassets:
+      name: your-app-assets-bucket
+      host: 'https://your-app-assets.example.com'
+    vendorassets:
+      name: your-vendor-assets-bucket
+      host: 'https://your-cdn.example.com'
+  lambda:
+    createThumbnail:
+      secret: ''
+  mail:
+    keyId: ''
+    key: ''
+sandbox:
+  # Mode: 'local' uses sandboxed srcdoc (simpler, no external service needed)
+  #       'external' uses separate sandbox server (more secure, requires setup)
+  mode: 'local'
+  # Local mode settings (used when mode: 'local')
+  local:
+    # Sandbox permissions - do NOT add 'allow-same-origin' for security
+    permissions: 'allow-scripts allow-forms allow-modals allow-popups'
+  # External mode settings (used when mode: 'external')
+  hostname: 0.0.0.0
+  port: 3030
+  cors:
+    origin: # array of hosts to allow cross-domain requests
+      - 'http://trinket.dev'
+  expiration: 300 # 5 minutes
+  contentSecurityPolicy: "default-src *; img-src * data:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'"
+  url:
+    protocol: http
+    domain: .trinket.dev
+    serverSubdomain: sandbox
+    port:

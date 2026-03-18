@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Help{% endblock %}
+
+{% block body_id %}help{% endblock %}
+
+{% block content %}
+<div class="row" style="padding: 40px 0;">
+  <div class="small-12 columns">
+    <h2>Help</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-12 medium-6 columns">
+    <h3>Using Trinket</h3>
+    <h4>Creating a Trinket</h4>
+    <p>Click "New Trinket" from the dropdown menu in the navigation bar and select a language. You can write code in the editor and click "Run" to see the output.</p>
+
+    <h4>Saving Your Work</h4>
+    <p>Sign up for an account to save your trinkets. Once logged in, your work is automatically saved.</p>
+
+    <h4>Sharing Trinkets</h4>
+    <p>Each trinket has a unique URL you can share. You can also embed trinkets in other websites using the embed code.</p>
+  </div>
+
+  <div class="small-12 medium-6 columns">
+    <h3>Creating Courses</h3>
+    <p>Trinket allows educators to create interactive coding courses with embedded trinkets, text, and media.</p>
+    <ol>
+      <li>Go to your library and click "New Course"</li>
+      <li>Add topics and pages to organize your content</li>
+      <li>Embed trinkets for interactive code examples</li>
+      <li>Share your course URL with students</li>
+    </ol>
+  </div>
+</div>
+
+<hr style="margin: 40px 0;" />
+
+<div class="row">
+  <div class="small-12 columns">
+    <h3>Self-Hosting &amp; Development</h3>
+    <p>Trinket is open source software. For information on running your own instance, see the
+      <a href="https://github.com/trinketapp/trinket-oss">GitHub repository</a>.</p>
+
+    <h3>Support</h3>
+    <p>For bugs and feature requests, please open an issue on
+      <a href="https://github.com/trinketapp/trinket-oss/issues">GitHub</a>.</p>
+  </div>
+</div>
+{% endblock %}

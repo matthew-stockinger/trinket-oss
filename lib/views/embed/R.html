@@ -1,0 +1,134 @@
+{% import "includes/embed-settings.html" as settings_block %}
+
+{% extends "embed/base.html" %}
+
+{% block head_styles %}
+{% if not outputOnly %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css">
+{% endif %}
+{% endblock %}
+
+{% block trinket_label %}
+<section class="trinket-label">
+  <i class="Rlogo"></i>
+</section>
+{% endblock %}
+
+{% block toolbar_options %}
+{% if outputOnly %}
+  {% include "embed/default-toolbar.html" %}
+{% else %}
+<a class="edit-it menu-button item allow-original {{'' if toggleCode else 'show-for-small-only'}}" data-action="code.edit" title="Edit the code.">
+  <i class="fa fa-pencil"></i>
+  <label class="show-for-large-up">Code</label>
+</a>
+<a class="button run-it menu-button item {{'' if (runOption and not runMode) else 'split'}} allow-original"
+   data-action="code.{{runOption if runOption else 'run'}}"
+   title="{{'View the result.' if not runOption or runOption == 'run' else 'Run code interactively.'}}"
+   role="button" aria-label="Run Button" tabindex="0">
+  <i class="fa {{'fa-play' if not runOption or runOption == 'run' else 'fa-terminal'}}"></i>
+  <label class="show-for-large-up">Run</label>
+  <span data-dropdown="run-options" data-options="align:bottom"></span>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block run_options %}
+{% if not outputOnly %}
+<ul id="run-options" class="f-dropdown" data-dropdown-content>
+  <li><a class="menu-button" data-action="code.run" data-button="run"><i class="fa fa-play"></i>Run</a></li>
+  <li><a class="menu-button" data-action="code.console" data-button="console"><i class="fa fa-terminal"></i>Console</a></li>
+</ul>
+{% endif %}
+{% endblock %}
+
+{% block settings_modal %}
+{{ settings_block.settings(user.settings.rTab, "R", false, user, trinket, draft) }}
+{% endblock %}
+
+{% block embed_content %}
+  <input id="honeypot" type='text' tabindex="-1"/>
+  <input id="start-value" type='hidden' value='{{start if start else "code"}}'/>
+  <input id="runOption-value" type='hidden' value='{{runOption if runOption else "run"}}'/>
+  <input id="runMode-value" type='hidden' value='{{"console" if runMode}}'/>
+
+  <div id="editor" class="code-editor hide" data-interface="editor"></div>
+
+  {% if not outputOnly %}
+  <div id="dragbar"></div>
+  {% endif %}
+
+  <div id="codeOutput" class="codeOutput hide" data-interface="output">
+    {% if outputOnly %}
+    <div id="console-wrap" class="hide">
+      <div id="R-console-output" aria-live="polite" aria-label="Code Output"></div>
+    </div>
+
+    {% else %}
+
+    <div id="errorConnecting" class="hide">
+      <p>There was a problem connecting to the server.<br /><br />Please check your connection and try running the trinket again.</p>
+    </div>
+
+    <div id="outputTabs" class="{% if hideInstructions or (not isOwner and not trinket.description) %}hideInstructions{% endif %}">
+      <div class="{% if not showInstructions %}active {% endif %}menu-button" id="codeOutputTab" data-action="output.view">Result</div>
+      <div class="{% if showInstructions %}active {% endif %}menu-button" id="instructionsTab" data-action="instructions.view"><i class="fa fa-list"></i> Instructions</div>
+    </div>
+
+    <div id="outputContainer" class="{% if hideInstructions or (not isOwner and not trinket.description) %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="console-wrap">
+        <div id="R-console-output" aria-live="polite" aria-label="Code Output"></div>
+        <a id="reset-output" class="hide" title="clear output"><i class="fa fa-ban"></i></a>
+      </div>
+    </div>
+
+    {% include "includes/embed-instructions.html" %}
+    {% endif %}
+
+  </div>
+
+  {% if not outputOnly %}
+  <div id="runFirstModal" class="reveal-modal small" data-interface="run-modal" data-reveal data-css-top="20" data-offset="200">
+    <h2>Run your code first!</h2>
+    <p class="lead">
+      It looks like you haven't tried running your new code.
+    </p>
+    <p>Try clicking
+    <a id="modalRun" class="button tiny" data-action="code.run"><i class="fa fa-play"></i>&nbsp;Run</a>
+    and if you like the result, try sharing again.</p>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  {% endif %}
+
+{% endblock %}
+
+{% block body_scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+
+  {% if not outputOnly %}
+  {{ component('ace-builds', 'src-min-noconflict/ace.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-modelist.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-language_tools.js') | safe }}
+  <script src="{{ '/components/marked/lib/marked.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-markdown.js' | cachePrefix }}"></script>
+  {% endif %}
+
+  {{ component('jquery-ui', 'jquery-ui.min.js') | safe }}
+  {% set js = extra_js.concat([
+       '/components/jq-console/jqconsole.min.js',
+       '/js/util/guid.js',
+       '/js/plugins/asset-browser.js',
+       '/js/plugins/code-editor.js',
+       '/js/embed/analytics/activity-log.js',
+       '/js/embed/server.js',
+       '/js/embed/R.js'
+     ])
+  %}
+
+  {% if outputOnly %}
+    {{ cachify_js('embed-R-output', js) | safe }}
+  {% else %}
+    {{ cachify_js('embed-R', js) | safe }}
+  {% endif %}
+{% endblock %}

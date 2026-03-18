@@ -1,0 +1,27 @@
+.login-button {
+  width: 246px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.login-div {
+  margin-top: 10px; // on the div because two "buttons" are a links with small height
+}
+
+// The Google button needs special styling because it has 5px blank space on each side.
+#google-image {
+  width: 256px;
+  margin: -5px;
+}
+
+#clever-image {
+width: 250px;
+height: 50px;
+}
+
+.after-login-buttons {
+margin-top: 3% !important;
+}
+.signup-fields {
+padding-top: 4%;
+}

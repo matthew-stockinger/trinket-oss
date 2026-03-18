@@ -1,0 +1,112 @@
+{% import "includes/embed-settings.html" as settings_block %}
+
+{% extends "embed/base.html" %}
+
+{% block trinket_label %}
+<section class="trinket-label">
+  <i class="icon-java"></i> <label class="show-for-medium-up">Java</label>
+</section>
+{% endblock %}
+
+{% block toolbar_options %}
+{% if outputOnly %}
+  {% include "embed/default-toolbar.html" %}
+{% else %}
+<a class="edit-it menu-button item allow-original {{'' if toggleCode else 'show-for-small-only'}}" data-action="code.edit" title="Edit the code.">
+  <i class="fa fa-pencil"></i>
+  <label class="show-for-medium-up">Code</label>
+</a>
+<a class="run-it menu-button item allow-original" data-action="code.run" data-tooltip aria-haspopup="true" title="View the result." data-options="disable_for_touch:true">
+  <i class="fa fa-play"></i>
+  <label class="show-for-medium-up">Run</label>
+</a>
+{% endif %}
+{% endblock %}
+
+{% block settings_modal %}
+{{ settings_block.settings(user.settings.javaTab, "Java", false, user, trinket, draft) }}
+{% endblock %}
+
+{% block embed_content %}
+  <input id="honeypot" type='text' tabindex="-1"/>
+  <input id="start-value" type='hidden' value='{{start if start else "code"}}'/>
+
+  <div id="editor" class="code-editor hide" data-interface="editor"></div>
+
+  {% if not outputOnly %}
+  <div id="dragbar"></div>
+  {% endif %}
+
+  <div id="codeOutput" class="codeOutput hide" data-interface="output">
+    {% if outputOnly %}
+    <div id="console-wrap" class="hide">
+      <div id="java-console-output" aria-live="polite" aria-label="Code Output"></div>
+    </div>
+
+    {% else %}
+
+    <div id="errorConnecting" class="hide">
+      <p>There was a problem connecting to the server.<br /><br />Please check your connection and try running the trinket again.</p>
+    </div>
+
+    <div id="outputTabs" class="{% if hideInstructions or (not isOwner and not trinket.description) %}hideInstructions{% endif %}">
+      <div class="{% if not showInstructions %}active {% endif %}menu-button" id="codeOutputTab" data-action="output.view">Result</div>
+      <div class="{% if showInstructions %}active {% endif %}menu-button" id="instructionsTab" data-action="instructions.view"><i class="fa fa-list"></i> Instructions</div>
+    </div>
+
+    <div id="outputContainer" class="{% if hideInstructions or (not isOwner and not trinket.description) %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="console-wrap">
+        <div id="java-console-output" aria-live="polite" aria-label="Code Output"></div>
+        <a id="reset-output" class="hide" title="clear output"><i class="fa fa-ban"></i></a>
+      </div>
+    </div>
+
+    {% include "includes/embed-instructions.html" %}
+    {% endif %}
+
+  </div>
+
+  {% if not outputOnly %}
+  <div id="runFirstModal" class="reveal-modal small" data-interface="run-modal" data-reveal data-css-top="20" data-offset="200">
+    <h2>Run your code first!</h2>
+    <p class="lead">
+      It looks like you haven't tried running your new code.
+    </p>
+    <p>Try clicking
+    <a id="modalRun" class="button tiny" data-action="code.run"><i class="fa fa-play"></i>&nbsp;Run</a>
+    and if you like the result, try sharing again.</p>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block body_scripts %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+
+  {% if not outputOnly %}
+  {{ component('ace-builds', 'src-min-noconflict/ace.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-modelist.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-language_tools.js') | safe }}
+  <script src="{{ '/components/marked/lib/marked.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-markdown.js' | cachePrefix }}"></script>
+  {% endif %}
+
+  {{ component('jquery-ui', 'jquery-ui.min.js') | safe }}
+  {% set js = extra_js.concat([
+       '/components/jq-console/jqconsole.min.js',
+       '/js/util/guid.js',
+       '/js/plugins/asset-browser.js',
+       '/js/plugins/code-editor.js',
+       '/js/embed/analytics/activity-log.js',
+       '/js/embed/server.js',
+       '/js/embed/java.js'
+     ])
+  %}
+
+  {% if outputOnly %}
+    {{ cachify_js('embed-java-output', js) | safe }}
+  {% else %}
+    {{ cachify_js('embed-java', js) | safe }}
+  {% endif %}
+{% endblock %}

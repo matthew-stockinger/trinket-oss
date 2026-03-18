@@ -1,0 +1,183 @@
+.ace_lineWidgetContainer {
+  height: 150px;
+  padding: 12.5px;
+  background-color: #f2f2f2;
+
+  .comment-wrapper {
+
+      background-color: #ffffff;
+      border: 1px solid #bfccd1;
+      position: relative;
+      border-radius: 4px;
+      padding: 8px;
+
+
+    a.button {
+      margin: 0 0 0 0.625rem;
+      padding: 0.5rem 1rem 0.55rem 1rem;
+    }
+
+    .comment-heading-container {
+      width: 100%;
+      height: 44px;
+
+      .comment-avatar-container {
+        min-width: 60px;
+        width: 60px;
+        float: left;
+        text-align: center;
+
+        .comment-avatar {
+          border-radius: 20px;
+          min-width: 40px;
+          width: 40px;
+          min-height: 40px;
+          height: 40px;
+        }
+      }
+
+      .comment-info-container {
+        position: relative;
+        padding-top: 10px;
+
+        .comment-actions-wrapper {
+          position: absolute;
+          top: 4px;
+          right: 0;
+          padding: 0;
+          font-size: 20px;
+
+          .comment-actions {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            margin-left: -10px;
+
+            &.disabled {
+              cursor: unset;
+              color: #d4d4d4;
+            }
+          }
+
+          .comment-actions:not(.disabled):hover {
+            background-color: lighten($primary-color, 40%);
+            border-radius: 50%;
+          }
+        }
+
+        .confirm-remove-comment-container {
+          position: absolute;
+          top: 0;
+          right: 0;
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: center;
+          background-color: #fff;
+        }
+
+        .update-comment-container {
+          position: absolute;
+          top: 0;
+          right: 0;
+          text-align: center;
+          padding-right: 8px;
+        }
+      }
+
+      .new-comment-container {
+        display: block;
+        overflow: hidden;
+      }
+    }
+
+    .new-comment-actions {
+      margin-top: 20px;
+      margin-left: 90px;
+    }
+
+    .comment-container {
+      width: 100%;
+      height: 65px;
+      padding-top: 8px;
+      padding-left: 16px;
+      border-top: 1px solid #ddd;
+      overflow: auto;
+      font-size: 16px;
+    }
+
+    .edit-comment-container {
+      width: 100%;
+      height: 65px;
+      padding: 0;
+      overflow: auto;
+    }
+
+    textarea.inline-comment-text {
+      resize: none;
+      margin: 0;
+      font-size: 16px !important;
+    }
+
+    .hide {
+      display: none !important;
+    }
+
+  }
+
+  // comment speech bubble
+  .comment-wrapper:after, .comment-wrapper:before {
+    bottom: 100%;
+    left: 52px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .comment-wrapper:after {
+    border-color: rgba(255, 255, 255, 0);
+    border-bottom-color: #ffffff;
+    border-width: 10px;
+    margin-left: -10px;
+  }
+  .comment-wrapper:before {
+    border-color: rgba(191, 204, 209, 0);
+    border-bottom-color: #bfccd1;
+    border-width: 13px;
+    margin-left: -13px;
+  }
+}
+
+.ace_gutter-cell.trinket-comment {
+  position: relative;
+  cursor: pointer;
+}
+
+// comment bubble icon in ace gutter
+.ace_gutter-cell.trinket-comment {
+  &.open:before {
+    content: "\f0e5";
+  }
+  &.collapsed:before {
+    content: "\f075";
+  }
+
+  &:before {
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    transform: scale(-1, 1);
+  /*--adjust as necessary--*/
+    color: #000;
+    font-size: 15px;
+    padding-right: 0.2em;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

@@ -1,0 +1,38 @@
+<div class="row collapse">
+  <p>Select the best options for your needs then copy the code below and paste it onto your site.</p>
+</div>
+<form>
+  <div class="row collapse">
+    <div class="faux-input textarea" ng-bind="embedCode" ng-text-select></div>
+  </div>
+  <fieldset>
+    <legend>Embed Options</legend>
+    <div class="row">
+      <div class="large-4 small-6 columns">
+        <select ng-model="info.embedSize" ng-options="size as size.name for size in embedSizes"></select>
+      </div>
+      <div class="large-8 small-6 columns" ng-show="extraOptions">
+        <select name="displayOptionEmbed" ng-model="info.embedDisplayMenu">
+          <option value="">Show code and output side-by-side (smaller screens will only show one at a time)</option>
+          <option value="embedOutputOnly">Only show output (hide the code)</option>
+          <option value="embedToggleCode">Only show code or output (let users toggle between them)</option>
+        </select>
+        <ul class="compact-list">
+          <li ng-show="autorunOption"><input type="checkbox" id="embedStartInput" ng-model="info.embedStart"><label class="inline" for="embedStartInput">Auto run trinket when loaded</label></li>
+        </ul>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset ng-show="runOption">
+    <legend>Run Options</legend>
+    <div class="row">
+      <div class="small-12 columns">
+        <select name="runOptionEmbed" ng-model="info.embedRunMenu">
+          <option value="">Allow either Run or Interactive console</option>
+          <option value="embedRunOption">Run code only</option>
+          <option value="embedConsoleOption">Interactive console only</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+</form>

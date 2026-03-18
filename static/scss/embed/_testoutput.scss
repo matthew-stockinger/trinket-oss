@@ -1,0 +1,46 @@
+#unittest-output {
+  height: 100%;
+  overflow: auto;
+
+  img {
+    display: inline-block;
+    vertical-align: middle;
+    height: 1rem;
+  }
+
+  ul {
+    margin: 0px;
+  }
+
+  .accordion-navigation > a {
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+  }
+
+  .really-wrong {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: firebrick;
+  }
+
+  .really-right {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: forestgreen;
+  }
+
+  .column > p {
+    font-weight: 600;
+    margin-bottom: 0rem;
+  }
+
+  .overview {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    color: #525252;
+  }
+
+  .open-close-indicator {
+    width: 1.5rem;
+  }
+}

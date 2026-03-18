@@ -1,0 +1,79 @@
+{% extends "courses/download/base.html" %}
+
+{% block body_id %}course-view{% endblock %}
+
+{% block body_class %}course{% endblock %}
+
+{% block content %}
+  <div>
+    <header id="course-nav" class="page-menu" ui-scrollfix="45">
+      <div id="material-nav">
+        <div id="class-progress">
+          <div class="percentage" style="width: {{ progress*100+'%' }}"></div>
+        </div>
+      </div>
+      <div class="course-info">
+        <h3>{{ course.name }}</h3>
+        <p class="byline">Created by <strong>{{ owner.name }}</strong></p>
+      </div>
+      <div class="menu-right right">
+        {% if prevPageHref %}
+        <a href="{{ prevPageHref }}" class="prev button small">
+          <i class="fa fa-angle-left"></i>
+        </a>
+        {% else %}
+        <a class="prev button small disabled">
+          <i class="fa fa-angle-left"></i>
+        </a>
+        {% endif %}
+        {% if nextPageHref %}
+        <a href="{{ nextPageHref }}" class="next button small">
+          <i class="fa fa-angle-right"></i>
+        </a>
+        {% else %}
+        <a class="next button small disabled">
+          <i class="fa fa-angle-right"></i>
+        </a>
+        {% endif %}
+      </div>
+    </header>
+    <div id="course-content" ui-scrollfix="45" class="open">
+      <aside id="outline">
+        <div class="info">
+          <p>{{ course.description }}</p>
+        </div>
+        <div>
+          <ul class="outline-list lessons">
+            {% for lesson in course.lessons %}
+            {% set lIndex = loop.index0 %}
+            <li class="outline-list-item lesson">
+              <div class="lesson-title clearfix">
+                <span class="lesson-name">{{ lesson.name }}</span>
+              </div>
+              <ul class="outline-list materials">
+                {% for material in lesson.materials %}
+                {% set mIndex = loop.index0 %}
+                <li class="outline-list-item material {% if lIndex == lessonIndex and mIndex == materialIndex %}current{% endif %}">
+                  <div class="material-title clearfix">
+                    <a href="{{ lesson.slug }}/{{ material.slug }}" class="material-name">{{ material.name }}</a>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </aside>
+      <div id="material-content">
+        <div id="material">
+          <h4 class="subheader"> 
+            <i class="fa fa-file-text-o"></i>
+            {{ course.lessons[ lessonIndex ].materials[ materialIndex ].name }}
+          </h4>
+          <div class="content">{{ pageContent | safe }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

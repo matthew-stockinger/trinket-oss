@@ -1,0 +1,53 @@
+.assignment-versions-container {
+  border: 1px solid #d4d4d4;
+  margin-top: 20px;
+  background-color: #f7f7f7;
+
+  > .row {
+    border-bottom: 1px solid #d4d4d4;
+    cursor: pointer;
+    padding: 0.4rem;
+
+    .previous-label, .original-label {
+      display: inline-block;
+      padding-bottom: 0.4rem;
+    }
+
+    &.collapsed {
+      visibility: hidden;
+      opacity: 0;
+      overflow: hidden;
+      max-height: 0;
+      -webkit-transition: all 0.8s;
+      transition: all 0.8s;
+    }
+    .show-row {
+      visibility: visible;
+      opacity: 1;
+      max-height: 2000px;
+      background-color: #ffffff;
+      overflow: auto;
+
+      .previous-submission, .original-assignment {
+        margin-top: 20px;
+      }
+
+      .comment-info {
+        font-size: 0.9rem;
+        .submission-commented {
+          display: inline-block;
+          margin-left: 35px;
+        }
+      }
+    }
+  }
+  > .row:last-child {
+    border-bottom: none;
+  }
+}
+
+.feedback-editor.ace_editor {
+  height: 200px;
+  border: 1px solid #d4d4d4;
+  margin-bottom: 10px;
+}

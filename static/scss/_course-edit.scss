@@ -1,0 +1,521 @@
+body.course {
+  #course-nav {
+    .action-buttons {
+      display: inline-block;
+
+      @media #{$small-only} {
+        display: none;
+      }
+    }
+
+    .course-subnav {
+      position: relative;
+      padding: 0.75em 2em;
+      margin: 0;
+
+      a.button {
+        margin-bottom: 0;
+      }
+
+      .title {
+        float: left;
+      }
+
+      #dashboard-list-options {
+        float: left;
+        position: relative;
+
+        label {
+          display: none;
+
+          @media #{$xlarge-up} {
+            display: inline-block;
+            font-size: 0.8125rem;
+            cursor: unset;
+          }
+        }
+        button {
+          margin-right: 0.6em;
+        }
+
+        #list-menus {
+          margin-left: 1rem;
+          display: inline-block;
+          position: relative;
+        }
+
+        #dashboard-view-options {
+          &.f-dropdown, li {
+            width: 200px;
+          }
+          span {
+            display: inline-block !important;
+          }
+        }
+      }
+    }
+  }
+
+  .course-info {
+    .course-name {
+      display: inline-block;
+    }
+  }
+
+  .dropdown-blue {
+    @extend .dropdown;
+    &:after {
+      border-color: $primary-color transparent transparent transparent !important;
+    }
+    &:hover:after {
+      border-color: #006ecc transparent transparent transparent !important;
+    }
+  }
+
+  ul#page-actions li {
+    cursor: unset;
+
+    a.disabled {
+      color: lighten(#4d4d4d, 20%);
+      pointer-events: none;
+    }
+  }
+
+  .inline-header {
+    display: inline-block;
+  }
+
+  .outline-list-item.angular-ui-tree-node { 
+    padding: 0 20px;
+    .lesson-title { 
+      line-height: 18px;
+      padding-top: 15px;
+    }
+    form.editable-wrap {
+      width: 60%;
+    }
+    input.editable-input {
+      width: 100%;
+      border: 1px solid #d4d4d4 !important;
+    }
+
+    &.isDraft {
+      background: repeating-linear-gradient(
+        45deg,
+        #eee,
+        #eee 10px,
+        transparent 10px,
+        transparent 20px
+      );
+    }
+
+    .edit-lesson-title {
+      @extend .lesson-title;
+      font-size: 1rem;
+      a.edit-lesson-actions-link {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        vertical-align: middle;
+        i {
+          color: #333;
+        }
+      }
+      a.edit-lesson-actions-link:hover {
+        background-color: #bbb;
+        border-radius: 50%;
+      }
+    }
+    .edit-material-title {
+      font-size: 0.875rem;
+      a.edit-material-actions-link {
+        width: 36px;
+        height: 36px;
+        line-height: 36px;
+        text-align: center;
+        vertical-align: middle;
+        margin-right: 8px;
+        i {
+          color: #333;
+        }
+      }
+      a.edit-material-actions-link:hover {
+        background-color: #bbb;
+        border-radius: 50%;
+      }
+
+      .dates-active-icon {
+        margin-left: rem-calc(-22px);
+      }
+    }
+    .edit-material-title:hover {
+      background-color: #eee;
+    }
+    
+    &.material {
+      margin: 0 -20px;
+      .material-title, .edit-material-title {
+        padding-left: rem-calc(20);
+      }
+      .material-name {
+        cursor: pointer;
+      }
+      &.current { 
+        font-weight: bold; 
+        background: $primary-color;
+        color: #FFF;
+      }
+    }
+  }
+
+  .draft-circle {
+    width: 12px;
+    height: 12px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: $draft-yellow;
+    display: inline-block;
+
+    &.in-aside {
+      margin-top: 12px;
+    }
+    &.in-outline, &.in-dashboard {
+      line-height: 14px;
+    }
+  }
+
+  #edit-outline {
+    @media #{$large-up} {
+      width: 75%;
+    }
+    .f-dropdown {
+      max-width: 300px;
+    }
+  }
+
+  #outline.editable, #edit-outline {
+    .outline-list.lessons {
+      margin-bottom: 3rem;
+    }
+    .outline-list.edit-lessons {
+      margin-bottom: 0.75rem;
+    }
+
+    .new-page-container {
+      display: inline-block;
+      width: 100%;
+
+      a {
+        margin-bottom: 0;
+        margin-left: 0.4rem;
+      }
+    }
+    .new-page-wrap {
+      padding: rem-calc(10) rem-calc(20) 0 rem-calc(20);
+    }
+
+    .outline-info {
+      padding: 0.4rem;
+    }
+  }
+
+  #new-topic-container {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    max-width: 350px;
+    margin-left: -350px;
+
+    -webkit-transition: margin-left 0.25s ease-in;
+    -moz-transition: margin-left 0.25s ease-in;
+    -o-transition: margin-left 0.25s ease-in;
+    transition: margin-left 0.25s ease-in;
+
+    &.open {
+      margin-left: 0;
+    }
+
+    #new-topic-button, #edit-outline-button {
+      margin-bottom: 0;
+      width: 100%;
+    }
+  }
+
+  i.success {
+    color: $success-color;
+  }
+  i.warning {
+    color: $warning-color;
+  }
+  i.alert {
+    color: $alert-color;
+  }
+
+  ul.course-users-list {
+    .pending-invitations {
+      margin-bottom: 0;
+    }
+    list-style-type: none;
+    margin-left: 0;
+
+    li.course-user {
+      border-top: 1px solid #ccc;
+      padding: 0.225rem 1.25rem;
+
+      .f-dropdown {
+        max-width: 250px;
+      }
+
+      form.editable-wrap {
+        width: 75%;
+      }
+      input.editable-input {
+        height: unset;
+      }
+
+      .user-info {
+        padding-top: rem-calc(2);
+        padding-bottom: rem-calc(2);
+        .avatar {
+          display: inline-block
+        }
+        .course-user-display-name {
+          vertical-align: middle;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .invitation-info {
+        padding-top: rem-calc(1);
+      }
+      .invitations-actions {
+        padding-top: rem-calc(1);
+        padding-bottom: rem-calc(1);
+      }
+
+      .course-user-actions-link {
+        width: rem-calc(28);
+        height: rem-calc(28);
+        line-height: rem-calc(28);
+        text-align: center;
+        display: inline-block;
+        font-size: 0.75rem;
+
+        i {
+          color: #333;
+          &.success {
+            color: $success-color;
+          }
+        }
+
+        &:hover {
+          background-color: #bbb;
+          border-radius: 50%;
+        }
+      }
+
+      .no-actions-placeholder {
+        display: inline-block;
+        width: 1.75rem;
+      }
+
+      i.hidden-from-dashboard {
+        position: absolute;
+        height: rem-calc(28);
+        line-height: rem-calc(28);
+        font-size: 0.75rem;
+      }
+
+      &.removed {
+        background-color: #eee;
+      }
+
+      a.user-role-button {
+        margin-bottom: 0;
+        padding: 0.4rem 1.25rem;
+        font-size: 0.75rem;
+
+        margin-right: 0.3rem;
+        color: #333;
+        width: 8.5rem;
+        background: none;
+        border: 1px solid transparent;
+        text-align: left;
+
+        &:after {
+          border-color: #333 transparent transparent transparent;
+        }
+
+        &:hover, &.open {
+          background: #ffffff;
+          border: 1px solid #333;
+        }
+        
+        &.owner {
+          cursor: default;
+          &:hover, &.open {
+            background: none;
+            border: 1px solid transparent;
+          }
+        }
+
+      }
+
+      ul.user-role-list {
+        padding: 0;
+
+        li:hover {
+          color: #fff;
+          background-color: $primary-color;
+        }
+
+        p.user-role-heading {
+          font-weight: 600;
+          font-size: 0.7rem;
+          margin: 0 1.35rem;
+          position: relative;
+
+          &.checked:before {
+            content: "\f00c";
+            font-family: FontAwesome;
+            position: absolute;
+            top: 0;
+            left: -1.1rem;
+          }
+        }
+        p.user-role-description {
+          margin: 0 1.25rem;
+          font-size: 0.7rem;
+        }
+      }
+    }
+
+    li.course-user:hover {
+      background-color: #eee;
+    }
+
+    li.course-user:first-child {
+      border-top: none;
+    }
+  }
+  ul.course-users-list.pending-invitations {
+    margin-bottom: 0;
+  }
+
+  .bottom {
+    @media #{$large-up} {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  #permissionsInfo {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s;
+
+    &.panel-open {
+      max-height: 800px;
+      margin-top: 10px;
+    }
+  }
+
+  #hiddenUsers {
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transition: all 0.8s;
+    transition: all 0.8s;
+
+    &.panel-open {
+      max-height: 800px;
+      margin-top: 10px;
+      overflow: auto;
+      padding-bottom: 50px;
+    }
+  }
+
+  .collapsed-form {
+    visibility: hidden;
+    opacity: 0;
+    overflow: hidden;
+    max-height: 0;
+    -webkit-transition: all 0.8s;
+    transition: all 0.8s;
+  }
+  .collapsed-form.show-fields {
+    visibility: visible;
+    opacity: 1;
+    max-height: 500px;
+  }
+
+  .collapsed {
+    visibility: hidden;
+    opacity: 0;
+    overflow: hidden;
+    max-height: 0;
+    -webkit-transition: all 0.8s;
+    transition: all 0.8s;
+  }
+  .show-email, .show-invitation {
+    visibility: visible;
+    opacity: 1;
+    max-height: 35px;
+  }
+  .show-add-users {
+    visibility: visible;
+    opacity: 1;
+    max-height: 800px;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+  }
+
+  .heading-button {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+  }
+
+  #add-users-container {
+    border: 1px solid #ddd;
+  }
+
+  .search-input {
+    .f-dropdown {
+      max-width: 400px;
+    }
+  }
+
+  .instructions-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border: 1px solid #cccccc;
+    margin-bottom: 1rem;
+
+    #trinket-instructions-editor {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+  }
+
+  #dates-container {
+    margin-bottom: 0.5rem;
+
+    fieldset, .switch, .inline {
+      margin: 0;
+    }
+
+    .inline {
+      line-height: 2rem;
+    }
+
+    .assignment-date {
+      cursor: pointer;
+      color: $blue;
+    }
+  }
+}

@@ -1,0 +1,240 @@
+.button {
+  color: $primary-color;
+  border: 1px solid $primary-color;
+  background: #FFF;
+  text-transform: capitalize;
+
+  &:hover {
+    color: darken($primary-color, 10%);
+    border: 1px solid darken($primary-color, 10%);
+    background: lighten($primary-color, 40%);
+  }
+
+  &.disabled,&.disabled:hover,&.disabled:focus {
+    color: $primary-color;
+    background: lighten($primary-color, 40%);
+    border: 1px solid $primary-color;
+    opacity: $button-disabled-opacity;
+  }
+
+  &.primary {
+    color: #FFF;
+    border: 1px solid $primary-color;
+    background: $primary-color;
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+  }
+
+  &.guide {
+    text-transform: uppercase;
+    color: #FFF;
+    border: 1px solid $secondary-color;
+    background: $secondary-color;
+    &:hover {
+      background: darken($secondary-color, 10%);
+    }
+    &.disabled,&.disabled:hover,&.disabled:focus {
+      color: $secondary-color;
+      background: lighten($secondary-color, 40%);
+      border: 1px solid $secondary-color;
+      opacity: $button-disabled-opacity;
+    }
+  }
+
+  &.caution {
+    background: #FFF;
+    border: 1px solid $alert-color;
+    color: $alert-color;
+    &:hover {
+      color: darken($alert-color, 10%);
+      border: 1px solid darken($alert-color, 10%);
+      background: lighten($alert-color, 40%);
+    }
+  }
+
+  &.danger {
+    color: #FFF;
+    border: 1px solid $alert-color;
+    background: $alert-color;
+    &:hover {
+      background: darken($alert-color, 10%);
+    }
+  }
+
+  &.caution,&.danger {
+    &.disabled,&.disabled:hover,&.disabled:focus {
+      color: $alert-color;
+      background: lighten($alert-color, 40%);
+      border: 1px solid $alert-color;
+      opacity: $button-disabled-opacity;
+    }
+  }
+}
+
+span.beta {
+  vertical-align: super;
+  font-size: 0.75em;
+  color: $primary-color;
+  &:before {
+    content: 'beta';
+  }
+}
+
+a:hover span.beta {
+  color: #DDD;
+}
+
+span.new-feature {
+  vertical-align: super;
+  font-size: 0.75em;
+  font-weight: bold;
+  color: $success-color;
+  &:before {
+    content: 'New!';
+  }
+}
+
+pre {
+  border: 1px solid $silver;
+  padding: 0.5em;
+  margin: 0 0 1em 0;
+  background-color: $ghost;
+  font-family: monospace;
+  white-space: pre;
+
+  code {
+    padding: 0;
+    margin: 0;
+    background-color: $ghost;
+  }
+}
+
+code {
+  border: none;
+  background-color: $vapor;
+}
+
+.faux-input {
+  padding: 8px 10px 6px;
+  -webkit-appearance: none;
+  border-radius: 0;
+  background-color: #ffffff;
+  font-family: inherit;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #cccccc;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+  color: rgba(0,0,0,0.75);
+  display: block;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  height: 2.4375rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.15s linear;
+  cursor: pointer;
+  overflow: auto;
+
+  &.textarea {
+    height: 3.9rem;
+  }
+}
+
+.compact-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+
+  input {
+    margin: 0;
+  }
+  label.inline {
+    padding: 0;
+  }
+}
+
+.agreement-text {
+  font-size: 75%;
+  color: lighten(#222, 50%);
+}
+
+.small-logo {
+  width: 8rem;
+}
+
+i.disabled-icon {
+  color: #ddd;
+}
+
+.shared-modal {
+  ul#my-folders-list {
+    list-style-type: none;
+    margin-left: 0;
+
+    li.folder-item {
+      border-top: 1px solid #ccc;
+      padding-top: 0.3rem;
+      padding-bottom: 0.3rem;
+
+      i.success {
+        color: $success-color;
+      }
+      i.warning {
+        color: $warning-color;
+      }
+      i.alert {
+        color: $alert-color;
+      }
+      i.neutral {
+        color: #636363;
+      }
+      span {
+        margin-left: 0.3rem;
+      }
+    }
+    li.folder-item:first-child {
+      border-top: none;
+    }
+  }
+}
+
+.collapse {
+  margin: 0;
+}
+
+.notifyjs-foundation-base {
+  white-space: nowrap;
+  background-color: #a0d3e8;
+  border-color: #74bfdd;
+  color: #4f4f4f;
+  border-radius: 3px;
+
+  border-style: solid;
+  border-width: 1px;
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-bottom: 1.11111rem;
+  padding: 0.77778rem 1.33333rem 0.77778rem 0.77778rem;
+  transition: opacity 300ms ease-out;
+
+  a.text-link {
+    color: white;
+    text-decoration: underline;
+  }
+}
+.notifyjs-foundation-success {
+  background-color: $success-color;
+  border-color: #21a40f;
+  color: #FFFFFF;
+}
+.notifyjs-foundation-warning {
+  background-color: #f08a24;
+  border-color: #de770f;
+  color: #FFFFFF;
+}
+.notifyjs-foundation-alert {
+  background-color: #f04124;
+  border-color: #de2d0f;
+  color: #FFFFFF;
+}

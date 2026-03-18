@@ -1,0 +1,94 @@
+# Trinket Local Configuration
+# Copy this file to local.yaml: cp config/local.example.yaml config/local.yaml
+# IMPORTANT: Never commit local.yaml to version control
+
+# =============================================================================
+# REQUIRED
+# =============================================================================
+
+app:
+  url:
+    protocol: http
+    hostname: localhost
+    port: 3000
+
+  plugins:
+    session:
+      cookieOptions:
+        # CHANGE THIS - must be at least 32 characters
+        password: 'change-this-to-a-secure-password-min-32-chars!'
+        domain: ''
+        isSecure: false  # Set true in production with HTTPS
+
+# =============================================================================
+# DATABASE
+# =============================================================================
+
+db:
+  mongo:
+    host: mongodb      # Use 'mongodb' for Docker, 'localhost' for local
+    port: 27017
+    database: trinket
+
+  # Redis is OPTIONAL - sessions work without it
+  redis:
+    enabled: false
+
+# =============================================================================
+# OPTIONAL: Email (for password reset)
+# =============================================================================
+# Without email, users can still register and log in, but password reset won't work.
+
+# app:
+#   mail:
+#     from: 'noreply@example.com'
+#     host: 'smtp.example.com'
+#     port: 587
+#     user: 'your-smtp-username'
+#     pass: 'your-smtp-password'
+
+# =============================================================================
+# OPTIONAL: File Storage (for asset uploads in trinkets)
+# =============================================================================
+# Without S3, the asset upload feature is disabled. Code still works fine.
+
+# features:
+#   assets: true
+#
+# aws:
+#   keyId: 'your-access-key-id'
+#   key: 'your-secret-key'
+#   region: 'us-east-1'
+#   buckets:
+#     userassets:
+#       name: 'your-bucket-name'
+#       host: 'https://your-bucket.s3.amazonaws.com'
+
+# =============================================================================
+# OPTIONAL: Google OAuth
+# =============================================================================
+
+# app:
+#   auth:
+#     google:
+#       clientID: 'your-client-id.apps.googleusercontent.com'
+#       clientSecret: 'your-client-secret'
+#       callbackURL: 'http://localhost:3000/auth/google/callback'
+
+# =============================================================================
+# OPTIONAL: reCAPTCHA (spam protection)
+# =============================================================================
+
+# app:
+#   recaptcha:
+#     sitekey: 'your-site-key'
+#     secretkey: 'your-secret-key'
+
+# =============================================================================
+# OPTIONAL: Branding
+# =============================================================================
+
+# app:
+#   siteName: 'My Code School'
+#   logo: '/img/my-logo.png'
+#   supportEmail: 'support@example.com'

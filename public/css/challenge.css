@@ -1,0 +1,84 @@
+#next-step-modal h2 {
+  color: #26BF12
+}
+
+#next-step-modal h2 > i {
+  margin-right: 1em
+}
+
+.reset-challenge {
+  margin-top: 10px;
+}
+.reset-challenge.hide {
+  display: none;
+}
+
+.boom {
+   position: absolute;
+}
+
+.place {
+   position: absolute;
+}
+
+.spark {
+  position: absolute;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+}
+
+.spark.front {
+  width: 5px;
+  height: 4px;
+}
+
+.spark.mid {
+  width: 3px;
+  height: 4px;
+}
+
+.spark.mid2 {
+  width: 4px;
+  height: 3px;
+}
+
+.spark.back {
+  width: 2px;
+  height: 2px;
+}
+
+.marks {
+  list-style: none;
+  margin: 0.5em;
+  border: 1px solid #d6d6d6;
+  background-color: #d4d4d4;
+}
+
+.mark {
+  font-size: 1.5em;
+  padding: 4px;
+  text-align: center;
+  color: #FFDA00;
+  display: inline-block;
+  width: 2em;
+}
+
+.mark.active {
+  color: #008AFF;
+}
+
+section.description, section.directions {
+  margin: 0.5em;
+}
+
+section.directions {
+  padding: 1em;
+  border: 1px solid #d6d6d6;
+  background-color: #d4d4d4;
+}
+
+.mark.pass {
+  color: #26BF12;
+}

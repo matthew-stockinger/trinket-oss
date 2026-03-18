@@ -1,0 +1,32 @@
+<form method="post" action="/admin/upload">
+  <div class="row">
+    <div class="small-12 columns">
+      <label>Paste info in CSV format. Required fields: Email, Password. Optional fields: Username, Name
+        <textarea name="userList" rows="10" placeholder="Email,Password,Username,Name
+user1@example.com,password123,user1,User One
+user2@example.com,password456,user2,User Two"></textarea>
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <input class="button primary" type="submit" value="Upload Users" />
+    </div>
+  </div>
+</form>
+
+{% if success is defined %}
+<hr>
+<div class="row">
+  <div class="small-12 columns">
+    <div class="alert-box success">
+      Successfully created: {{ success }} users
+    </div>
+    {% if errors > 0 %}
+    <div class="alert-box warning">
+      Errors: {{ errors }} (duplicate emails or invalid data)
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}

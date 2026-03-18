@@ -1,0 +1,288 @@
+$material-row-height: 40px;
+
+.dashboard-content {
+  margin-bottom: 1rem;
+
+  .dashboard-container {
+    margin-top: 0.5rem;
+
+    .first-lesson {
+      display: inline-block;
+    }
+    .hidden-user-count {
+      line-height: 1.4;
+      margin: .2rem .9375rem .5rem 0;
+    }
+  }
+
+  .material-row, .student-row {
+    &.course-dashboard {
+      margin: 0.2rem 0;
+    }
+
+    &:not(.row-open) {
+      height: $material-row-height;
+      line-height: $material-row-height;
+    }
+
+    .material-name, .student-name {
+      border-left: 1rem solid transparent;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      .not-assignment {
+        color: #aaaaaa;
+      }
+    }
+  }
+
+  .instructions-card {
+    border: 1px solid #d4d4d4;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    background-color: #f7f7f7;
+    padding: 0.5rem;
+    cursor: pointer;
+
+    .collapsed {
+      visibility: hidden;
+      opacity: 0;
+      overflow: hidden;
+      max-height: 0;
+      -webkit-transition: all 0.8s;
+      transition: all 0.8s;
+    }
+    .show-instructions-row {
+      visibility: visible;
+      opacity: 1;
+      max-height: 2000px;
+      background-color: #ffffff;
+      overflow: auto;
+      padding: 0.4rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &.dashboard-list {
+    .user-row, .submission-row {
+      padding: 0.2rem 0;
+      border-bottom: 1px solid #cccccc;
+
+      &.clickable {
+        cursor: pointer;
+      }
+
+      .collapsed {
+        visibility: hidden;
+        opacity: 0;
+        overflow: hidden;
+        max-height: 0;
+        -webkit-transition: all 0.8s;
+        transition: all 0.8s;
+      }
+      .show-feedback-row {
+        visibility: visible;
+        opacity: 1;
+        max-height: 2000px;
+        background-color: #ffffff;
+        overflow: auto;
+      }
+
+      &.row-open {
+        border: 1px solid #cccccc;
+        padding: 0.4rem;
+        max-width: 65rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        background-color: #eeeeee;
+
+        .user-info, .assignment-info {
+          padding-bottom: 0.4rem;
+        }
+      }
+    }
+    .user-row:not(.row-open):hover, .submission-row:not(.row-open):hover {
+      background-color: #eeeeee;
+    }
+    .user-row:first-child {
+      margin-top: 1rem;
+    }
+
+    .not-started {
+    }
+    .started {
+      color: $yellow;
+    }
+    .submitted {
+      color: $primary-color;
+    }
+    .completed {
+      color: $secondary-color;
+    }
+    .submittedLate {
+      color: $warning-color;
+    }
+
+    .trinket-feedback {
+      background-color: #ffffff;
+
+      .previous-submission {
+        margin-top: 20px;
+      }
+    }
+
+    trinket-feedback {
+      @import "assignments-common";
+    }
+
+    .comment-info {
+      font-size: 0.9rem;
+      .submission-commented {
+        display: inline-block;
+        margin-left: 35px;
+      }
+    }
+
+    a.dashboard-actions-link {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      vertical-align: middle;
+      i {
+        color: #333;
+      }
+
+      &.with-chart {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+    a.dashboard-actions-link:hover {
+      background-color: #bbb;
+      border-radius: 50%;
+    }
+
+    a.dashboard-actions-link + ul {
+      width: 200px;
+    }
+  }
+
+  .hidden-users-header {
+    margin-top: 1rem;
+  }
+  .hidden-users {
+    &.collapsed {
+      visibility: hidden;
+      opacity: 0;
+      overflow: hidden;
+      max-height: 0;
+      -webkit-transition: all 0.8s;
+      transition: all 0.8s;
+    }
+    &.show-hidden-users {
+      visibility: visible;
+      opacity: 1;
+      max-height: 2000px;
+      overflow: visible;
+    }
+  }
+
+  .chart-wrapper {
+    @include progress-container;
+    @include radius($material-row-height);
+
+    height: $material-row-height;
+    border: none;
+    padding: 0px;
+    margin: 0;
+
+    .chart-segment {
+      @include progress-meter;
+      display: inline;
+      text-align: center;
+      // Ye olde vertical centering trick
+      // height - 2x border +padding
+      height: $material-row-height;
+      line-height: $material-row-height;
+
+      // hide text so it's not selectable when not visible
+      text-indent: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      color: transparent;
+      &:hover {
+        text-indent: 0%;
+      }
+
+      &.not-started {
+        @include progress-meter($bg:$yellow);
+        background: repeating-linear-gradient(
+          135deg,
+          #eee,
+          #eee 10px,
+          transparent 10px,
+          transparent 30px
+        );
+        &:hover {
+          font-weight: bold;
+          color: #333;
+        }
+      }
+      &.started {
+        @include progress-meter($bg:$yellow);
+        &:hover {
+          font-weight: bold;
+          color: #333;
+        }
+      }
+      &.submitted {
+        @include progress-meter($bg:$primary-color);
+        &:hover {
+          color: #ffffff;
+        }
+      }
+      &.completed {
+        @include progress-meter($bg:$secondary-color);
+        &:hover {
+          color: #ffffff;
+        }
+      }
+      &:first-child {
+        border-top-left-radius: 60px;
+        border-bottom-left-radius: 60px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 60px;
+        border-bottom-right-radius: 60px;
+      }
+    }
+  }
+
+  .legend-label {
+    margin-bottom: 0;
+  }
+  .chart-legend {
+    margin-top: 1rem;
+    .chart-wrapper .chart-segment {
+      &.started, &.not-started{
+        span {
+          color: #333;
+          text-indent: 0%;
+          font-weight: bold;
+        }
+      }
+
+      &.completed, &.submitted {
+        span {
+          color: #fff;
+          text-indent: 0%;
+        }
+      }
+    }
+  }
+}

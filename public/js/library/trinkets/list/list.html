@@ -1,0 +1,124 @@
+<div class="library-subnav clearfix row gutterless" data-magellan-expedition="fixed">
+  <section class="left">
+    <nav class="title breadcrumbs">
+      <a href="/home"><i class="fa fa-home"></i></a>
+      <a class="current">My Trinkets</a>
+    </nav>
+    <section id="listview-options">
+      <trinket-search on-select="gotoSelectedTrinket" placeholder-text="search by name or instructions" search-input-open="searchInputOpen"></trinket-search>
+      <section id="listview-menus" ng-show="!searchInputOpen" class="fade-in-out">
+        <label>Sort:</label>
+        <button class="button small" data-dropdown="library-sort-options">
+          <i class="{{ sortOptions[sortBy].class }}"></i> <span class="show-for-xlarge-up">{{ sortOptions[sortBy].label }}</span> <i class="fa fa-caret-down"></i>
+        </button>
+        <ul id="library-sort-options" class="tiny f-dropdown" data-dropdown-content>
+          <li ng-repeat="(key, option) in sortOptions">
+            <a ng-click="initSort(key)"><i class="{{ option.class }}"></i> {{ option.label }}</a>
+          </li>
+        </ul>
+        <label>View:</label>
+        <button class="button small" data-dropdown="library-view-options">
+          <i class="{{ viewOptions[viewType].class }}"></i> <span class="show-for-xlarge-up">{{ viewOptions[viewType].label }}</span> <i class="fa fa-caret-down"></i>
+        </button>
+        <ul id="library-view-options" class="tiny f-dropdown" data-dropdown-content>
+          <li ng-repeat="(key, option) in viewOptions">
+            <a ng-click="changeView(key)"><i class="{{ option.class }}"></i> {{ option.label }}</a>
+          </li>
+        </ul>
+      </section>
+    </section>
+  </section>
+  <section class="right">
+    <new-trinket></new-trinket>
+  </section>
+  <section class="right" id="new-folder-section">
+    <a class="small button" data-reveal-id="new-folder-modal"><span class="show-for-xlarge-up"><i class="fa fa-plus-circle"></i>&nbsp;new folder</span><i class="hide-for-xlarge-up fa fa-folder"></i></a>
+  </section>
+</div>
+<div class="row" ng-show="!items || !folders"><h2><i class="fa fa-spinner fa-spin"></i>&nbsp;Loading...</h2></div>
+<div class="row" ng-show="items && !items.length && !folders.length">
+  <h2>You have no trinkets!</h2>
+  Click the "New Trinket" button in the top right to create one!
+</div>
+<div ng-show="items.length || folders.length">
+  <ul id="trinkets-list" infinite-scroll="moreTrinkets()" infinite-scroll-distance='1' class="{{viewType}}-view">
+    <li ng-repeat="folder in folders | orderBy:'name'" class="a-folder" data-id="{{folder.id}}" ng-click="gotoFolder(folder.slug)" title="{{folder.name}}">
+      <a class="snapshot titled folder" ng-if="!userParam" ui-sref="folderList({slug: folder.slug})">
+        <div class="folder-img-container">
+          <img class="folder-img" width="140" height="140" ng-src="/img/folder-snapshot.png" alt="{{folder.name}}">
+        </div>
+        <h3 class="title titled {{viewType}}-view lang-folder trinketLabel">{{folder.name}}</h3>
+      </a>
+      <a class="snapshot titled folder" ng-if="userParam" ui-sref="folderList({slug: folder.slug, user: userParam})">
+        <div class="folder-img-container">
+          <img class="folder-img" width="140" height="140" ng-src="/img/folder-snapshot.png" alt="{{folder.name}}">
+        </div>
+        <h3 class="title titled {{viewType}}-view lang-folder trinketLabel">{{folder.name}}</h3>
+      </a>
+      <div class="trinket-stats">
+        <div class="trinket-last-date">
+          Last updated {{ folder.lastUpdated | formatDate }}
+        </div>
+        <ul>
+          <li class="trinket-stat">
+            <i class="trinket-key"></i>
+            <div class="badge" ng-if="folder.trinketCount">
+              {{folder.trinketCount | formatNum}}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li ng-repeat="item in items" data-id="{{item.id}}" ng-click="gotoTrinket(item.shortCode)" title="{{item.name || 'Untitled'}}">
+      <a class="snapshot" ng-class="{titled: item.name}" ui-sref="detail({shortCode: item.shortCode})">
+        <img ng-class="{'set-height': item.lang != 'glowscript' && item.lang != 'glowscript-blocks'}" ng-src="{{item.snapshot}}" alt="{{item.snapshot}}">
+        <h3 ng-class="{titled: item.name}" class="title trinket-list-with-lang {{viewType}}-view lang-{{item.lang}} trinketLabel">{{item.name || 'Untitled'}}</h3>
+      </a>
+      <div class="trinket-stats">
+        <div ng-if="item.lastView.viewedOn" class="trinket-last-date">
+          Last viewed {{ item.lastView.viewedOn | formatDate }}
+        </div>
+        <div ng-if="!item.lastView.viewedOn" class="trinket-last-date">
+          Last updated {{ item.lastUpdated | formatDate }}
+        </div>
+        <ul class="small-block-grid-5" ng-init="stats=[
+               {metric:'runs',       icon:'hand-o-up', title:'interactions'},
+               {metric:'forks',      icon:'code-fork', title:'remixes'},
+               {metric:'views',      icon:'code',      title:'views'},
+               {metric:'social',     icon:'users',     title:'shares'}
+              ]">
+          <li class="trinket-stat"
+              title="{{item.metrics[stat.metric] || '0'}} {{stat.title}}"
+              ng-repeat="stat in stats">
+            <i class="fa fa-{{stat.icon}}"></i>
+            <div class="badge"
+                 ng-if="item.metrics[stat.metric]">
+              {{item.metrics[stat.metric] | formatNum}}
+            </div>
+          </li>
+          <li class="trinket-stat" title="{{ item.published ? 'Published' : '' }}">
+            <i ng-if="item.published" class="fa fa-book" ng-class="{success:item.published}"></i>
+          </li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>
+<div id="new-folder-modal" class="reveal-modal small" data-reveal aria-labelledby="new-folder-title" aria-hidden="true" role="dialog">
+  <div id="new-folder-messages"></div>
+  <h2 id="new-folder-title">Create New Folder</h2>
+  <form id="new-folder-form" new-folder ng-submit="addNewFolder()">
+    <div class="row">
+      <div class="small-12 columns">
+        <input id="new-folder-name" type="text" name="name" ng-model="name" placeholder="Enter folder name" required />
+      <div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <button class="button small primary"><i ng-class="{'fa fa-circle-o-notch fa-lg fa-spin':isSubmitting}"></i> Create</button>
+      </div>
+    </div>
+  </form>
+  </div>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>

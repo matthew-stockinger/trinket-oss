@@ -1,0 +1,694 @@
+<header id="course-nav" class="page-menu" ui-scrollfix="45">
+  <div id="material-nav">
+    <div id="class-progress">
+      <div class="percentage" ng-style="{width:progress*100+'%'}"></div>
+    </div>
+  </div>
+  <div class="course-subnav clearfix row gutterless">
+    <section ng-cloak ng-show="course" class="left">
+      <nav class="title breadcrumbs">
+        <a href="/home"><i class="fa fa-home"></i></a>
+        <a class="current"><i ng-if="course.archived" class="fa fa-archive"></i> <strong>{{ course.name }}</strong> by {{ course._owner.name }}</a>
+      </nav>
+    </section>
+    <div class="right">
+      <a class="button small" ng-if="canViewSubmissions" ng-click="viewDashboard()"><i class="fa fa-dashboard"></i> <div class="show-for-large-up">Dashboard</div></a>
+      <a class="button small dropdown-blue" data-dropdown="course-actions" id="course-actions-button"><i class="fa fa-cog"></i> <div class="show-for-large-up">Course</div></a>
+      <ul id="course-actions" ng-if="canCopyThisCourse || canUpdateCourse || canManageAccess" class="f-dropdown small" data-dropdown-content>
+        <li><a ng-if="canUpdateCourse" ng-click="openSettingsModal()"><i class="fa fa-pencil fa-fw"></i> Edit Course Details</a></li>
+        <li><a ng-if="canCopyThisCourse" ng-click="copyCourse()"><i class="fa fa-copy fa-fw"></i> Make a Copy of this Course</a></li>
+        <li><a ng-if="canCopyThisCourse" ng-click="openDownloadCourseModal()"><i class="fa fa-download fa-fw"></i> Download Course Pages</a></li>
+        <li><a ng-if="canArchiveThisCourse && !course.archived" ng-click="openArchiveCourseModal()"><i class="fa fa-archive fa-fw"></i> Archive Course</a></li>
+        <li><a ng-if="canArchiveThisCourse && course.archived" ng-click="archiveCourse()"><i class="fa fa-inbox fa-fw"></i> Restore Archived Course</a></li>
+      </ul>
+      <a class="button small" ng-if="canManageAccess" ng-click="openUserModal()"><i class="fa fa-users"></i> <div class="show-for-large-up">Users</div></a>
+      <a href class="prev button small" ng-click="previousMaterial()">
+        <i class="fa fa-angle-left"></i>
+      </a>
+      <a href class="next button small" ng-click="nextMaterial()">
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </div>
+  </div>
+</header>
+<div id="course-content" ui-scrollfix="45" ng-class="{open:menuOpen}">
+  <a id="outline-expander" ng-click="menuOpen=!menuOpen">
+    <i class="fa" ng-class="{'fa-bars':!menuOpen,'fa-times':menuOpen}"></i>
+  </a>
+  <aside id="outline" class="editable">
+    <div class="info">
+      <p>{{ course.description }}</p>
+    </div>
+    <div ui-tree="outlineDragOptions" data-drag-delay="200">
+      <ul ui-tree-nodes ng-model="course.lessons" data-type="lesson" class="outline-list lessons">
+        <li class="outline-list-item lesson" ng-repeat="lesson in course.lessons" ui-tree-node data-type="lesson" ng-class="{isDraft:lesson.isDraft,past:lesson.isPast,current:lesson.isCurrent,future:lesson.isFuture}">
+          <div class="lesson-title angular-ui-tree-handle clearfix">
+            <i class="fa fa-bars"></i>
+            <span class="lesson-name">{{ lesson.name }}</span>
+            <div data-tooltip class="draft-circle in-aside right has-tip" title="Marked as draft" ng-if="lesson.isDraft">&nbsp;</div>
+          </div>
+          <ul ui-tree-nodes ng-model="lesson.materials" data-type="material" class="outline-list materials" ng-class="{isDraft:lesson.isDraft}">
+            <li ng-repeat="material in lesson.materials" id="{{ lesson.slug }}-{{ material.slug }}" ui-tree-node data-type="material" class="outline-list-item material" ng-class="{past:material.isPast,current:material.isCurrent,future:material.isFuture}">
+              <div class="material-title angular-ui-tree-handle clearfix" ng-click="viewMaterial(material.slideIndex, true)">
+                <!-- add title or tooltip with dates info? -->
+                <i ng-if="usingDates(material)" class="fa fa-fw fa-clock-o dates-active-icon"></i>
+                <!-- change icon depending on what kind of material this is -->
+                <i class="fa fa-fw" ng-class="material.type == 'assignment' ? 'fa-pencil-square-o' : 'fa-file-text-o'"></i>
+                <span class="material-name">{{ material.name }}</span>
+                <div data-tooltip class="draft-circle in-aside right has-tip" title="Marked as draft" ng-if="material.isDraft">&nbsp;</div>
+              </div>
+            </li>
+          </ul>
+          <div ng-show="canUpdateContent" class="new-page-container">
+            <a class="right" ng-if="canCreateAssignments" ng-click="openNewAssignmentDialog(lesson)"><i class="fa fa-plus-circle"></i> Assignment</a>
+            <a class="right" ng-click="openNewPageDialog(lesson)"><i class="fa fa-plus-circle"></i> Page</a>
+          </div>
+        </li>
+      </ul>
+      <div ng-show="contentLoaded && !haveLessons">
+        <p class="outline-info">A list of your topics and pages will be displayed here.</p>
+      </div>
+    </div>
+  </aside>
+
+  <div ng-show="canUpdateContent" data-nodrag id="new-topic-container" class="row collapse" ng-class="{open:menuOpen}">
+    <div class="small-6 columns">
+      <a id="new-topic-button" class="button small" ng-click="openNewTopicDialog()"><i class="fa fa-plus-circle"></i> topic</a>
+    </div>
+    <div class="small-6 columns">
+      <a ng-show="!editingOutline" id="edit-outline-button" class="button small" ng-click="editOutline()"><i class="fa fa-pencil"></i> outline</a>
+      <a ng-show="editingOutline" id="edit-outline-button" class="button small" ng-click="haveContent && doneOutline()" ng-class="{disabled:!haveContent}">done</a>
+    </div>
+  </div>
+
+  <div id="material-content">
+    <div class="row">
+      <div id="course-notifications" class="small-12"></div>
+    </div>
+
+    <div ng-switch="currentMaterial.type" ng-show="currentMaterial && !editingOutline" id="material">
+      <div class="page-controls-container right" ng-show="canUpdateContent">
+        <a id="page-controls-button" data-dropdown="page-actions" class="button small dropdown-blue"><i class="fa fa-pencil"></i> <div class="show-for-large-up">Edit</div></a>
+        <ul id="page-actions" class="f-dropdown small" data-dropdown-content>
+          <li>
+            <a ng-click="editContent()"><i class="fa fa-pencil fa-fw"></i> Edit {{ currentMaterial.type === "assignment" ? "Assignment" : "Page" }}</a>
+          </li>
+          <li>
+            <a ng-click="toggleDraft(currentMaterial)"><i class="fa fa-eye fa-fw"></i> {{ currentMaterial.isDraft ? "Publish" : "Mark as Draft" }}</a>
+          </li>
+          <li title="{{ currentMaterial.isDraft ? 'Disabled until published' : '' }}">
+            <a ng-href="{{coursePageUrl}}" ng-class="{disabled:currentMaterial.isDraft,disabled:course.archived}"><i class="fa fa-user fa-fw"></i> View as Student</a>
+          </li>
+          <li>
+            <a ng-click="openRemovePageDialog(currentMaterial)"><i class="fa fa-trash-o fa-fw alert"></i> Remove</a>
+          </li>
+        </ul>
+      </div>
+
+      <h4 class="subheader">
+        <i ng-switch-when="page" class="fa fa-file-text-o fa-fw"></i>
+        <i ng-switch-when="assignment" class="fa fa-pencil-square-o fa-fw"></i>
+        {{ currentMaterial.name }} <span ng-show="currentMaterial.isDraft" data-tooltip class="draft-label label radius has-tip" title="Click Edit menu for option to publish.">draft</span>
+      </h4>
+
+      <div ng-show="currentMaterial.content" ng-bind-html="currentMaterial.markup"></div>
+
+      <div ng-if="canUpdateContent" ng-switch-when="page" ng-hide="currentMaterial.content" ng-click="editContent()">
+        <p>Click here to add content to your page.</span>
+      </div>
+
+      <div ng-if="canManageAssignments" ng-switch-when="assignment" ng-hide="currentMaterial.content" ng-click="editContent()">
+        <p>Click here to add instructions to your assignment.</span>
+      </div>
+
+      <trinket-assignment ng-if="currentMaterial.trinket.trinketId"
+                          material="currentMaterial"
+                          assignment-trinket="{{ currentMaterial.trinket }}"
+                          preview="true"
+                          can-edit="canEditTrinketAssignment"></trinket-assignment>
+
+      <div ng-if="canViewSubmissions && currentMaterial.assignment">
+        <hr />
+        <div>
+          <h4 class="inline-header">Student Progress:</h4>
+          <a ng-click="viewAssignment(currentMaterial)">View Student Submissions</a>
+        </div>
+        <assignment-dashboard class="dashboard-content" assignment="currentMaterial.assignment"></assignment-dashboard>
+      </div>
+
+    </div>
+
+    <div id="edit-outline" ui-tree="editOutlineDragOptions" data-drag-delay="200" ng-show="editingOutline || (contentLoaded && !haveContent)">
+      <h3>Course Outline</h3>
+      <div class="row" ng-show="contentLoaded && !haveContent">
+        <div class="large-12 columns">
+          <p>
+            Welcome to your course outline!
+          </p>
+          <p>
+            Courses consist of topics and pages. Start by entering a topic below or click the New Topic button on the left.
+            After adding topics, you'll be able to create pages for each.
+          </p>
+        </div>
+      </div>
+      <ul ui-tree-nodes ng-model="course.lessons" data-type="edit-outline-lesson" class="outline-list edit-lessons">
+        <li class="outline-list-item lesson" ng-repeat="lesson in course.lessons" ui-tree-node data-type="edit-outline-lesson" ng-class="{isDraft:lesson.isDraft}">
+          <div class="edit-lesson-title angular-ui-tree-handle clearfix">
+            <i class="fa fa-bars"></i>
+
+            <div data-tooltip class="draft-circle in-outline has-tip" title="Marked as draft" ng-if="lesson.isDraft">&nbsp;</div>
+
+            <span ng-show="canUpdateContent" editable-text="lesson.name" blur="submit" onbeforesave="editLesson(lesson, $data)" class="lesson-name">
+              {{ lesson.name }}
+            </span>
+            <span ng-show="!canUpdateContent">{{ lesson.name }}</span>
+
+            <a ng-show="canUpdateContent" class="right edit-lesson-actions-link" data-nodrag data-options='align:left' data-dropdown="lesson-actions-{{lesson.id}}">
+              <i class="fa fa-ellipsis-v"></i>
+            </a>
+
+            <div> <!-- div wrapper needed to overrule parent overflow so this dropdown is positioned correctly -->
+              <ul id="lesson-actions-{{lesson.id}}" class='f-dropdown' data-dropdown-content tabindex="-1">
+                <li ng-switch="lesson.isDraft || false">
+                  <a ng-switch-when="true" ng-click="toggleDraft(lesson)"><i class="fa fa-eye fa-fw"></i> Publish</a>
+                  <a ng-switch-when="false" ng-click="toggleDraft(lesson)"><i class="fa fa-eye fa-fw"></i> Mark as Draft</a>
+                </li>
+                <li>
+                  <a ng-click="openRemoveLessonDialog(lesson, $index)"><i class="fa fa-trash-o alert fa-fw"></i> Remove Topic</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <ul ui-tree-nodes ng-model="lesson.materials" data-type="edit-outline-material" class="outline-list edit-materials" ng-class="{isDraft:lesson.isDraft}">
+            <li ng-repeat="material in lesson.materials" ui-tree-node data-type="edit-outline-material" class="outline-list-item material">
+              <div ng-switch="material.type" class="edit-material-title angular-ui-tree-handle clearfix">
+                <i ng-switch-when="page" class="fa fa-file-text-o fa-fw"></i>
+                <!-- add title or tooltip with dates info? -->
+                <i ng-if="usingDates(material)" class="fa fa-fw fa-clock-o dates-active-icon"></i>
+                <i ng-switch-when="assignment" class="fa fa-pencil-square-o fa-fw"></i>
+
+                <div data-tooltip class="draft-circle in-outline has-tip" title="Marked as draft" ng-if="material.isDraft">&nbsp;</div>
+
+                <span ng-switch-when="page"
+                      ng-show="canUpdateContent"
+                      class="material-name"
+                      editable-text="material.name"
+                      blur="submit"
+                      onbeforesave="editMaterial(material, $data)">{{ material.name }}</span>
+                <span ng-switch-when="page" ng-show="!canUpdateContent">{{ material.name }}</span>
+
+                <span ng-switch-when="assignment"
+                      ng-show="canManageAssignments"
+                      class="material-name"
+                      editable-text="material.name"
+                      blur="submit"
+                      onbeforesave="editMaterial(material, $data)">{{ material.name }}</span>
+                <span ng-switch-when="assignment" ng-show="!canManageAssignments">{{ material.name }}</span>
+
+                <a ng-switch-when="page" ng-show="canUpdateContent" class="right edit-material-actions-link" data-nodrag data-options='align:left' data-dropdown="material-{{material.id}}">
+                  <i class="fa fa-ellipsis-v"></i>
+                </a>
+                <a ng-switch-when="assignment" ng-show="canManageAssignments" class="right edit-material-actions-link" data-nodrag data-options='align:left' data-dropdown="material-{{material.id}}">
+                  <i class="fa fa-ellipsis-v"></i>
+                </a>
+
+                <ul id="material-{{material.id}}" class='f-dropdown' data-dropdown-content>
+                  <li>
+                    <a ng-switch-when="page" ng-click="editContent(lesson, material)"><i class="fa fa-pencil fa-fw"></i> Edit Page</a>
+                    <a ng-switch-when="assignment" ng-click="editContent(lesson, material)"><i class="fa fa-pencil fa-fw"></i> Edit Assignment</a>
+                  </li>
+                  <li ng-switch="material.isDraft || false">
+                    <a ng-switch-when="true" ng-click="toggleDraft(material)"><i class="fa fa-eye fa-fw"></i> Publish</a>
+                    <a ng-switch-when="false" ng-click="toggleDraft(material)"><i class="fa fa-eye fa-fw"></i> Mark as Draft</a>
+                  </li>
+                  <li>
+                    <a ng-switch-when="page" ng-click="openRemovePageDialog(material)"><i class="fa fa-trash-o alert fa-fw"></i> Remove Page</a>
+                    <a ng-switch-when="assignment" ng-click="openRemovePageDialog(material)"><i class="fa fa-trash-o alert fa-fw"></i> Remove Assignment</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+          <form class='add-material' ng-submit="addMaterial($event, lesson)" data-nodrag>
+            <div class="row collapse">
+              <div class="small-12 new-page-wrap">
+                <input type="text" class="form-control material" ng-model="lesson.newPageTitle" placeholder="Enter new page title" required>
+              </div>
+            </div>
+          </form>
+        </li>
+      </ul>
+      <div data-nodrag>
+        <form ng-submit="addLesson($event, course)">
+          <input type="text" class="form-control lesson" ng-model="course.newLessonName" placeholder="Enter new topic name" required>
+        </form>
+      </div>
+    </div>
+  </div> <!-- end #edit-outline-content -->
+</div>
+
+<div id="courseEditModal" class="reveal-modal" data-reveal role="dialog">
+  <div id="course-settings-messages"></div>
+  <h2>{{ course.name }}</h2>
+  <form name="course-settings-form" ng-submit="updateCourse($event)">
+    <div class="row">
+      <div class="large-12 columns">
+        <label>Course name</label>
+        <input type="text" name="name" ng-model="courseForm.name" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <label>Course description</label>
+        <textarea name="description" rows="4" ng-model="courseForm.description"></textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <label>Course visibility</label>
+        <select name="courseType" ng-model="courseForm.courseType" ng-options="t.id as t.name for t in [{'id':'public','name':'Public'},{'id':'private','name':'Private'},{'id':'open','name':'Open'}]">
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large=12 columns">
+        <label>Default page and assignment visibility</label>
+        <select name="contentDefault" ng-model="courseForm.contentDefault" ng-options="o.id as o.name for o in [{'id':'publish','name':'Published'},{'id':'draft','name':'Marked as Draft'}]">
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <button type="submit" class="primary small"><i class="fa" ng-class="{'fa-save':!savingCourse, 'fa-circle-o-notch fa-spin':savingCourse}"></i> Update</button>
+        <a ng-show="canDeleteCourse" class="button caution small right" title="Delete Course" data-reveal-id="deleteCourseDialog" data-reveal><i class="fa fa-trash-o"></i></a>
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<script type="text/ng-template" id="courseUserModal.html">
+  <div class="row">
+    <div class="small-12 medium-6 columns">
+      <h2>{{ course.name }}</h2>
+    </div>
+    <div class="small-12 medium-6 columns">
+      <a class="button small right heading-button" ng-click="showAddUsers = !showAddUsers" ng-show="canManageAccess"><i class="fa fa-user-plus"></i> Add Users</a>
+    </div>
+  </div>
+
+  <section id="add-users-container" ng-show="canManageAccess" ng-class="{'show-add-users':showAddUsers}" class="collapsed">
+
+  <div class="row">
+    <div class="small-12 columns">
+      <p ng-if="emailEnabled">There are 3 ways to add students to your class:</p>
+      <p ng-if="!emailEnabled">There are 2 ways to add students to your class:</p>
+    </div>
+  </div>
+
+  <div ng-if="emailEnabled">
+    <div id="invitations-sent-messages"></div>
+
+    <div class="row">
+      <div class="small-12 columns">
+        <form name="invite-users-form" ng-submit="inviteUsersToCourse()">
+          <fieldset ng-class="{'border-on':formToggles.email}" class="border">
+            <legend class="clickable-legend" ng-click="toggleForm('email')"><i ng-class="{'hide':formToggles.email}" class="fa fa-chevron-right"></i> Email Invitations</legend>
+            <div ng-class="{'show-fields':formToggles.email}" class="collapsed-form">
+
+              <div class="row">
+                <div class="small-12 columns">
+                  <p>Paste a list of email addresses, one per line.</p>
+                </div>
+              </div>
+              <div class="row" data-equalizer data-equalizer-mq="large-up">
+                <div class="medium-12 large-6 columns" data-equalizer-watch>
+                  <textarea rows="4" ng-model="inviteForm.emailList"></textarea>
+                </div>
+                <div class="medium-12 large-6 columns" data-equalizer-watch>
+                  <button type="submit" class="button small secondary bottom" ng-class="{'disabled':sendingInvitations}">
+                    <i ng-class="sendingInvitations ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-envelope'"></i> Send Invitations
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="small-12 columns">
+                  We'll send an email with a unique link to each address. You'll see a list of pending invitations below.
+                </div>
+              </div>
+
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="access-code-messages"></div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <form name="access-code-form">
+        <fieldset ng-class="{'border-on':formToggles.accessCode}" class="border">
+          <legend class="clickable-legend" ng-click="toggleForm('accessCode')"><i ng-class="{'hide':formToggles.accessCode}" class="fa fa-chevron-right"></i> Share Access Code</legend>
+          <div ng-class="{'show-fields':formToggles.accessCode}" class="collapsed-form">
+            <div class="row">
+              <div class="small-12 columns">
+                <p>Share this access code or link with your students. They'll be able to enter the code from their home page. The link will automatically add them to your course.</p>
+              </div>
+            </div>
+            <div class="row collapse">
+              <div class="small-4 columns">
+                <p class="join-code faux-input">{{ accessCode }}</p>
+              </div>
+              <div class="small-4 columns end">
+                <a class="button secondary collapse postfix" ng-click="generateAccessCode()"><i ng-class="generatingCode ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-code'"></i> Generate New Access Code</a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="small-12 columns">
+                <p class="smaller">{{ accessCodeUrl }}</p>
+              </div>
+            </div>
+            <div class="row" ng-show="accessCode.length">
+              <div class="small-12 columns">
+                <p class="smaller no-margin">Note: Changing the access code invalidates previous access codes.</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  <div id="add-user-messages"></div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <form name="add-student-form" ng-submit="addUserToCourse()">
+        <fieldset ng-class="{'border-on':formToggles.addStudent}" class="border">
+          <legend class="clickable-legend" ng-click="toggleForm('addStudent')"><i ng-class="{'hide':formToggles.addStudent}" class="fa fa-chevron-right"></i> Add Trinket User</legend>
+          <div ng-class="{'show-fields':formToggles.addStudent}" class="collapsed-form">
+            <div class="row">
+              <div class="small-12 columns">
+                <p>You can add a student immediately if you know their Trinket username or email address.</p>
+              </div>
+            </div>
+            <div class="row collapse">
+              <div class="small-6 columns">
+                <input class="collapse" type="text" ng-model="user.lookup" name="user-lookup" placeholder="enter username or email address" required />
+              </div>
+              <div class="small-1 columns end">
+                <button type="submit" class="button secondary collapse postfix"><i ng-class="addingUser ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-user-plus'"></i> Add</button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+
+  </section> <!-- end add users -->
+
+  <div ng-if="emailEnabled">
+    <div id="invitations-update-messages"></div>
+
+    <div class="row" ng-show="haveInvitations()">
+      <div class="large-12 columns">
+        <strong>Pending Invitations</strong>
+      </div>
+    </div>
+    <div class="row" ng-show="haveInvitations()">
+      <div class="large-12 columns">
+        <ul class="course-users-list pending-invitations">
+          <li class="course-user" ng-repeat="(email, invitation) in invitations | orderBy:'email'">
+            <div class="row">
+              <div class="small-6 columns invitation-info">
+                <a ng-click="toggleShowInvitation(invitation)"><i ng-class="showInvitation[user.userId] ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'"></i></a>
+                <i ng-show="invitation.status == 'invalid'" title="Invalid email address" class="fa fa-exclamation-circle alert"></i>
+                <span id="invalid-{{ invitation.id }}" class="course-user-display-name" editable-text="invitation.email" blur="submit" onbeforesave="updateInvitationEmail(invitation, $data)">{{ invitation.email }}</span>
+              </div>
+              <div class="small-6 columns invitation-actions text-right">
+                <a ng-hide="working[invitation.email] || resent[invitation.email]" class="course-user-actions-link" data-options="align:left" data-dropdown="invitation-{{ invitation.id }}"><i class="fa fa-ellipsis-v"></i></a>
+                <span ng-show="working[invitation.email]" class="course-user-actions-link"><i class="fa fa-circle-o-notch fa-spin"></i></span>
+                <span ng-show="resent[invitation.email]" class="course-user-actions-link"><i class="fa fa-check-circle success"></i></span>
+
+                <ul id="invitation-{{ invitation.id }}" class="f-dropdown text-left" data-dropdown-content>
+                  <li><a ng-hide="invitation.status == 'invalid'" ng-click="resendInvitation(invitation)"><i class="fa fa-envelope-o fa-fw"></i> Resend Invitation</a></li>
+                  <li><a ng-show="invitation.status == 'invalid'" ng-click="clickEditable(invitation)"><i class="fa fa-exclamation-circle fa-fw alert"></i> Invalid Email</a></li>
+                  <li><a ng-click="deleteInvitation(invitation)"><i class="fa fa-trash-o fa-fw alert"></i> Delete Invitation</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div ng-class="{'show-invitation':showInvitation[invitation.id]}" class="row collapsed">
+              <div class="small-12 columns">
+                <i class="fa fa-link"></i> {{ invitation.acceptUrl }}
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div> <!-- end invitation list -->
+    <div class="row" ng-show="haveInvitations()">
+      <div class="large-12 columns">
+        <p class="smaller">Note: Changing the email address of a pending invitation will send a new email.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="course-users-messages"></div>
+
+  <div class="row">
+    <div class="small-12 medium-6 columns">
+      <strong>Current Users</strong>
+    </div>
+    <div class="small-12 medium-6 columns">
+      <a class="right" ng-click="showInfo = !showInfo"><i class="fa fa-info-circle" style="color: #008aff"></i> About Permissions</a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <div id="permissionsInfo" ng-class="{'panel-open':showInfo}">
+        <p>A link to this course will be added to the home screen of each user you add, regardless of their permissions.</p>
+        <ul>
+          <li>
+            <strong>Students</strong> can view and interact with all course content.
+          </li>
+          <li ng-show="canAssignAssocRole">
+            <strong>Associates</strong> can view course content and make a copy for themselves.
+          </li>
+          <li>
+            <strong>Collaborators</strong> can view and edit all course content.
+            This is ideal for other instructors or if you want students to collaboratively create course content.
+          </li>
+          <li>
+            <strong>Administrators</strong> have all Collaborator permissions, can add/remove other users and change their permissions,
+            provide feedback on student assignments. This is ideal for team teaching or if you have a teaching assistant.
+          </li>
+          <li>
+            <strong>Owner</strong> is who created this course.
+            Only the owner can delete a course and the owner of a course cannot be changed.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="large-12 columns">
+      <ul class="course-users-list">
+        <li ng-class="{'removed':undo[user.userId]}" class="course-user" ng-repeat="user in users | orderBy:'displayName'">
+
+          <div class="row">
+            <div class="small-6 columns user-info">
+              <a ng-click="toggleShowUser(user)"><i ng-class="showUser[user.userId] ? 'fa fa-minus-square-o' : 'fa fa-plus-square-o'"></i></a>
+              <img class="avatar" ng-src="{{ user.avatar }}" />
+              <span class="course-user-display-name">{{ user.displayName }}</span>
+              <span ng-if="user.deleted" class="secondary-label label round" title="This user deleted their account.">deleted</span>
+            </div>
+
+            <div class="small-6 columns text-right" ng-show="canManageAccess">
+              <!--normal button-->
+              <a class="button tiny dropdown text-left user-role-button" ng-class="{'disabled':undo[user.userId]}" data-dropdown="user-role-{{ user.userId }}" ng-show="!user.isSelf && !user.isOwner">{{ user.role }}</a>
+
+              <!--owner or self button-->
+              <a class="button tiny text-left user-role-button owner" ng-class="{'disabled':undo[user.userId]}" data-dropdown="user-role-{{ user.userId }}" ng-show="user.isSelf || user.isOwner">{{ user.role }}</a>
+
+              <ul id="user-role-{{ user.userId }}" class="f-dropdown content text-left user-role-list" ng-show="!user.isSelf && !user.isOwner" data-dropdown-content>
+                <li ng-click="updateUserRole(user, 'student')">
+                  <div><p class="user-role-heading" ng-class="{'checked':user.role == 'student'}">Student</p><p class="user-role-description">View Course</p></div>
+                </li>
+                <li ng-show="canAssignAssocRole" ng-click="updateUserRole(user, 'associate')">
+                  <div><p class="user-role-heading" ng-class="{'checked':user.role == 'associate'}">Associate</p><p class="user-role-description">View & Copy Course</p></div>
+                </li>
+                <li ng-click="updateUserRole(user, 'collaborator')">
+                  <div><p class="user-role-heading" ng-class="{'checked':user.role == 'collaborator'}">Collaborator</p><p class="user-role-description">Manage course content</p></div>
+                </li>
+                <li ng-click="updateUserRole(user, 'admin')">
+                  <div><p class="user-role-heading" ng-class="{'checked':user.role == 'admin'}">Admin</p><p class="user-role-description">Manage course details and content, provide feedback on student assignments</p></div>
+                </li>
+              </ul>
+
+              <a ng-hide="undo[user.userId] || working[user.userId]" class="course-user-actions-link" data-dropdown="user-{{ user.userId }}"><i class='fa fa-ellipsis-v'></i></a>
+              <a ng-show="undo[user.userId] && !working[user.userId]" ng-click="undoUserRemove(user)" class="course-user-actions-link" title="Undo"><i class="fa fa-undo"></i></a>
+              <span ng-show="working[user.userId]" class="course-user-actions-link"><i class="fa fa-circle-o-notch fa-spin"></i></span>
+
+              <i ng-if="!user.onDashboard" class="fa fa-dashboard alert hidden-from-dashboard" title="User hidden from dashboard"></i>
+
+              <ul id="user-{{ user.userId }}" class="f-dropdown text-left" data-dropdown-content>
+                 <li><a ng-if="user.onDashboard" ng-click="updateUserView(user, 'dashboard', 'hide')"><i class="fa fa-fw fa-dashboard alert"></i> Hide from Dashboard</a></li>
+                 <li><a ng-if="!user.onDashboard" ng-click="updateUserView(user, 'dashboard', 'show')"><i class="fa fa-fw fa-dashboard"></i> Show on Dashboard</a></li>
+                 <li ng-hide="user.isSelf || user.isOwner"><a ng-click="removeUserFromCourse(user)"><i class="fa fa-fw fa-user-times alert"></i> Remove from Course</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div ng-class="{'show-email':showUser[user.userId]}" class="row collapsed">
+            <div class="small-12 columns">
+                <i class="fa fa-user"></i> {{ user.username }} &nbsp; <a href="mailto:{{ user.email }}"><i class="fa fa-envelope"></i> {{ user.email }}</a>
+            </div>
+          </div>
+
+        </li>
+      </ul>
+    </div>
+  </div> <!-- end user list -->
+
+  <a class="close-reveal-modal" ng-click="close()" aria-label="Close">&#215;</a>
+</script>
+
+<div id="newTopicDialog" class="reveal-modal tiny" data-reveal role="dialog">
+  <h3>New Topic</h3>
+  <form name="new-topic-form" ng-submit="addLesson($event, course)">
+    <div class="row">
+      <label>Topic name</label>
+      <input type="text" name="topic-name" ng-model="course.newLessonName" focus-me="$root.focusMe" />
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="newPageDialog" class="reveal-modal tiny" data-reveal role="dialog">
+  <h3>New Page &mdash; {{ thisLesson.name }}</h3>
+  <form name="new-page-form" ng-submit="addMaterial($event, thisLesson)">
+    <div class="row">
+      <div class="large-12 columns">
+        <label>Page title</label>
+        <input type="text" name="page-title" ng-model="thisLesson.newPageTitle" focus-me="$root.focusMe" />
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="removePageDialog" class="reveal-modal" data-reveal role="dialog">
+  <h3><i class="fa fa-warning alert"></i> Remove {{ _removePageLabel }} &mdash; {{ thisPage.name }}</h3>
+  <h4 class="subheader">Are you sure you want to remove this {{ _removePageLabel.toLowerCase() }}?</h4>
+  <label>Please enter the name of this {{ _removePageLabel.toLowerCase() }} below to confirm.</label>
+  <form name="remove-page-form" ng-submit="removeMaterial($event, thisPage)">
+    <div class="row">
+      <div class="large-12 columns">
+        <input type="text" id="confirm-page-name" name="page-name" value="" ng-model="confirmPageName" ng-change="comparePageNames()" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <a class="button danger small" ng-click="removeMaterial($event, thisPage)" ng-class="{'disabled':!pageNamesMatchForDelete}">Remove {{ _removePageLabel }}</a>
+        <a class="button caution small" ng-click="cancelPageRemove()">Do not remove {{ _removePageLabel.toLowerCase() }}</a>
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="removeLessonDialog" class="reveal-modal" data-reveal role="dialog">
+  <h3><i class="fa fa-warning alert"></i> Remove Topic and Pages &mdash; {{ thisLesson.name }}</h3>
+  <h4 class="subheader">Are you sure you want to remove this topic and any pages associated with it?</h4>
+  <label>Please enter the name of this topic below to confirm.</label>
+  <form name="remove-lesson-form" ng-submit="removeLesson($event, thisLesson)">
+    <div class="row">
+      <div class="large-12 columns">
+        <input type="text" id="confirm-lesson-name" name="lesson-name" value="" ng-model="confirmLessonName" ng-change="compareLessonNames()" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <a class="button danger small" ng-click="removeLesson($event, thisLesson)" ng-class="{'disabled':!lessonNamesMatchForDelete}">Remove Topic and Pages</a>
+        <a class="button caution small" ng-click="cancelLessonRemove()">Do not remove topic</a>
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+<div id="deleteCourseDialog" class="reveal-modal" data-reveal role="dialog">
+  <h3><i class="fa fa-warning alert"></i> Delete Course &mdash; {{ course.name }}</h3>
+  <h4 class="subheader">Are you sure you want to delete this course?</h4>
+  <label>Please enter the name of this course below to confirm.</label>
+  <form name="delete-course-form" ng-submit="deleteCourse($event)">
+    <div class="row">
+      <div class="large-12 columns">
+        <input type="text" id="confirm-course-name" name="course-name" value="" ng-model="confirmCourseName" ng-change="compareCourseNames()" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns">
+        <a class="button danger small" ng-click="deleteCourse($event)" ng-class="{'disabled':!courseNamesMatchForDelete}">Delete Course</a>
+        <a class="button caution small" ng-click="cancelCourseDelete()">Do not delete course</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div id="archiveCourseModal" class="reveal-modal" data-reveal role="dialog">
+  <h3><i class="fa fa-archive"></i> Archive Course &mdash; {{ course.name }}</h3>
+  <h4 class="subheader">Are you sure you want to archive this course?</h4>
+  <p>Once archived, this course will no longer be available for anyone to view.<br />You will see this course in an archived list on your home page and can restore it at any time.</p>
+  <div class="row">
+    <div class="large-12 columns">
+      <a class="button primary small" ng-click="archiveCourse()">Archive Course</a>
+      <a class="button small" ng-click="cancelCourseDelete()">Do not archive course</a>
+    </div>
+  </div>
+</div>
+
+<div id="downloadCourseModal" class="reveal-modal small" data-reveal role="dialog">
+  <h2><i class="fa fa-download"></i> {{ course.name }}</h2>
+  <div class="row">
+    <div class="small-12 columns">
+      <p>
+        Choose which format you'd like to download.
+        Source files are the original text-based markdown format.
+        HTML pages are versions that you can view with a web browser.
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-6 columns text-center">
+      <a class="button small" ng-click="downloadMarkdown()"><i ng-class="generatingDownload.md ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-file-code-o'"></i> Source Files</a>
+    </div>
+    <div class="small-6 columns text-center">
+      <a class="button small" ng-click="downloadHTML()"><i ng-class="generatingDownload.html ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-file-o'"></i> HTML Pages</a>
+    </div>
+  </div>
+</div>
+
+<div id="copyCourseNameDialog" class="reveal-modal tiny" data-reveal role="dialog">
+  <h3><i class="fa fa-copy"></i> {{ course.name }}</h3>
+  <div class="row">
+    <div class="small-12 columns">
+      <p>Looks like you may already have a copy of this course. If you'd like another copy please enter a new name.</p>
+    </div>
+  </div>
+  <form name="course-copy-name" ng-submit="copyCourse()">
+    <div class="row">
+      <div class="small-12 columns">
+        <label>Course name</label>
+        <input type="text" name="course-name" ng-model="courseCopyName" focus-me="$root.focusMe" />
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>

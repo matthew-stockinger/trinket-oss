@@ -1,0 +1,39 @@
+# Pygame-specific packages
+pygame==2.5.2
+# pgzero==1.2.1  # Requires additional integration work to function
+
+# Same as python3 shell
+beautifulsoup4==4.11.1
+lxml==4.9.1
+numpy==1.23.2
+scipy==1.9.0
+matplotlib==3.5.3
+pycolors==0.1.2
+pandas==1.4.3
+pygal==3.0.0
+pygal_maps_world==1.0.2
+pygal_maps_fr==1.1.0
+pygal_maps_ch==1.0.1
+cairosvg==2.5.2
+tinycss==0.4
+cssselect==1.1.0
+bokeh==2.4.3
+scikit-learn==1.1.2
+patsy==0.5.2
+statsmodels==0.13.2
+requests-oauthlib==1.3.0
+pronouncing==0.2.0
+names==0.3.0
+pycep-correios==5.0.0
+seaborn==0.11.2
+exifread==3.0.0
+biopython==1.79
+ete3==3.1.2
+mysql-connector-python==8.0.26
+sympy==1.10.1
+pytest==7.1.2
+networkx==2.6.3
+Cython==0.29.32
+#qiskit==0.7.0
+#qiskit-aqua==0.4.1
+basemap==1.3.6

@@ -1,0 +1,43 @@
+{% import "includes/contact-us.html" as contact %}
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="small-12 columns">
+    <h2>Activate Your Account</h2>
+  </div>
+</div>
+
+{% if invalid %}
+<div class="row">
+  <div class="small-12 columns">
+    <p>The link to activate your account could not be verified. Please check the link and try again.</p>
+    {% if emailEnabled %}<p>If the link still does not work you can try <a href="/forgot-pass">resetting your password</a>.</p>{% endif %}
+    <p>Please {{ contact.link() }} with any questions.</p>
+  </div>
+</div>
+{% else %}
+<form method="post" action="/activate-account">
+  <div class="row">
+    <div class="small-12 medium-9 columns">
+      <p>Email address: {{ email }}</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 medium-9 columns">
+      <label> Set your password
+        <input type="password" name="password" required />
+      </label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      <input type="hidden" name="key" value="{{ key }}" />
+      <input class="button secondary" type="submit" value="activate" />
+    </div>
+  </div>
+</form>
+{% endif %}
+
+{% endblock %}

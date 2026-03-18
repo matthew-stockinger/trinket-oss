@@ -1,0 +1,377 @@
+{% import "includes/embed-settings.html" as settings_block %}
+
+{% extends "embed/base.html" %}
+
+{% block head_styles %}
+{% if not outputOnly %}
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/styles/github.min.css">
+{% endif %}
+{% endblock %}
+
+{% block toolbar_options %}
+{% if outputOnly %}
+  {% include "embed/default-toolbar.html" %}
+{% else %}
+<a class="edit-it menu-button item {{'' if toggleCode or runMode == "calculator" else 'show-for-small-only'}} allow-original" data-action="code.edit" data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="Edit the code.">
+  <i class="fa fa-pencil"></i>
+  <label class="show-for-large-up">Code</label>
+</a>
+<a class="run-it menu-button item allow-original" data-action="code.run" data-tooltip aria-haspopup="true" title="View the result." data-options="disable_for_touch:true">
+  <i class="fa fa-play"></i>
+  <label class="show-for-large-up">Run</label>
+</a>
+{% if runMode != 'calculator' %}
+<a class="menu-button item show-for-medium-up" data-action="code.help" data-data="open" data-tooltip aria-haspopup="true" title="Web VPython Help" data-options="disable_for_touch:true">
+  <i class="fa fa-question"></i>
+  <label class="show-for-large-up">Help</label>
+</a>
+{% endif %}
+{% endif %}
+{% endblock %}
+
+{% block settings_modal %}
+{{ settings_block.settings(user.settings.pythonTab, "Web VPython", false, user, trinket, draft) }}
+{% endblock %}
+
+{% block embed_content %}
+  <input id="honeypot" type='text' tabindex="-1"/>
+  <input id="start-value" type='hidden' value='{{start if start else "code"}}'/>
+  <input id="runMode-value" type='hidden' value='{{runMode}}'/>
+
+  {% if not outputOnly %}
+  <div id="help" class="hide" data-interface="overlay">
+    <div class="row">
+      <div class="small-8 columns">
+        <p><strong>Web VPython</strong></p>
+        <p>Web VPython is an easy-to-use, powerful environment for creating 3D animations. You can also use VPython with installed Python: see <a href="https://vpython.org" target="_blank">vpython.org</a>.</p>
+        <p>Helpful Web VPython resources:
+          <ul>
+            <li><a href="https://webvpython.org" target="_blank">webvpython.org</a></li>
+            <li><a href="https://glowscript.org/docs/VPythonDocs/index.html" target="_blank">Web VPython Help</a></li>
+          </ul>
+        </p>
+      </div>
+      <div class="small-4 columns right">
+        <img src="{{ '/img/glowscript-example.png' | cachePrefix }}" alt="Web VPython Example" title="Web VPython Example" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <p>Here is a quick example to help get you started.</p>
+        <p id="glowscriptContainer">
+          <pre><code id="glowscriptExample" class="hide">Web VPython 3.2
+
+canvas(caption="""Right button drag or Ctrl-drag to rotate "camera" to view scene.
+Middle button or Alt-drag to drag up or down to zoom in or out.
+  On a two-button mouse, middle is left + right.
+Touch screen: pinch/extend to zoom, swipe or two-finger rotate.""")
+
+side = 4.0
+thk = 0.3
+s2 = 2*side - thk
+s3 = 2*side + thk
+
+wallR = box (pos=vector( side, 0, 0), size=vector(thk, s2, s3),  color = color.red)
+wallL = box (pos=vector(-side, 0, 0), size=vector(thk, s2, s3),  color = color.red)
+wallB = box (pos=vector(0, -side, 0), size=vector(s3, thk, s3),  color = color.blue)
+wallT = box (pos=vector(0,  side, 0), size=vector(s3, thk, s3),  color = color.blue)
+wallBK = box(pos=vector(0, 0, -side), size=vector(s2, s2, thk), color = vector(0.7,0.7,0.7))
+
+ball = sphere (color = color.green, radius = 0.4, make_trail=True, retain=200)
+ball.mass = 1.0
+ball.p = vector (-0.15, -0.23, +0.27)
+
+side = side - thk*0.5 - ball.radius
+
+dt = 0.3
+while True:
+  rate(200)
+  ball.pos = ball.pos + (ball.p/ball.mass)*dt
+  if not (side > ball.pos.x > -side):
+    ball.p.x = -ball.p.x
+  if not (side > ball.pos.y > -side):
+    ball.p.y = -ball.p.y
+  if not (side > ball.pos.z > -side):
+    ball.p.z = -ball.p.z</code></pre>
+        </p>
+      </div>
+    </div>
+    <a class="menu-button closer" data-action="code.help" data-data="close"><i class="fa fa-times-circle-o"></i></a>
+  </div>
+  {% endif %}
+
+  <div id="editor" class="code-editor hide" data-interface="editor"></div>
+
+  {% if not outputOnly %}
+  <div id="dragbar"></div>
+  {% endif %}
+
+  <div id="codeOutput" class="codeOutput hide" data-interface="output">
+
+    {% if outputOnly %}
+    <div id="loadingContent" class="hide">
+      <span><i class="fa fa-spinner fa-spin"></i> Loading</span>
+    </div>
+    <div id="glowscriptIframeContainer"></div>
+
+    {% else %}
+
+    <div id="outputTabs" class="{% if hideInstructions or (not isOwner and not trinket.description) %}hideInstructions{% endif %}">
+      <div class="{% if not showInstructions %}active {% endif %}menu-button" id="codeOutputTab" data-action="output.view">Result</div>
+      <div class="{% if showInstructions %}active {% endif %}menu-button" id="instructionsTab" data-action="instructions.view"><i class="fa fa-list"></i> Instructions</div>
+    </div>
+
+    <div id="outputContainer" class="{% if hideInstructions or (not isOwner and not trinket.description) %}withoutTabs{% else %}withTabs{% endif %}">
+      <div id="loadingContent" class="hide">
+        <span><i class="fa fa-spinner fa-spin"></i> Loading</span>
+      </div>
+      <div id="glowscriptIframeContainer"></div>
+      <div id="output-dragbar" class="hide" data-action="resize"></div>
+      <div id="console-wrap" class="hide">
+        <div id="console-output"></div>
+      </div>
+    </div>
+
+    {% include "includes/embed-instructions.html" %}
+    {% endif %}
+
+  </div>
+
+  {% if not outputOnly %}
+  <div id="runFirstModal" class="reveal-modal small" data-interface="run-modal" data-reveal data-css-top="20" data-offset="200">
+    <h2>Run your code first!</h2>
+    <p class="lead">
+      It looks like you haven't tried running your new code.
+    </p>
+    <p>Try clicking
+    <a id="modalRun" class="button tiny" data-action="code.run"><i class="fa fa-play"></i>&nbsp;Run</a>
+    and if you like the result, try sharing again.</p>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
+  {% endif %}
+
+  {% raw %}
+  <textarea id="glowscriptTemplate" class="hide">
+    <html>
+      <head>
+        <style>
+        html, body {
+          margin: 0;
+          padding: 0;
+        }
+        div#glowscript {
+          width: 100%;
+          margin: 0 auto;
+          text-align: center;
+        }
+        textarea#print {
+          display: {{glowscriptTextarea}};
+          margin-top: 16px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        div#print-output {
+          display: none;
+          flex-direction: column;
+          margin: 16px;
+          padding: 8px;
+          background-color: white;
+          border: 1px solid #008aff;
+        }
+        </style>
+        <link type="text/css" href="{{url}}/{{prefix}}components/{{path}}/css/redmond/IDE/jquery-ui.custom.css" rel="stylesheet" />
+        <link type="text/css" href="{{url}}/{{prefix}}components/{{path}}/css/ide.css" rel="stylesheet" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.3/MathJax.js?config=TeX-AMS_HTML"></script>
+        {{jqueryList}}
+        <script type="text/javascript" src="{{url}}/{{prefix}}components/{{path}}/package/glow.{{version}}.min.js"></script>
+        <script type="text/javascript" src="{{url}}/{{prefix}}components/{{path}}/package/RSrun.{{version}}.min.js"></script>
+        <script type="text/javascript" src="{{url}}/{{prefix}}components/{{path}}/package/RScompiler.{{version}}.min.js"></script>
+      </head>
+      <body>
+        <div id="loading">Loading your Web VPython program</div>
+        <div id="glowscript"></div>
+        <div id="print-output"></div>
+
+<script id="glowscript_source" type="text/plain">{{prog}}</script>
+
+        <script type="text/javascript">
+          var prog = $('#glowscript_source').text()
+            , compiled, main_func;
+
+          // need to distinguish between 2.9 and <
+          var floatVersion = parseFloat('{{version}}');
+
+          if ('{{runMode}}' === 'calculator' && ('{{version}}' === '3.2.2' || floatVersion > 3.2)) {
+            $('#print-output').css('display', 'flex');
+            window.addEventListener('message', function(e) {
+              var data;
+
+              try {
+                data = JSON.parse(e.data);
+              } catch(e) {}
+
+              if (data && data['glowscript.print']) {
+                var s = data['glowscript.print'];
+                $('#print-output').append(s + "<br>");
+              }
+            });
+          }
+
+          async function runProgram(program) {
+            try {
+              eval(program);
+              await __main__();
+            } catch(err) {
+              // todo: figure out why stack trace parsing doesn't work for newer version of GS
+              var stack = reportScriptError(program, err, {{versionStringAdded}});
+              if (stack) {
+                window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message + ' ' + stack, type : "runtime" }), "*");
+              }
+              else {
+                window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message, type : "runtime" }), "*");
+              }
+            }
+          }
+
+          async function async_screenshot(scene) { // GlowScript 2.9 and later
+            var img = await scene.__renderer.screenshot();
+            var targetSize = 270;
+            var aspect = img.width / img.height;
+            var w = aspect >= 1 ? targetSize : targetSize * aspect;
+            var h = aspect >= 1 ? targetSize / aspect : targetSize;
+            var cvs = document.createElement("canvas");
+            cvs.width = w;
+            cvs.height = h;
+            var cx = cvs.getContext('2d');
+            cx.drawImage(img, 0, 0, w, h);
+            var snapshot = cvs.toDataURL();
+            window.parent.postMessage(JSON.stringify({ snapshot: snapshot }), "*");
+          }
+
+          try {
+            compiled = window.glowscript_compile(prog, { lang : '{{lang}}', version : '{{version}}' });
+          } catch(e) {
+            window.parent.postMessage(JSON.stringify({ "glowscript.error" : e.message, type : "compile" }), "*");
+          }
+
+          $("#loading").remove()
+          window.__context = {
+            glowscript_container : $('#glowscript')
+          };
+
+          if (floatVersion >= 2.9) {
+            runProgram(compiled);
+          }
+          else {
+            if (compiled) {
+              try {
+                main_func = eval(compiled);
+                window.userMain = main_func;
+
+                if (window.userMain && typeof window.userMain === "function") {
+                  window.userMain(function(err) {
+                    if (err) {
+                      var stack = reportScriptError(compiled, err)
+                      if (stack) {
+                        window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message + ' ' + stack, type : "runtime" }), "*");
+                      }
+                      else {
+                        window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message, type : "runtime" }), "*");
+                      }
+                    }
+                  });
+                }
+              } catch(err) {
+                var stack = reportScriptError(compiled, err);
+                if (stack) {
+                  window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message + ' ' + stack, type : "runtime" }), "*");
+                }
+                else {
+                  window.parent.postMessage(JSON.stringify({ "glowscript.error" : err.message, type : "runtime" }), "*");
+                }
+              }
+            }
+          }
+
+          window.addEventListener('message', function(e) {
+            if (e.data === "glowscript.snapshot") {
+              var scene = window.scene;
+              if (!scene) {
+                for (var c = 0; c < canvas.activated.length; c++) {
+                  if (canvas.activated[c] !== null) {
+                    scene = canvas.activated[c];
+                    break;
+                  }
+                }
+              }
+              if (scene) {
+                if (parseFloat('{{version}}') >= 2.9) {
+                  async_screenshot(scene);
+                }
+                else {
+                  (scene.__renderer || scene.renderer).screenshot(function (err, img) {
+                    if (!err) {
+                      $(img).load(function () {
+                        // Rescale the image to 128px max dimension and save it as a screenshot
+                        var targetSize = 270;
+                        var aspect = img.width / img.height;
+                        var w = aspect >= 1 ? targetSize : targetSize * aspect;
+                        var h = aspect >= 1 ? targetSize / aspect : targetSize;
+
+                        var canvas = document.createElement("canvas");
+                        canvas.width = w;
+                        canvas.height = h;
+                        var cx = canvas.getContext('2d');
+                        cx.drawImage(img, 0, 0, w, h);
+                        var snapshot = canvas.toDataURL("image/png");
+
+                        window.parent.postMessage(JSON.stringify({ snapshot: snapshot }), "*");
+                      });
+                    }
+                  });
+                }
+              }
+              else {
+                var glowscript_graph = $.find('.glowscript-canvas-wrapper canvas');
+                if (glowscript_graph[0] && typeof glowscript_graph[0].toDataURL == "function") {
+                  var snapshot = glowscript_graph[0].toDataURL("image/png");
+                  window.parent.postMessage(JSON.stringify({ snapshot: snapshot }), "*");
+                }
+              }
+            }
+          });
+        </script>
+      </body>
+    </html>
+  </textarea>
+  {% endraw %}
+
+{% endblock %}
+
+{% block body_scripts %}
+  {% if not outputOnly %}
+  {{ component('ace-builds', 'src-min-noconflict/ace.js') | safe }}
+  {{ component('ace-builds', 'src-min-noconflict/ext-modelist.js') | safe }}
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script>
+  <script src="{{ '/components/marked/lib/marked.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-config.js' | cachePrefix }}"></script>
+  <script src="{{ '/js/trinket-markdown.js' | cachePrefix }}"></script>
+  {% endif %}
+
+  {% include "embed/glowscript-config.html" %}
+  {{ component('jquery-ui', 'jquery-ui.min.js') | safe }}
+  {% set js = extra_js.concat([
+       '/components/jq-console/jqconsole.min.js',
+       '/js/util/guid.js',
+       '/js/plugins/code-editor.js',
+       '/js/embed/analytics/activity-log.js',
+       '/js/embed/glowscript.js'
+     ])
+  %}
+
+  {% if outputOnly %}
+    {{ cachify_js('embed-glowscript-output', js) | safe }}
+  {% else %}
+    {{ cachify_js('embed-glowscript', js) | safe }}
+  {% endif %}
+{% endblock %}

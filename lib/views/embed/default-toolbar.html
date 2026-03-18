@@ -1,0 +1,14 @@
+<button class="run-it menu-button item button allow-original"
+   data-action="{{'code.console' if runOption and runOption == 'console' else 'code.run'}}"
+   title="{{'View the result.' if not runOption or runOption == 'run' else 'Run code interactively.'}}"
+   aria-label="Run Code"
+   role="button" tabindex="0">
+  <i class="fa {{'fa-terminal' if runOption and runOption == 'console' else 'fa-play'}}"></i>
+  <label>{{'Run' if not runOption or runOption == 'run' else 'Console'}}</label>
+</button>
+<a class="check-it menu-button item allow-original {{'' if trinket.settings.testsEnabled else 'hide'}}"
+   data-action="code.check"
+   title="Check your code.">
+  <i class="fa fa-check-circle"></i>
+  <label class="show-for-medium-up">Check</label>
+</a>

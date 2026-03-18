@@ -1,0 +1,219 @@
+.material-subnav {
+  position: relative;
+  padding: 1.25em 2em;
+  margin: 0;
+  .button {
+    margin-bottom: 0;
+  }
+
+  .title {
+    float: left;
+  }
+  .breadcrumbs > .current > .draft-circle {
+    width: 12px;
+    height: 12px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: $draft-yellow;
+    display: inline-block;
+  }
+  #autosave-message {
+    float: left;
+    padding: 0.85rem 1.75rem 0.75rem;
+    color: #222;
+    font-size: 0.85em;
+
+    .autosave-error {
+      color: darken($alert-color, 20%);
+    }
+  }
+
+  .options-right {
+    float: right;
+    position: relative;
+  }
+}
+
+#material-edit {
+  position: relative;
+
+  .toolbar {
+    padding: 0 rem-calc(20);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    border-top: 1px solid darken($blue-40, 10%);
+    border-bottom: 1px solid darken($blue-40, 10%);
+    background: $blue-40;
+    overflow: hidden;
+
+    .title {
+      color: $primary-color;
+    }
+
+    .save {
+      position: absolute;
+      top: -40px;
+      left: 45%;
+      padding: 0 15px;
+      border-radius: 8px;
+      background: lighten($yellow, 20%);
+      font-weight: 900;
+    }
+
+    a {
+      padding: rem-calc(6 15 10);
+
+      &:not(.button) {
+        &:hover {
+          background-color: darken($blue-40, 10%);
+        }
+      }
+
+      &.button {
+        border: none;
+        margin: 0;
+      }
+    }
+
+    &.ui-scrollfix {
+      position: fixed;
+      top: 0;
+      z-index: 1;
+    }
+    .editable-wrap { width: auto; }
+
+    .search-input {
+      display: inline-block;
+      vertical-align: middle;
+      width: 350px;
+      height: 45px;
+      z-index: 5;
+      overflow: hidden;
+
+      input {
+        position: relative;
+        left: -350px;
+        width: 350px;
+        @media #{$small-only} {
+          width: 150px;
+        }
+        @media #{$medium-only} {
+          width: 225px;
+        }
+        height: 100%;
+        margin: 0;
+        padding: 0 10px;
+        backface-visibility: none;
+        border-radius: 0;
+        transition: left 0.3s;
+      }
+
+      &.focus {
+        z-index: 20;
+        input {
+          left: 0;
+          transition: left 0.3s;
+        }
+      }
+      &.active {
+        overflow: unset;
+      }
+
+      .f-dropdown {
+        overflow: hidden;
+        max-width: 400px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        li {
+          background: #eeeeee;
+        }
+        li.active {
+          background: #ffffff;
+        }
+      }
+    }
+  }
+
+  .editor {
+    position: relative;
+    margin: 0;
+
+    #markdown, #preview {
+      position: absolute;
+      margin: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 0;
+      display: block;
+      visibility: visible;
+      width: 50%;
+
+      li.list-item {
+        list-style-type: none;
+        input[type='checkbox'] {
+          margin: 0 0.2em 0.25em -1.6em;
+        }
+      }
+    }
+
+    #markdown {
+      font-size: 13px;
+      line-height: 18px;
+      right: 764px;
+      left: 0;
+      border-right: 1px solid #d4d4d4;
+    }
+
+    #preview {
+      left: auto;
+      right: 0;
+      overflow: scroll;
+      padding: 0 20px;
+
+      pre.codeInput {
+        overflow: scroll;
+        min-height: 50px;
+      }
+
+      .embed-placeholder {
+        margin: 5px 5px 20px 5px;
+        border:1px solid black;
+        background-color:#DDD;
+        display: table;
+
+        p {
+          display: table-cell;
+          vertical-align: middle;
+          text-align: center;
+        }
+      }
+
+      .material-preview {
+        margin: 1rem;
+        font-size: 1.4rem;
+        color: #d4d4d4;
+      }
+    }
+  }
+}
+
+#fileUploadModal {
+  text-align: center;
+  line-height: 24px;
+  .dropzone {
+    padding: 40px 15px;
+    border: dashed 5px #d4d4d4;
+    background: #EEE;
+    i {
+      font-size: 48px;
+      color: #999;
+    }
+  }
+  .browse {
+    p { margin: 20px 0 0 0; }
+    input { width: 160px; }
+  }
+}

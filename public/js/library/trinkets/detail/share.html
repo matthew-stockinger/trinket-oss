@@ -1,0 +1,36 @@
+<div class="row collapse">
+  <p>Need to share this trinket with students or other teachers?<br />
+  This trinket is available for others to view at the URL below.</p>
+</div>
+<form>
+  <div class="row collapse">
+    <div class="small-10 collapse">
+      <div class="faux-input" ng-bind="trinketUrl" ng-text-select></div>
+    </div>
+  </div>
+  <fieldset>
+    <legend>Link Options</legend>
+    <div class="row collapse">
+      <div class="small-10">
+        <select name="displayOptionLink" ng-model="info.shareDisplayMenu">
+          <option value="">Show code and output side-by-side (smaller screens will only show one at a time)</option>
+          <option value="shareOutputOnly">Only show output (hide the code)</option>
+          <option value="shareToggleCode">Only show code or output (let users toggle between them)</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset ng-show="runOption">
+    <legend>Run Options</legend>
+    <div class="row collapse">
+      <div class="small-10">
+        <select name="runOptionLink" ng-model="info.shareRunMenu">
+          <option value="">Allow either Run or Interactive console</option>
+          <option value="shareRunOption">Run code only</option>
+          <option value="shareConsoleOption">Interactive console only</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+</form>
+

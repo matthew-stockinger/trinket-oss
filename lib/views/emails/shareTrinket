@@ -1,0 +1,28 @@
+<html><head>
+</head><body><div id="content-container" style="margin-left: auto; margin-right: auto;">
+
+  <div id="content-body" style="padding: 20px; background: #ffffff; border: 1px solid #dddddd; border-radius: 3px; line-height: 2em; font-family: Arial">
+
+
+    <p class="p1">{{name}} wanted to share their <a href="{{shareUrl}}" target="_blank" rel="nofollow" text="{{shareUrl}}">project</a> with you.</p>
+
+    {% if snapshot %}
+    <div style="width: 280px; height: 280px; margin:auto; border: 1px solid rgba(0,0,0,0.2);">
+      <a target="_blank" rel="nofollow" text="{{shareUrl}}"
+         style="display:inline-block; border: solid 4px #eee; padding: 10px;" href="{{shareUrl}}">
+        <img style="max-width: 100%; height:auto;" width="252" height="252" src="{{snapshot}}">
+      </a>
+    </div>
+    {% endif %}
+
+    <p class="p1">Want to add this to your site? Simply copy the code below and paste it into your site.</p>
+
+    <p style="border:1px solid #d4d4d4; padding:4px">
+      &lt;iframe src="{{embedUrl}}" width="{{embedWidth}}%" height="{{embedHeight}}px" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen&gt;&lt;/iframe&gt;
+    </p>
+
+    <p>Hope you enjoy!</p>
+  </div>
+
+  {% include "emails/footer.html" %}
+</div></body></html>

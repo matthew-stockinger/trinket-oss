@@ -1,0 +1,18 @@
+<a class="button" ng-class="buttonClass" ng-click="openJoinCourse()"><i class="fa fa-user-plus"></i> Join Course</a>
+
+<script type="text/ng-template" id="joinCourse.html">
+  <div id="join-course-messages"></div>
+  <h2 id="join-course-title">Join a Course</h2>
+  <p class="lead">To join a course, you'll need the right Access Code. If you don't have one, contact your instructor.</p>
+  <form id="join-course-form" name="joinCourseForm" ng-submit="checkAccessCode()">
+    <div class="row">
+      <div class="small-12 medium-4 columns">
+        <input type="text" name="accessCode" ng-model="accessCode" ng-required="required" placeholder="enter your Access Code here" />
+      </div>
+      <div class="small-12 medium-4 columns end">
+        <button type="submit" class="button tiny"><i ng-class="checkingAccessCode ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-check-circle'"></i> Verify Code and Join</button>
+      </div>
+    </div>
+  </form>
+  <a class="close-reveal-modal" aria-label="Close" ng-click="close()">&#215;</a>
+</script>

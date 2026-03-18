@@ -1,0 +1,9 @@
+{
+  "shell": {
+    "port": 8010,
+    "tmpDir": "/tmp/pygame",
+    "cors": {
+      "origin": ["http://localhost:3000", "http://localhost:8080"]
+    }
+  }
+}

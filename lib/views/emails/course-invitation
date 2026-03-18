@@ -1,0 +1,27 @@
+<html>
+  <head></head>
+  <body>
+    <div id="content-container" style="margin-left: auto; margin-right: auto;">
+
+      <div id="content-body" style="padding: 20px; background: #ffffff; border: 1px solid #dddddd; border-radius: 3px; line-height: 2em; font-family: Arial">
+        <p>Hello!</p>
+
+        <p><strong>{{inviterName}}</strong> has invited you to join <strong>{{courseName}}</strong>.</p>
+
+        <p>Click the button below to accept this invitation and join the course now.</p>
+
+        <p><a style="color: #ffffff; background-color: #1e990e; padding: 0.875rem 1.75rem 0.9375rem 1.75rem; font-size: 0.8125rem; text-decoration: none" href="{{acceptUrl}}"><strong>Join Course</strong></a></p>
+
+        <p>Or copy and paste the URL below into your internet browser:<br /><a href="{{acceptUrl}}">{{acceptUrl}}</a></p>
+
+        <p>If you have questions you can reply to this email which will go to the sender of the invitation.</p>
+
+        <p>Hope you enjoy your course!</p>
+      </div>
+
+    </div>
+
+    {% set skipReplyMessage = true %}
+    {% include "emails/footer.html" %}
+  </body>
+</html>

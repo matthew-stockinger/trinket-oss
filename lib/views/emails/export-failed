@@ -1,0 +1,23 @@
+<html>
+  <head></head>
+  <body>
+    <div id="content-container" style="margin-left: auto; margin-right: auto;">
+
+      <div id="content-body" style="padding: 20px; background: #ffffff; border: 1px solid #dddddd; border-radius: 3px; line-height: 2em; font-family: Arial">
+        <p>Hi {{username}},</p>
+
+        <p>We're sorry, but your export could not be completed.</p>
+
+        <p>
+          <strong>Error:</strong> {{errorMessage}}
+        </p>
+
+        <p>Please try again later, or contact us if the problem persists.</p>
+
+        <p>Happy Coding!</p>
+      </div>
+    </div>
+
+    {% include "emails/footer.html" %}
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block ng_app %}{{ 'courseEditor' if canEdit or isAssoc else 'courseView' }}{% endblock %}
+
+{% block body_class %}course{% endblock %}
+
+{% block content %}
+  <div ng-view ng-cloak ng-init="courseId='{{courseId}}';userSlug='{{userSlug}}';courseSlug='{{courseSlug}}';canEdit={{'true' if canEdit else 'false'}}"></div>
+  {% if user and user.roles %}
+    <input id="roles" type='hidden' value='{{ user.roles | encrypt }}'>
+  {% endif %}
+{% endblock %}
+
+{% block banner %}{% endblock %}
+
+{% block extra_js %}
+{% for script in config.app.ngapps.courseEditor %}
+  <script src="{{ script | cachePrefix }}"></script>
+{% endfor %}
+{% endblock %}
+

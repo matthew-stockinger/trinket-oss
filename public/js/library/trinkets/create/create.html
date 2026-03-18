@@ -1,0 +1,119 @@
+<div id="trinket-overview" class="row">
+  <section ng-show="canCreate" class="page-menu">
+    <section class="options-right">
+      <a class="button small primary" ng-click="save()"><i class="fa fa-save"></i>&nbsp;save</a>
+      <a class="button small caution" ng-click="cancel()">cancel</a>
+    </section>
+    <div class="spacer"></div>
+    <nav class="breadcrumbs">
+      <a href="/home"><i class="fa fa-home"></i></a>
+      <a ui-sref="list">My Trinkets</a>
+      <a class="current">
+        <span editable-text="trinket.name"
+              e-maxlength="50"
+              buttons="no"
+              blur="submit">{{ trinket.name || 'Untitled' }}</span>
+      </a>
+    </nav>
+  </section>
+  <section ng-if="lang == 'python3'">
+    <p>
+      This trinket includes everything in
+      <a href="https://www.python.org/downloads/release/python-3109/" target="_blank">Python 3.10.9 <sup><i class="fa fa-external-link"></i></sup></a>
+      as well as scientific libraries like <a href="http://www.numpy.org/" target="_blank">Numpy <sup><i class="fa fa-external-link"></i></sup></a>,
+      <a href="http://www.scipy.org/", target="_blank">SciPy <sup><i class="fa fa-external-link"></i></sup></a>
+      and <a href="http://matplotlib.org/" target="_blank">matplotlib <sup><i class="fa fa-external-link"></i></sup></a>,
+      with more on the way. You can try the examples below or try your own code and then click &nbsp;<i class="fa fa-play"></i> Run. An interactive
+      console option is available too &mdash; just select &nbsp;<i class="fa fa-terminal"></i> Console from the Run menu.
+    </p>
+  </section>
+  <section ng-if="lang == 'java'">
+    <p>
+      This is our Java trinket. We're running <a href="http://docs.oracle.com/javase/8/" target="_blank">Java SE 8</a>.
+      You can try the examples below or try your own code and then click &nbsp;<i class="fa fa-play"></i> Run.
+    </p>
+  </section>
+  <section ng-if="lang == 'R'">
+    <p>
+      The <a href="https://www.r-project.org/" target="_blank">R language</a> is a powerful environment for statistical computing and graphics.
+      You can try the examples below or try your own code and then click &nbsp;<i class="fa fa-play"></i> Run.
+    </p>
+  </section>
+  <section ng-if="lang == 'pygame'">
+    <p>
+      With pygame you can create your favorite interactive games. This trinket also includes support for Tkinter and sound.
+      You can try the examples below or try your own code and then click &nbsp;<i class="fa fa-play"></i> Run.
+    </p>
+  </section>
+  <p ng-if="lang == 'glowscript' && !iframeUrl">You can create Web VPython (formerly known as GlowScript) trinkets using Python or Blocks. Select which type you'd like to create below:</p>
+  <section id="embed-code" ng-class="lang == 'music' ? 'medium' : 'large'">
+    <section id="glowscript-options" ng-if="lang == 'glowscript' && !iframeUrl">
+      <div class="row">
+        <div class="small-5 small-offset-1 columns">
+          <div class="gsblocks-img-container" ng-click="setIframeUrl('glowscript')">
+            <img ng-src="{{ config.prefix('/img/glowscript-python.png') }}" />
+            <span class="overlay"><span>Python</span></span>
+          </div>
+        </div>
+        <div class="small-5 columns end">
+          <div class="gsblocks-img-container" ng-click="setIframeUrl('glowscript-blocks')">
+            <img ng-src="{{ config.prefix('/img/glowscript-blocks.png') }}" />
+            <span class="overlay"><span>Blocks</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <iframe ng-show="iframeUrl" ng-src="{{iframeUrl}}" width="100%" height="100%" frameborder="0" marginwidth="0" marginheight="0" allowfullscreen
+            embed-api run-mode="runMode" is-modified="isModified" api="trinketApi" can-create="{{canCreate}}"></iframe>
+  </section>
+
+  <section ng-if="lang == 'python'">
+    <p>
+      <b>Getting Started &mdash;</b> Type or paste Python code into the box on the left. Click <i class="fa fa-play"></i> <strong>Run</strong> to view its
+      output in the box on the right. Click <i class="fa fa-save"></i><strong>Save</strong> when you're done. Don't worry- you can always edit the code later.
+    </p>
+    <p>First time? Try typing: <code>print("Hello, World!")</code></p>
+    <p>
+      <b>Python Version &mdash;</b> By default, this Trinket will try to run both Python 2 and 3 code. You can also enable strict Python 2 or Python 3 modes with a
+      <code>#!/bin/python2</code> or <code>#!/bin/python3</code> at the top of your trinket.
+    </p>
+  </section>
+  <section ng-if="lang == 'music'">
+    <p>A music trinket allows you to create short compositions. When people view your trinket they will be able to make their own changes and then listen them.</p>
+    <p>
+      You can click the hamburger menu on the left side of the code window to look at the cheatsheet or change any setup options.
+      If you make something you don't like, you can also press the reset button.
+    </p>
+  </section>
+  <section ng-if="lang == 'glowscript' || lang == 'glowscript-blocks'">
+    <p>
+      Web VPython is an easy-to-use, powerful environment for creating 3D animations. It is frequently used in Physics classrooms for modeling and visualizations.
+      Find out more about Web VPython at <a href="https://webvpython.org/" target="_blank">webvpython.org</a>.
+    </p>
+    <p ng-if="lang == 'glowscript' && iframeUrl">
+      To use the latest version of Web VPython, the first line of your program should be <code>Web VPython 3.2</code>.
+      To use older versions or to write your Web VPython programs in JavaScript, visit the
+      <a href="https://www.glowscript.org/docs/VPythonDocs/index.html" target="_blank">technical documentation</a>.
+    </p>
+    <p ng-if="lang == 'glowscript-blocks' && iframeUrl">
+      The GlowScript Blocks trinket is being developed in coordination with the Department of Physics at Texas State University.
+    </p>
+  </section>
+
+  <section ng-show="examples && iframeUrl">
+    <h3>Examples</h3>
+    <p>
+      If you're looking for ideas on how to get started, or need ideas for a new project, here are a few examples to hopefully help.
+      Click on one of the images to try it out.
+    </p>
+    <ul id="trinkets-list">
+      <li class="named-list" ng-repeat="ex in examples">
+        <a data-lang="{{lang}}" data-short-code="{{ex.shortCode}}" class="trinket-snapshot" ng-class="{title: ex.name}">
+          <!-- ng-click="loadTrinket($index)" -->
+          <img ng-src="{{ex.snapshot}}" width="280" height="280" alt="{{ex.snapshot}}">
+          <h3 class="title">{{ex.name || 'Untitled'}}</h3>
+        </a>
+      </li>
+    </ul>
+  </section>
+</div>

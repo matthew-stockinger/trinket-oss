@@ -1,0 +1,24 @@
+#codeOutput {
+  position: relative;
+  float:right;
+  height: 100%;
+  width: 40%;
+  border-left: 1px solid ;
+}
+
+#editor {
+  float: left;
+  height: 100%;
+  text-align: left;
+  width: 60%;
+}
+
+#graphic canvas {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+span.error {
+  margin-top: 0;
+}
+

@@ -1,0 +1,11 @@
+app:
+  analytics:
+    secret:
+  url:
+    protocol:
+    hostname:
+db:
+  mongo:
+    host:
+    user:
+    pass:

@@ -1,0 +1,56 @@
+label { margin-bottom: 0; }
+
+input[type="text"], input[type="button"] {
+	padding: 8px 10px 6px;
+}
+
+.mat-input-container {
+  input {
+    all: unset !important;
+  }
+}
+
+span.error, small.error {
+	a {
+		color: #FFF;
+		text-decoration: underline;
+	}
+}
+
+#bottom-page-interest {
+  margin-top: 40px;
+  border: 1px solid #c4c4c4;
+  border-radius: 2px;
+  padding: 1.5em 1em;
+
+  input {
+    margin: 0;
+  }
+  a {
+    margin: 0;
+  }
+}
+
+#inline-interest {
+  border: 1px solid #c4c4c4;
+  border-radius: 2px;
+  padding: 1.5em 1em;
+
+  input {
+    margin: 0;
+  }
+  a {
+    margin: 0;
+  }
+}
+
+#interest-go {
+  opacity: 0.95;
+}
+
+.light-alert-success {
+  border: 1px solid $success-color;
+  padding: 20px 30px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,141 @@
+<div class="row">
+  <div class="small-12 columns">
+    <div class="row">
+      <div class="small-4 columns">
+        <span class="right inline" style="display: block; padding-top: 0.5625rem;">Current Email Address</span>
+      </div>
+      <div class="small-6 columns end">
+        <span class="inline" style="display: block; padding-top: 0.5625rem;">{{ user.email }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if emailEnabled %}
+<form id="verify-email" method="post">
+  <div class="row">
+    <div class="small-12 columns">
+      {% if not user.verified %}
+      <div class="g-recaptcha" data-sitekey="{{ config.app.recaptcha.sitekey }}" data-callback="emailVerificationForm" data-size="invisible"></div>
+      <div id="emailPendingStatus" class="row">
+        <div class="small-10 small-offset-1 columns end">
+          <p class="data-warning">Your email address has not been verified. <a id="send-verification-email">Send verification email</a>.</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+<form id="change-email" method="post">
+  <div class="row">
+    <div class="small-12 columns">
+      <div class="row">
+        <div class="small-4 columns">
+          <label for="email-address" class="right inline">New Email Address</label>
+        </div>
+        <div class="small-6 columns end">
+          <input type="text" id="email-address" name="email" required />
+        </div>
+      </div>
+
+      {% if data.pendingEmailAddress %}
+      <div id="emailPendingStatus" class="row">
+        <div class="small-10 small-offset-1 columns end">
+          <p class="data-warning">You have a pending email change for <span id="pendingEmailAddress">{{ data.pendingEmailAddress }}</span>. You can try <a id="resend-email">resending the confirmation email</a> if you did not receive it.</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="row">
+        <div class="small-6 small-offset-4 columns end">
+          <input type="submit" class="button primary small" value="update email address" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{% else %}
+<div class="row">
+  <div class="small-12 columns">
+    <p>Email changes are not available because email is not configured on this server.</p>
+  </div>
+</div>
+{% endif %}
+
+{% block extra_js %}
+<script type="text/javascript">
+$('#change-email').submit(function(event) {
+  event.preventDefault();
+
+  var $self = $(this);
+
+  $("input[type=submit]").attr('disabled','disabled');
+
+  $.ajax({
+    url      : '/api/users/email',
+    method   : 'POST',
+    data     : $(this).serialize(),
+    dataType : 'json'
+  }).done(function(result) {
+    if (result.success) {
+      $('#account').notify(
+        "Almost done! We sent an email to your new address with a link to confirm this update."
+        , { position : 'top center', className : 'success' }
+      );
+      $('#pendingEmailAddress').text( $('#email-address').val().toLowerCase() );
+      $('#emailPendingStatus').removeClass('hide');
+      $self.get(0).reset();
+    }
+    else if (result.message) {
+      $('#account').notify(
+        result.message
+        , { position : 'top center', className : 'warning' }
+      );
+    }
+    else {
+      $('#account').notify(
+        "Something went wrong when trying to change your email address. Please try again."
+        , { position : 'top center', className : 'alert' }
+      );
+    }
+
+    $("input[type=submit]").removeAttr('disabled');
+  }).fail(function(err) {
+    $('#account').notify(
+      "Something went wrong when trying to change your email address. Please try again."
+      , { position : 'top center', className : 'alert' }
+    );
+    $("input[type=submit]").removeAttr('disabled');
+  });
+});
+
+$('#resend-email').click(function(event) {
+  event.preventDefault();
+
+  $.get('/api/users/resendEmailChange').done(function(result) {
+    if (result.success) {
+      $('#account').notify(
+        "Resending confirmation email now."
+        , { position : 'top center', className : 'success' }
+      );
+    }
+    else {
+      $('#account').notify(
+        "There was a problem resending the confirmation email. Please try again later or try setting a new email address."
+        , { position : 'top center', className : 'alert' }
+      );
+    }
+  }).fail(function(err) {
+    $('#account').notify(
+      "There was a problem resending the confirmation email. Please try again later or try setting a new email address."
+      , { position : 'top center', className : 'alert' }
+    );
+  });
+});
+$('#send-verification-email').click(function(event) {
+  event.preventDefault();
+  grecaptcha.execute();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'icomoon';
+  src:    url("#{$fonts_prefix}/trinket-key-icon/fonts/icomoon.eot");
+  src:    url("#{$fonts_prefix}/trinket-key-icon/fonts/icomoon.eot#iefix") format('embedded-opentype'),
+      url("#{$fonts_prefix}/trinket-key-icon/fonts/icomoon.ttf") format('truetype'),
+      url("#{$fonts_prefix}/trinket-key-icon/fonts/icomoon.woff") format('woff'),
+      url("#{$fonts_prefix}/trinket-key-icon/fonts/icomoon.svg#icomoon") format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+i.trinket-key {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:before {
+    content: "\e900";
+  }
+
+  &.logo {
+    color: white;
+    border-radius: 50%;
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    margin-left: 0.5em;
+    padding-bottom: 1.5em;
+    margin-bottom: -0.25em;
+    content: "";
+    position: relative;
+
+    &.premium, &.green {
+      background-color: $secondary-color;
+    }
+    &.yellow {
+      background-color: $yellow;
+    }
+
+    &:before {
+      position: absolute;
+      top: 0.25em;
+      left: 0.25em;
+    }
+  }
+}

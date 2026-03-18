@@ -1,0 +1,673 @@
+[data-magellan-expedition-clone] { visibility:hidden; }
+
+.trinketLabel {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#interactionsTable {
+  width: 100%;
+}
+
+#shareTab {
+  position: relative;
+}
+
+#copiedMessage {
+  margin-top: 40px;
+}
+
+#metrics {
+  margin-top: 20px;
+}
+
+#sharing {
+  margin-top: 20px;
+  #descriptionTab {
+    pre {
+      font-family: $body-font-family;
+    }
+    .editable-input.editable-has-buttons {
+      width: 100%;
+    }
+    .editable-buttons {
+      display: block;
+    }
+  }
+  .tabs {
+    ul {
+      width: 100%;
+    }
+    li:first-child {
+      border-left: 1px solid #d4d4d4;
+    }
+    li {
+      border-top: 1px solid #d4d4d4;
+      border-right: 1px solid #d4d4d4;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 0;
+    }
+  }
+  .tabs-content {
+    width: 100%;
+    height: 360px;
+    border: 1px solid #d4d4d4;
+    padding: 12px;
+    overflow-y: auto;
+  }
+}
+
+.label.info.last-saved {
+  position: absolute;
+  top: -20px;
+  right: 0;
+  background: none;
+}
+
+.library-subnav {
+  border-bottom: 1px solid #d4d4d4;
+  position: relative;
+  padding: 0.75em 2em;
+  .button {
+    margin-bottom: 0;
+    // margin-top: 0.6em;
+  }
+
+  .title {
+    float: left;
+    @media #{$small-only} {
+      float: none;
+      margin-bottom: 0;
+    }
+  }
+
+  #listview-options {
+    float: left;
+    position: relative;
+
+    label {
+      display: none;
+
+      @media #{$xlarge-up} {
+        display: inline-block;
+        font-size: 0.8125rem;
+        cursor: unset;
+      }
+    }
+    button {
+      margin-right: 0.6em;
+    }
+
+    #search-label {
+      margin-left: 1rem;
+    }
+
+    .search-input {
+      position: absolute;
+      top: 0;
+      left: 5.65rem;
+      width: 450px;
+      height: 3rem;
+      z-index: 5;
+      overflow: hidden;
+
+      input {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: -450px;
+        width: 450px;
+        @media #{$small-only} {
+          width: 150px;
+        }
+        @media #{$medium-only} {
+          width: 225px;
+        }
+        height: 100%;
+        margin: 0;
+        padding: 0 10px;
+        backface-visibility: none;
+        border-radius: 0;
+        transition: left 0.3s;
+      }
+
+      &.focus {
+        z-index: 20;
+        input {
+          left: 0;
+          transition: left 0.3s;
+        }
+      }
+      &.active {
+        overflow: unset;
+      }
+
+      .f-dropdown {
+        overflow: hidden;
+        max-width: 400px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        li {
+          background: #eeeeee;
+        }
+        li.active {
+          background: #ffffff;
+        }
+      }
+    }
+
+    #listview-menus {
+      display: inline-block;
+      z-index: 10;
+      position: relative;
+    }
+  }
+
+  .sub-nav {
+    float: left;
+    @media #{$small-only} {
+      float: none;
+      margin: 0;
+      position: initial;
+      dt {
+        margin-left: 0;
+      }
+    }
+    margin: 0;
+    padding: $crumb-padding;
+    position: relative;
+    dt {
+      text-transform: none;
+      margin-bottom: 0;
+      margin-right: 0.2em;
+    }
+    dd {
+      margin-left: 0.2rem;
+    }
+    a {
+      line-height: inherit;
+    }
+  }
+
+  #new-folder-section {
+    margin-right: 0.6em;
+  }
+}
+#trinkets-list, .trinkets-list {
+  ul {
+    margin: 0 auto;
+    text-align: center;
+  }
+  li {
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+
+    &.named-list {
+      min-height: 280px;
+
+      &.admin-view {
+        position: relative;
+        overflow: visible;
+        i {
+          position: absolute;
+          top: -1rem;
+          right: -1rem;
+        }
+      }
+    }
+  }
+
+  &.list-view {
+    div, ul, li, h3 {
+      font-size: 1rem;
+    }
+
+    &>li {
+      padding: 0.8rem 0.5rem 0.5rem;
+      display: block;
+      width: initial;
+      min-height: initial;
+      border: none;
+      clear: both;
+
+      .snapshot {
+        display: inline-block;
+
+        height: 1rem;
+        float: left;
+
+        position: static;
+
+        img, div.folder-img-container {
+          display: none;
+        }
+
+        .title {
+          position: static;
+          display: inline-block;
+          width: initial;
+          border: none;
+          margin: 0 0 -0.2rem 0;
+          padding: 0;
+          &:before {
+            // if you are saying wtf??
+            // see http://blog.brianjohnsondesign.com/responsive-background-image-sprites-css-tutorial/
+            width: 1rem;
+            height: 0;
+            padding-bottom: 1rem;
+            background-repeat: no-repeat;
+            background-size: 900%;
+            background-image: url("#{$assets_host}/langs-6.0.png");
+            display: inline-block;
+            margin-right: 0.5rem;
+            content: "";
+          }
+          &.lang-python:before {
+            background-position: 0 0;
+          }
+          &.lang-music:before {
+            background-position: 12.5% 0;
+          }
+          &.lang-blocks:before {
+            background-position: 25% 0;
+          }
+          &.lang-html:before {
+            background-position: 37.5% 0;
+          }
+          &.lang-console:before {
+            background-position: 0 0;
+          }
+          &.lang-glowscript:before {
+            background-position: 50% 0;
+          }
+          &.lang-glowscript-blocks:before {
+            background-position: 50% 0;
+          }
+          &.lang-folder:before {
+            background-position: 62.5% 0;
+          }
+          &.lang-java:before {
+            background-position: 75% 0;
+          }
+          &.lang-R:before {
+            background-position: 87.5% 0;
+          }
+          &.lang-pygame:before {
+            background-position: 100% 0;
+          }
+        }
+      }
+
+      .trinket-stats {
+        line-height: 1rem;
+        font-size: 0.8rem;
+        display: inline-block;
+        float: right;
+        .trinket-last-date {
+          display: inline-block;
+        }
+        ul {
+          margin-bottom: -0.2rem;
+          display: inline-block;
+          li {
+            margin: 0 0.625rem;
+            width: initial;
+          }
+        }
+      }
+    }
+  }
+
+  &>li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px;
+    height: auto;
+    min-height: 320px;
+    width: 280px;
+    border: solid 4px #eee;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    &:hover {
+      box-shadow: 0 0 2px 2px rgba($primary-color, 0.5);
+    }
+    .snapshot {
+      display: block;
+      height: 310px;
+
+      position: relative;
+
+      img.set-height {
+        height: 280px;
+      }
+
+      .title {
+        position: absolute;
+        bottom: 0;
+        margin: 0;
+        border-top: 1px solid #ddd;
+        padding: 0 0.25em;
+        color: #ddd;
+        background-color: #ffffff;
+        opacity: 0.75;
+
+        width: 100%;
+      }
+
+      &.titled .title {
+        color: #666;
+      }
+
+      div.folder-img-container {
+        display: inline-block;
+        height: 280px;
+        line-height: 220px;
+        text-align: center;
+        width: 100%;
+        img.folder-img {
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .titled {
+      color: #666;
+    }
+
+    &.dragging-trinket {
+      border: dashed 2px $primary-color;
+      box-shadow: none;
+      background: rgba(#fff, 1);
+      color: #666;
+    }
+    &.folder-dropzone {
+      box-shadow: 0 0 8px 2px rgba($primary-color, 0.75);
+    }
+  }
+
+  &>li.no-stats {
+    min-height: 280px;
+    position: relative;
+
+    img {
+      opacity: 1;
+      -webkit-transition: opacity 0.2s ease-in-out;
+      -moz-transition: opacity 0.2s ease-in-out;
+      -o-transition: opacity 0.2s ease-in-out;
+      -ms-transition: opacity 0.2s ease-in-out;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    a.hover-button {
+      position: absolute;
+      display: none;
+      width: 160px;
+      top: 40px;
+      left: 50%;
+      margin-left: -80px;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      img {
+        opacity: 0.3;
+      }
+
+      a.hover-button {
+        display: block;
+      }
+    }
+  }
+
+  .trinket-stats {
+    padding: 0 0.5em;
+  }
+}
+
+.trinket-last-date {
+  color: #999;
+  font-size: 0.8em;
+}
+
+#trinket-overview {
+  margin-top: 20px;
+
+  max-width: 85%;
+
+  .page-menu {
+    position: relative;
+    display: flex;
+    flex-flow: row-reverse;
+    margin-bottom: 1rem;
+
+    .options-right {
+      flex: 0.5 1 auto;
+      display: flex;
+      justify-content: flex-end;
+      margin-left: 1em;
+
+      @media #{$small-only} {
+        margin-left: 0;
+        margin-top: 4em;
+        float: right;
+      }
+
+      .button.small {
+        flex: 1 1 auto;
+        margin: .1rem;
+        padding: rem-calc(16px) rem-calc(20px);
+        justify-content: center;
+
+        .label-container {
+          display: flex;
+          justify-content: center;
+          align-content: center;
+          .label-text {
+            margin-left: rem-calc(5px);
+          }
+          .label-icon {
+            margin-top: 1px;
+          }
+        }
+      }
+    }
+
+    .spacer {
+      flex: 1 0 auto
+    }
+
+    .breadcrumbs {
+      flex: 0 2 auto;
+
+      @media #{$medium-only} {
+        display: block;
+      }
+
+      @media #{$small-only} {
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      display: inline-block;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      &>* {
+        float: none;
+      }
+    }
+  }
+
+  #embed-code {
+    margin-bottom: 20px;
+    width: 100%;
+    overflow: hidden;
+    .exit-edit-view {
+      display: none;
+    }
+
+    &.edit {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      padding: 40px 10px 10px;
+      background: rgba(0,0,0,0.75);
+      .exit-edit-view {
+        display: block;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+      }
+    }
+
+    &.small {
+      height: 150px;
+    }
+    &.medium {
+      height: 400px;
+    }
+    &.large {
+      height: 600px;
+    }
+  }
+
+  .trinket-stat {
+    padding: 0 20px 0 0;
+  }
+}
+
+.trinket-list-with-lang {
+  &:before {
+    // if you are saying wtf??
+    // see http://blog.brianjohnsondesign.com/responsive-background-image-sprites-css-tutorial/
+    // background-position: 100% / (n - 1)
+    // background-size: n * 100%
+    width: 1rem;
+    height: 0;
+    padding-bottom: 1rem;
+    background-repeat: no-repeat;
+    background-size: 900%;
+    background-image: url("#{$assets_host}/langs-6.0.png");
+    display: inline-block;
+    margin-right: 0.5rem;
+    content: "";
+  }
+  &.lang-python:before {
+    background-position: 0 0;
+  }
+  &.lang-music:before {
+    background-position: 12.5% 0;
+  }
+  &.lang-blocks:before {
+    background-position: 25% 0;
+  }
+  &.lang-html:before {
+    background-position: 37.5% 0;
+  }
+  &.lang-console:before {
+    background-position: 0 0;
+  }
+  &.lang-glowscript:before {
+    background-position: 50% 0;
+  }
+  &.lang-glowscript-blocks:before {
+    background-position: 50% 0;
+  }
+  &.lang-folder:before {
+    background-position: 62.5% 0;
+  }
+  &.lang-java:before {
+    background-position: 75% 0;
+  }
+  &.lang-R:before {
+    background-position: 87.5% 0;
+  }
+  &.lang-pygame:before {
+    background-position: 100% 0;
+  }
+}
+
+.fade-in-out {
+  opacity: 1;
+  -webkit-transition: all linear 0.5s;
+  -moz-transition: all linear 0.5s;
+  -o-transition: all linear 0.5s;
+  -ms-transition: all linear 0.5s;
+  transition: all linear 0.5s;
+}
+
+.fade-in-out.ng-hide {
+  opacity: 0;
+}
+
+#glowscript-options {
+  margin-top: 5px;
+  height: 96%;
+  overflow: visible;
+
+  > .row {
+    height: 100%;
+    > .columns {
+      height: 100%;
+    }
+  }
+
+  .gsblocks-img-container {
+    display: inline-block;
+    position: relative;
+    height: 100%;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.80);
+      text-align: center;
+
+      &:hover {
+        background: none;
+        span {
+          background: white;
+          box-shadow: 0 0 2px 2px rgba($primary-color, 0.5);
+          padding: 10px 20px;
+        }
+      }
+
+      span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 160%;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+#addToFolderModal {
+  max-height: calc(100vh - 25px);
+  overflow-y: auto;
+  top: 25px;
+}

@@ -1,0 +1,171 @@
+<div id="profileError" data-alert class="alert-box alert hide-override">
+  <span id="message"></span>
+</div>
+<div id="profileSuccess" data-alert class="alert-box success hide-override">
+  Success! Your profile has been updated.
+</div>
+
+<div class="row">
+  <div class="small-8 columns {% if config.features.assets %}dropzone{% endif %}">
+    <div id="avatar-dropzone" class="row">
+      <div class="avatar-image medium-3 small-10 small-offset-1 columns">
+        <img id="user-avatar" src="{{ userAvatarSrc }}" class="avatar" />
+      </div>
+      {% if config.features.assets %}
+      <div class="medium-6 small-10 small-offset-1 columns end">
+        <button id="upload-button" class="tiny file-upload">Upload new picture</button>
+        <div id="hidden-previews" class="hide"></div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if config.features.assets %}
+    <div id="upload-progress" class="row hide">
+      <div class="small-12">
+        <div class="progress">
+          <span class="meter green" style="width:35%">
+            <p class="percent">35%</p>
+          </span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<form id="update-profile" method="post" data-user-id="{{ user.id }}">
+  <div class="row">
+    <div class="small-8 columns">
+
+      <div class="row">
+        <div class="medium-3 small-10 small-offset-1 columns">
+          <label for="display-name" class="show-for-medium-up inline">Display Name</label>
+          <label for="display-name" class="show-for-small-only">Display Name</label>
+        </div>
+        <div class="medium-6 small-10 small-offset-1 columns end">
+          <input type="text" id="display-name" name="name" value="{{ user.name }}" required />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="medium-3 small-10 small-offset-1 columns">
+          <label for="username" class="show-for-medium-up inline">Username</label>
+          <label for="username" class="show-for-small-only">Username</label>
+        </div>
+        <div class="medium-6 small-10 small-offset-1 columns end">
+          <input type="text" id="username" name="username" value="{{ user.username }}" required />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if user.username.indexOf('_') >= 0 %}
+  <div class="row">
+    <div class="small-10 small-offset-1 columns">
+      <span class="data-warning">Including underscores in your username can cause problems when your
+      courses are viewed in certain browsers such as Internet Explorer 11 and Microsoft Edge.</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="small-12 columns">
+      <div class="row update-row collapse">
+        <div class="medium-6 small-10 small-offset-1 columns">
+          <input type="hidden" id="avatar" name="avatar" value="{{ user.avatar }}" />
+          <input type="submit" class="button primary small" value="update profile" />
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+{% block extra_js %}
+{% if config.features.assets %}
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/dropzone/4.2.0/min/dropzone.min.js"></script>
+<script type="text/javascript">
+Dropzone.autoDiscover = false;
+var avatarDropzone = new Dropzone("div#avatar-dropzone", {
+    url : "/file/avatar"
+  , acceptedFiles : "image/jpeg,image/png,image/gif,image/jpg"
+  , dictDefaultMessage : ""
+  , previewsContainer : "#hidden-previews"
+  , clickable : "#upload-button"
+  , paramName : "upload"
+  , init: function() {
+      // set progress indicator to 0
+      $('#upload-progress').addClass('hide');
+      $('#upload-progress').find('span.meter').css('width', '0%');
+      $('#upload-progress').find('p.percent').text('0%');
+
+      this.on("success", function(file, response) {
+        var newSrc = response.host + '/' + response.path;
+        $('#user-avatar').attr('src', newSrc);
+        $('#avatar').val(newSrc);
+      });
+
+      this.on("error", function(err) {
+        $('#message').text("There was a problem uploading your new picture. Picture format must be one of png, jpeg, jpg, or gif.");
+        showAlert("#profileError");
+      });
+
+      this.on("uploadprogress", function(file, progress, bytesSent) {
+        if ($('#upload-progress').hasClass('hide')) {
+          $('#upload-progress').removeClass('hide');
+        }
+        $('#upload-progress').find('span.meter').css('width', progress + '%');
+        $('#upload-progress').find('p.percent').text(Math.floor(progress) + '%');
+
+        if (progress === 100) {
+          setTimeout(function() {
+            $('#upload-progress').addClass('hide');
+          }, 10000);
+        }
+      });
+    }
+});
+</script>
+{% endif %}
+<script type="text/javascript">
+$('#update-profile').submit(function(event) {
+  event.preventDefault();
+  $('.alert-box').addClass('hide-override');
+
+  $.ajax({
+    url      : '/api/users/' + $(this).data('user-id'),
+    method   : 'PUT',
+    data     : $(this).serialize(),
+    dataType : 'json'
+  }).done(function(result) {
+    if (result.success) {
+      showAlert("#profileSuccess");
+      if (result.user.avatar && /^http/.test(result.user.avatar)) {
+        $('#nav-user-avatar').attr('src', result.user.avatar);
+      }
+      $('#userdata').text(result.user.username);
+    }
+    else if (result.flash && result.flash.validation && result.flash.validation.username) {
+      $('#message').text(result.flash.validation.username);
+      showAlert("#profileError");
+    }
+    else if (result.message) {
+      $('#message').text(result.message);
+      showAlert("#profileError");
+    }
+    else {
+      $('#message').text('Something went wrong when trying to update your profile. Please try again.');
+      showAlert("#profileError");
+    }
+  }).fail(function(err) {
+    $('#message').text('Something went wrong when trying to update your profile. Please try again.');
+    showAlert("#passwordError");
+  });
+});
+function showAlert(alert) {
+  $(alert).removeClass("hide-override");
+  setTimeout(function() {
+    $(alert).addClass("hide-override");
+  }, 5000);
+}
+</script>
+{% endblock %}

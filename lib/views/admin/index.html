@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block body_class %}side-nav-with-content{% endblock %}
+
+{% block base_href %}<base href="/">{% endblock %}
+
+{% block banner %}{% endblock %}
+
+{% block ng_app %}{% endblock %}
+
+{% block content %}
+<div id="admin" class="row full-width">
+  <div class="large-3 small-12 columns">
+    <ul class="side-nav">
+      <li class="side-nav-heading">
+        <h4>Pages</h4>
+      </li>
+    {% for link in ['Users', 'Featured-Courses'] %}
+      <li>
+        <a {% if page == link.toLowerCase() %}class="active"{% endif %} href="/admin/{{ link | lower }}">{{ link | replace('-', ' ') }}</a>
+      </li>
+    {% endfor %}
+    {% if config.features.trinkets.python3 or config.features.trinkets.java or config.features.trinkets.R or config.features.trinkets.pygame %}
+      <li>
+        <a {% if page == 'serverside' %}class="active"{% endif %} href="/admin/serverside">Server Side</a>
+      </li>
+    {% endif %}
+      <li>
+        <a {% if page == 'upload' %}class="active"{% endif %} href="/admin/upload">Batch User Upload</a>
+      </li>
+    </ul>
+  </div>
+  <div class="content-column large-9 small-12 columns">
+    <div id="content-wrapper">
+
+      <div class="row">
+        <div class="small-12 columns">
+          <div class="content-heading">
+            {% set title = page.split('-') %}
+            <h4>{% for word in title %} {{ word | capitalize }} {% endfor %}</h4>
+          </div>
+        </div>
+      </div>
+      <div id="content" class="row">
+        <div class="small-12 columns">
+          {% include "admin/includes/" + subpage + ".html" %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+var template = TrinketIO.import('utils.template');
+
+$('#admin-roles').click(function(event) {
+  event.preventDefault();
+
+  var heading = template('role-user', {
+    username : $(this).data('username')
+  });
+
+  var roles = JSON.parse($('#rolesData').text());
+  $('#rolesJSON').val(JSON.stringify(roles, null, 2));
+  $('#rolesHeading').empty().append(heading);
+
+  $('#changeRolesModal').find('.update-roles').data('userid', $(this).data('userid'));
+
+  $('#changeRolesModal').foundation('reveal', 'open');
+});
+$('.update-roles').click(function(event) {
+  event.preventDefault();
+
+  $('#rolesMessage').addClass('hide');
+
+  var rolesData;
+  if ($('#rolesJSON').val().length) {
+    try {
+      rolesData = JSON.parse($('#rolesJSON').val());
+    } catch(e) {
+      showRolesMessage('Error parsing data: ' + e);
+    }
+  }
+  else {
+    rolesData = [];
+  }
+
+  if (typeof rolesData !== 'undefined') {
+    $.post('/api/admin/user/' + $(this).data('userid'), {
+      roles : rolesData
+    }).done(function(result) {
+      if (result.success) {
+        var reloadUrl = location.pathname + location.search;
+        if (location.search.indexOf('active=roles') < 0) {
+          reloadUrl += '&active=roles';
+        }
+        showRolesMessage('Yay! <a href="' + reloadUrl + '">Reload user roles</a>.');
+      }
+      else {
+        showRolesMessage('Something went wrong. ' + result);
+      }
+    }).fail(function(err) {
+      showRolesMessage(err);
+    });
+  }
+});
+$('.cancel-change').click(function(event) {
+  $('#changeRolesModal').foundation('reveal', 'close');
+});
+function showRolesMessage(message) {
+  $('#rolesMessage').empty().html(message);
+  $('#rolesMessage').removeClass('hide');
+}
+
+$('form.featured-course-form').on('submit', function(event) {
+  event.preventDefault();
+
+  var self = this
+    , data = $(this).serialize()
+    , courseUrl, courseName, courseHtml;
+
+  $.post('/api/admin/featured-course', data)
+  .done(function(result) {
+    courseUrl  = '/' + result.course.ownerSlug + '/courses/' + result.course.slug;
+    courseName = result.course.name;
+    if (result.course.page) {
+      courseUrl  += '#/' + result.course.page;
+      courseName += ' '  + result.course.page;
+    }
+
+    courseHtml = template('added-course', {
+        courseId        : result.course.id
+      , courseUrl       : courseUrl
+      , courseName      : courseName
+      , coursePage      : result.course.page || ''
+    });
+
+    $('#featured').append( $(courseHtml) );
+  }).fail(function(err) {
+    // alert? not found
+    console.log("err:", err);
+  });
+});
+$(document).on('click', '.remove-featured-course', function(event) {
+  event.preventDefault();
+
+  var courseId = $(this).data('course-id')
+    , page     = $(this).data('page')
+    , self     = this;
+
+  $.ajax({
+    url    : '/api/admin/featured-course/' + courseId + '?page=' + page,
+    method : 'DELETE'
+  }).done(function(result) {
+    $(self).closest('.course-row-container').remove();
+  })
+  .fail(function(err) {
+    console.log("err:", err);
+  });
+});
+</script>
+{% endblock %}

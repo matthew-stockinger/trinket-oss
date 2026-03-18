@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block body_class %}side-nav-with-content payment-page{% endblock %}
+
+{% block content %}
+<div id="account" class="row {{ page }}" data-email-result="{{ flash.email_result }}">
+  <div class="large-3 small-12 columns">
+    <ul class="side-nav">
+      <li class="side-nav-heading">
+        <h4>Settings</h4>
+      </li>
+    {% set pages = ['Profile', 'Email', 'Password', 'Trinket-Editor', 'Data', 'Delete-Account'] %}
+    {% for link in pages %}
+      <li><a {% if page == link.toLowerCase() %}class="active"{% endif %} href="/account/{{ link | lower }}">{{ link | replace('-', ' ') }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+  <div class="content-column large-9 small-12 columns">
+    <div id="content-wrapper">
+
+      <div class="row">
+        <div class="small-12 columns">
+          <div class="content-heading">
+            {% set title = page.split('-') %}
+            <h4>{% for word in title %} {{ word | capitalize }} {% endfor %}</h4>
+          </div>
+        </div>
+      </div>
+      <div id="content" class="row">
+        <div class="small-12 columns">
+          {% include "users/includes/" + page + ".html" %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+  var email_result = $('#account').data('email-result');
+  switch (email_result) {
+    case 'success':
+      $('#account').notify(
+        "Your email address has been updated."
+        , { position : 'top center', className : 'success' }
+      );
+      break;
+    case 'verified':
+      $('#account').notify(
+        "Your email address has been verified."
+        , { position : 'top center', className : 'success' }
+      );
+      break;
+    case 'error':
+      $('#account').notify(
+        "We had a problem updating your email address. Please try again."
+        , { position : 'top center', className : 'alert' }
+      );
+      break;
+    case 'verify_error':
+      $('#account').notify(
+        "We had a problem verifying your email address. Please try again."
+        , { position : 'top center', className : 'alert' }
+      );
+      break;
+    case 'key_error':
+      $('#account').notify(
+        "We had a problem verifying that link. Please try again."
+        , { position : 'top center', className : 'alert' }
+      );
+      break;
+    case 'duplicate':
+      $('#account').notify(
+        "Another account is using that email address. Please try entering a different address."
+        , { position : 'top center', className : 'alert' }
+      );
+      break;
+  }
+});
+</script>
+{% endblock %}
