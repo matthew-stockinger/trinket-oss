@@ -8,9 +8,10 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - submitted PR for make-admin.js fix
 - created login for matthew.stockinger@isd742.org. Made admin. Password in manager.
 - updated local.yaml to add html and console trinkets.
-- **git ignored** local settings changed so that python will run in browser.
+- default settings changed so that python will run in browser.
   - app: embed: skulpt: local: true
   - app: embed: skulpt: min: true
+- created new logo images and updated branding settings 
 
 # TODO
 

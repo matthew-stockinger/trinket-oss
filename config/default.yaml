@@ -18,12 +18,12 @@ features:
     R: false           # Requires R backend
 
 app:
-  siteName: 'Trinket'
+  siteName: 'Trinket742'
   siteUrl: ''
-  supportEmail: ''
-  adminEmail: ''
-  logo: '/img/trinket-logo.png'
-  logoIcon: '/img/trinket-logo-circles.png'
+  supportEmail: 'matthew.stockinger@isd742.org'
+  adminEmail: 'matthew.stockinger@isd742.org'
+  logo: '/img/rubber-duck-trinket742-logo-2.png'
+  logoIcon: '/img/trinket-logo-ducks.png'
   hostname: 0.0.0.0
   port: 3000
   url:
