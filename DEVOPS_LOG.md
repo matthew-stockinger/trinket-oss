@@ -11,11 +11,15 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - default settings changed so that python will run in browser.
   - app: embed: skulpt: local: true
   - app: embed: skulpt: min: true
-- created new logo images and updated branding settings 
+- created new logo images and updated branding settings
+- commented out all occurrences of 'sign up' buttons and the /signup endpoint
+  - I only want to allow students to log in with google, and join courses with a join link.
+  - NO public signups allowed.
 
 # TODO
 
 - buy domain?
 - set up SMTP and sendgrid?
 - file storage / S3?
-- 
+- Google sign-in
+  - restrict logins to @apps.isd742.org

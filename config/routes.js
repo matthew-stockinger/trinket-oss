@@ -18,10 +18,10 @@ routes = [
     html   : 'index.html',
     enable : true
   },
-  {
-    route : 'GET /signup pages.signup',
-    html  : 'signup.html'
-  },
+  // {
+  //   route : 'GET /signup pages.signup',
+  //   html  : 'signup.html'
+  // },
   {
     route : 'GET /login pages.login',
     html  : 'login.html',
