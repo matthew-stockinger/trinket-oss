@@ -20,6 +20,9 @@ A log of setup steps I took to get Trinket deployed for my classroom.
   - Instructions at [https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid?authuser=1](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid?authuser=1)
   - Uncommented local.yaml settings and copied in client ID and secret **git ignored**
   - Updated plugins: session: cookieOptions: password in local.yaml. Stored in password manager.
+- updated local.yaml 
+  - app: siteUrl = 'https://trinket742.org'
+  - app: url: hostname = 'trinket742.org'
 
 # TODO
 

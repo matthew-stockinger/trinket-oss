@@ -19,7 +19,7 @@ features:
 
 app:
   siteName: 'Trinket742'
-  siteUrl: ''
+  siteUrl: 'https://trinket742.org'
   supportEmail: 'matthew.stockinger@isd742.org'
   adminEmail: 'matthew.stockinger@isd742.org'
   logo: '/img/rubber-duck-trinket742-logo-2.png'
@@ -28,7 +28,7 @@ app:
   port: 3000
   url:
     protocol: https
-    hostname: trinket.dev
+    hostname: trinket742.org
     port:
   start: true
   usersubdomains: false
