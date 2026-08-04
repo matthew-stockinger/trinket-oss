@@ -11,21 +11,25 @@ var read_creds = dbconfig.mongoread.user && dbconfig.mongoread.pass
   ? dbconfig.mongoread.user + ':' + dbconfig.mongoread.pass + '@' : '';
 
 function connect() {
-  var connectStr = 'mongodb://'
-    + mongo_creds
-    + dbconfig.mongo.host + ':'
-    + dbconfig.mongo.port + '/'
-    + dbconfig.mongo.database;
+  var connectStr = process.env.MONGO_URI;
 
-  if (dbconfig.mongoread.host) {
-    connectStr += ','
-    + read_creds
-    + dbconfig.mongoread.host + ':'
-    + dbconfig.mongoread.port + '/'
-    + dbconfig.mongoread.database;
+  if (!connectStr) {
+    connectStr = 'mongodb://'
+      + mongo_creds
+      + dbconfig.mongo.host + ':'
+      + dbconfig.mongo.port + '/'
+      + dbconfig.mongo.database;
 
-    if (dbconfig.mongoread.opts) {
-      connectStr += '?' + dbconfig.mongoread.opts;
+    if (dbconfig.mongoread.host) {
+      connectStr += ','
+        + read_creds
+        + dbconfig.mongoread.host + ':'
+        + dbconfig.mongoread.port + '/'
+        + dbconfig.mongoread.database;
+
+      if (dbconfig.mongoread.opts) {
+        connectStr += '?' + dbconfig.mongoread.opts;
+      }
     }
   }
 

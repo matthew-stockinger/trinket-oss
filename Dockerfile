@@ -8,9 +8,6 @@ RUN apt-get update \
     && apt-get install -y python3 build-essential \
     && apt-get -y autoclean
 
-# Install global tools
-RUN npm install -g pm2@5
-
 RUN groupadd -r trinket && \
     useradd -r -g trinket -m -c "trinket user" trinket
 
@@ -28,12 +25,13 @@ RUN curl -L --silent -o ./public-components.tgz \
     && tar xzf public-components.tgz \
     && rm public-components.tgz
 
-RUN npm install --legacy-peer-deps
+# Install all deps (including devDeps for vite CSS build) then build assets
+RUN npm install --legacy-peer-deps && npm run build
 
 ARG COMMIT_ID
-ARG NODE_ENV
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
-EXPOSE 3000
+EXPOSE 8080
 
-CMD ["pm2-docker", "start", "app.js"]
+CMD ["node", "app.js"]

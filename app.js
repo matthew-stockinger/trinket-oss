@@ -47,7 +47,7 @@ const cache_control = 'private, s-maxage=0, max-age=0, no-cache, no-store, must-
 // Main async initialization
 const init = async () => {
   // Validate required configuration
-  const sessionPassword = config.app.plugins.session.cookieOptions.password;
+  const sessionPassword = process.env.SESSION_SECRET || config.app.plugins.session.cookieOptions.password;
   if (!sessionPassword || sessionPassword.length < 32) {
     console.error('\n' + '='.repeat(70));
     console.error('ERROR: Session cookie password not configured!');
@@ -67,7 +67,7 @@ const init = async () => {
   // Create server with Hapi 20+ configuration
   const server = Hapi.server({
     host: config.app.hostname || 'localhost',
-    port: config.app.port || 3000,
+    port: parseInt(process.env.PORT || config.app.port || 3000, 10),
     routes: {
       cors: config.app.cors || false,
       state: {
@@ -95,7 +95,7 @@ const init = async () => {
       options: {
         storeBlank: false,
         cookieOptions: {
-          password: config.app.plugins.session.cookieOptions.password,
+          password: sessionPassword,
           isSecure: config.app.plugins.session.cookieOptions.isSecure !== false,
           isSameSite: 'Lax'
         },
