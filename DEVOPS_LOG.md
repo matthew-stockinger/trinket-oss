@@ -26,6 +26,6 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 
 # TODO
 
-- buy domain?
+- hook up domain.  Currently parked.
 - set up SMTP and sendgrid?
 - file storage / S3?
