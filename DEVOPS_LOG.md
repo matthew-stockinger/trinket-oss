@@ -21,11 +21,18 @@ A log of setup steps I took to get Trinket deployed for my classroom.
   - Uncommented local.yaml settings and copied in client ID and secret **git ignored**
   - Updated plugins: session: cookieOptions: password in local.yaml. Stored in password manager.
 - updated local.yaml 
-  - app: siteUrl = 'https://trinket742.org'
-  - app: url: hostname = 'trinket742.org'
 
-# TODO
+## TODO
 
+- trying to redeploy, ran into trouble.  See DEVOPS_TROUBLESHOOTING.md.
+- app: siteUrl = 'https://trinket742.org'
+- app: url: hostname = 'trinket742.org'
 - hook up domain.  Currently parked.
 - set up SMTP and sendgrid?
 - file storage / S3?
+- remove email + password logins.  Google Oauth only.
+
+## Student testing TODO 
+
+- When a student logs in, does it look like the teacher view?  Can they create new courses?
+- Ensure that a student can join a course.
