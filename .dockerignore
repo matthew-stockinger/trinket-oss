@@ -1,4 +1,6 @@
 **/.git
-node_modules
+# Must be **/ — a bare "node_modules" only matches the repo root, and host-built
+# native modules (bcrypt) are not loadable inside the Linux image.
+**/node_modules
 config/local.yaml
 .env
