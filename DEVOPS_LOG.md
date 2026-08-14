@@ -24,6 +24,7 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 
 ## TODO
 
+- Google login not showing on https://trinket-647187954071.us-central1.run.app/login.  Troubleshoot.
 - hook up custom domain. **In progress by Matt 8.14.2026. Waiting on DNS to update for domain ownership verification.**
     - config yaml changes needed?
     - app: siteUrl = 'https://trinket742.org'
