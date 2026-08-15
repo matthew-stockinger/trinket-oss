@@ -96,12 +96,12 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
     Need changes to default.yaml, local.yaml, and production.yaml. See GETTING_STARTED.md for instructions. Also update url and hostname sections.
 
-6. Custom domain (optional, after deployment works)
+6. Custom domain (after deployment works)
 
     The method below is one of two methods supported by Google. See https://docs.cloud.google.com/run/docs/mapping-custom-domains. Method 1 = **global external application load balancer.** More complex, but better supported and more flexible. Method 2 = **Cloud Run domain mapping.** In preview. Matt decision = method 2, 8.14.2026.
 
     Cloud run domain mapping how-to here:
-    1. Verify ownership of the domain.
+    1. Verify ownership of the domain. _(matt done 8.15.2026)_
 
         `gcloud domains list-user-verified`
 
@@ -109,10 +109,28 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
         `gcloud domains verify trinket742.org`
 
-    2. map the service to a custom domain.
+    2. map the service to a custom domain.  _(matt done 8.15.2026)_
 
-        Claude gave this command, but I think it might need editing. See docs linked above.
+        `gcloud beta run domain-mappings create --service trinket --domain trinket742.org --region us-central1`
 
-        `gcloud run domain-mappings create --service trinket --domain trinket742.org --region us-central1`
+        and
 
-    3. Add DNS records at registrar.
+        `gcloud beta run domain-mappings create --service trinket --domain www.trinket742.org --region us-central1`
+
+    3. Add DNS records at registrar. _(matt done 8.15.2026)_
+
+        Retrieve the relevant records:
+
+        `gcloud beta run domain-mappings describe --domain trinket742.org`
+
+        edit DNS at namesilo.  tip: use 'www' to map to www.trinket742.org.  Use '@' to map to trinket742.org.
+
+    4. Update yaml settings and google console URLs.  Rebuild, push, deploy.
+
+        production.yaml session cookieOptions domain = `.trinket742.org`
+        
+        production.yaml url hostname = `trinket742.org`
+
+        check google cloud web console authorized redirect URI.
+
+        check GOOGLE_CALLBACK_URL in deploy command.
