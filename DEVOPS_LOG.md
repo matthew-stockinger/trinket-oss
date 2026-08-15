@@ -21,12 +21,10 @@ A log of setup steps I took to get Trinket deployed for my classroom.
     - Uncommented local.yaml settings and copied in client ID and secret **git ignored**
     - Updated plugins: session: cookieOptions: password in local.yaml. Stored in password manager.
 - Got google login working on https://trinket-647187954071.us-central1.run.app/login.  Updated production.yaml and default.yaml with auth section and url.  Updated deploy command to use new url seen here.  Updated gcloud console APIs section with this URL and callback URL.
+- removed cookieOptions secret and google auth from production.yaml because these values are passed in via the deploy command, environment vars, and gcloud secrets.
 
 ## TODO
 
-- cookieOptions secret is set in local.yaml.  Do I need this in production.yaml?
-- after google signon, redirect is to /signup and I'm getting a 404.
-    - update: 2nd attempt seemed to rectify this issue.  sign-in successfull.
 - hook up custom domain. **In progress by Matt 8.14.2026. Waiting on DNS to update for domain ownership verification.**
     - config yaml changes needed?
     - app: siteUrl = 'https://trinket742.org'
