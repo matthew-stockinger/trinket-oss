@@ -81,12 +81,15 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
     To store a new secret: `echo 'whatever_secret' | gcloud secrets create SECRET_NAME --data-file=-`
 
-    Deploying. _(You should be able to copy and paste this directly. Service testing URL from most recent deploy, on 8.14.2026 = https://trinket-647187954071.us-central1.run.app)_
+    Deploying. _(You should be able to copy and paste this directly. Note: if trinket742.org doesn't load, go find the alternate URL on the google cloud console >> cloud run.  Most recent was https://trinket-647187954071.us-central1.run.app.  
+    
+    Also note: min-instances may be changed, and concurrency.  That's future load testing work.)_
 
-    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production","GOOGLE_CALLBACK_URL=https://trinket-647187954071.us-central1.run.app/auth/google/callback" --set-secrets "MONGO_URI=MONGO_URI:latest","SESSION_SECRET=SESSION_SECRET:latest","GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest","GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest" --min-instances 0 --max-instances 2`
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest","SESSION_SECRET=SESSION_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
 
-    _(The commands below are the originals that Matt tried. Copied here for documentation. Don't use. Correct syntax is above.)_
+    _(The commands below are older originals that Matt tried. Copied here for documentation. Don't use. Correct syntax is above.)_
 
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production","GOOGLE_CALLBACK_URL=https://trinket742.org/auth/google/callback" --set-secrets "MONGO_URI=MONGO_URI:latest","SESSION_SECRET=SESSION_SECRET:latest","GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest","GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
     `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest" --set-secrets "SESSION_SECRET=SESSION_SECRET:latest" --set-secrets "GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest" --set-secrets "GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest" --set-env-vars "GOOGLE_CALLBACK_URL=https://trinket-xxxxxxxxxxxx-uc.a.run.app/auth/google/callback" --min-instances 0 --max-instances 2`
     `gcloud run deploy trinket --image us-central1-docker.pkg.dev/YOUR_PROJECT_ID/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest" --set-env-vars "SESSION_SECRET=your-session-password-min-32-chars-here" --set-env-vars "GOOGLE_CLIENT_ID=647187954071-u36mqcud4t7h43d7ke7s00nrgccdrdrg.apps.googleusercontent.com" --set-env-vars "GOOGLE_CLIENT_SECRET=your-oauth-secret-from-password-manager" --set-env-vars "GOOGLE_CALLBACK_URL=https://trinket-xxxxxxxxxxxx-uc.a.run.app/auth/google/callback" --min-instances 0 --max-instances 2`
 
@@ -125,12 +128,12 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
         edit DNS at namesilo.  tip: use 'www' to map to www.trinket742.org.  Use '@' to map to trinket742.org.
 
-    4. Update yaml settings and google console URLs.  Rebuild, push, deploy.
+    4. Update yaml settings and google console URLs.  Rebuild, push, deploy. _(done by Matt 8.17.2026)_
 
         production.yaml session cookieOptions domain = `.trinket742.org`
         
         production.yaml url hostname = `trinket742.org`
 
-        check google cloud web console authorized redirect URI.
+        production.yaml google auth settings.  Copy from local.yaml.
 
-        check GOOGLE_CALLBACK_URL in deploy command.
+        check google cloud web console >> APIs and Services >> Credentials >> authorized javascript origins and authorized redirect URI.

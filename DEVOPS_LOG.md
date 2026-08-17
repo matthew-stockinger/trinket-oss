@@ -22,16 +22,11 @@ A log of setup steps I took to get Trinket deployed for my classroom.
     - Updated plugins: session: cookieOptions: password in local.yaml. Stored in password manager.
 - Got google login working on https://trinket-647187954071.us-central1.run.app/login.  Updated production.yaml and default.yaml with auth section and url.  Updated deploy command to use new url seen here.  Updated gcloud console APIs section with this URL and callback URL.
 - removed cookieOptions secret and google auth from production.yaml because these values are passed in via the deploy command, environment vars, and gcloud secrets.
-- almost hooked up custom domain.  See DEVOPS_OVERVIEW.md for steps taken.
+- hooked up custom domain.  See DEVOPS_OVERVIEW.md for steps taken.
 
 ## TODO
 
-- hook up custom domain. **In progress by Matt 8.14.2026. Waiting on DNS to update for domain ownership verification.**
-    - config yaml changes needed?
-    - app: siteUrl = 'https://trinket742.org'
-    - app: url: hostname = 'trinket742.org'
-    - possible login problems when user navigates to www.trinket742.org.  Will need Claude edit to source code for this one if it's a problem.
-- admin rights don't seem to be working with google signin to https://trinket-647187954071.us-central1.run.app
+- admin rights don't seem to be working with google signin to https://trinket-647187954071.us-central1.run.app.  Check /admin route.
 - set up SMTP and sendgrid?
 - file storage / S3?
 - remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.
