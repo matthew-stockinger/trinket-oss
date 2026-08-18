@@ -9,7 +9,7 @@ This info will point you in the right direction to manage this fork/deployment o
 - console.cloud.google.com. Log in with google, matthew.stockinger@isd742.org
 - search for 'cloud run'
 - project id is trinket742
-- container is built locally using docker or docker-compose, then pushed to the google cloud artifact registry. From the cloud console, you can search for artifact registry and see this. The push itself happens via gcloud CLI.
+- container is built locally using docker or docker-compose, then pushed to the google cloud artifact registry. From the cloud console, you can search for artifact registry and see this. The push itself happens via gcloud CLI.  All the steps are described in detail below.
 
 **MongoDB Atlas**
 
@@ -99,7 +99,7 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
     Need changes to default.yaml, local.yaml, and production.yaml. See GETTING_STARTED.md for instructions. Also update url and hostname sections.
 
-6. Custom domain (after deployment works)
+6. Custom domain (after deployment works) _(matt done)_
 
     The method below is one of two methods supported by Google. See https://docs.cloud.google.com/run/docs/mapping-custom-domains. Method 1 = **global external application load balancer.** More complex, but better supported and more flexible. Method 2 = **Cloud Run domain mapping.** In preview. Matt decision = method 2, 8.14.2026.
 

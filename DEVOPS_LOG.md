@@ -27,6 +27,8 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 ## TODO
 
 - admin rights don't seem to be working with google signin to https://trinket-647187954071.us-central1.run.app.  Check /admin route.
+    - works on localhost.  User badge is matthew-stockinger-0755
+    - doesn't work on trinket742.org.  User badge is matthew-stockinger-isd742-org
 - set up SMTP and sendgrid?
 - file storage / S3?
 - remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.
