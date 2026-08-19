@@ -24,10 +24,11 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - removed cookieOptions secret and google auth from production.yaml because these values are passed in via the deploy command, environment vars, and gcloud secrets.
 - hooked up custom domain.  See DEVOPS_OVERVIEW.md for steps taken.
 - made matthew.stockinger@isd742.org admin on trinket742.org.  Steps to do this are in GETTING_STARTED.md.
+- decision: no email needed because all logins with be Google OAuth.
+    - side note: could probably set up smtp settings to send through matthew.stockinger@isd742.org in the future if needed.
 
 ## TODO
 
-- set up SMTP and sendgrid?
 - file storage / S3?
 - remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.
 
