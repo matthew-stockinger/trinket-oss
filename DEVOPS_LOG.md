@@ -23,12 +23,10 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - Got google login working on https://trinket-647187954071.us-central1.run.app/login.  Updated production.yaml and default.yaml with auth section and url.  Updated deploy command to use new url seen here.  Updated gcloud console APIs section with this URL and callback URL.
 - removed cookieOptions secret and google auth from production.yaml because these values are passed in via the deploy command, environment vars, and gcloud secrets.
 - hooked up custom domain.  See DEVOPS_OVERVIEW.md for steps taken.
+- made matthew.stockinger@isd742.org admin on trinket742.org.  Steps to do this are in GETTING_STARTED.md.
 
 ## TODO
 
-- admin rights don't seem to be working with google signin to https://trinket-647187954071.us-central1.run.app.  Check /admin route.
-    - works on localhost.  User badge is matthew-stockinger-0755
-    - doesn't work on trinket742.org.  User badge is matthew-stockinger-isd742-org
 - set up SMTP and sendgrid?
 - file storage / S3?
 - remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.

@@ -67,6 +67,8 @@ docker-compose restart app
 
 ### Creating an Admin User
 
+#### Local
+
 After registering a user through the web interface, promote them to admin:
 
 ```bash
@@ -74,6 +76,30 @@ docker-compose exec app npm run make-admin user@example.com
 ```
 
 Admin users can access `/admin` for site administration features.
+
+#### External DB deployment
+
+This workflow is for instances that are hosted with a container hosting service and an external DB as a service provider.  E.g. Google Cloud Run for the container and MongoDB Atlas for DBaaS.
+
+The above (local) workflow doesn't work for cloud deployments because localhost instances use a local database, while cloud-hosted instances use a cloud-hosted DB.  So even if you log in using the same Google OAuth username, the data is stored in separate places.
+
+Note: ensure that the Docker daemon is running (e.g. Docker Desktop app on Windows).  The trinket container does **not** need to be running locally, though.
+
+```powershell
+$uri = gcloud secrets versions access latest --secret=MONGO_URI
+docker run --rm -e NODE_ENV=production -e MONGO_URI="$uri" `
+  us-central1-docker.pkg.dev/trinket742/trinket/app:latest `
+  node scripts/make-admin.js matthew.stockinger@isd742.org
+```
+
+**or**
+
+```bash
+uri=$(gcloud secrets versions access latest --secret=MONGO_URI)
+docker run --rm -e NODE_ENV=production -e MONGO_URI="$uri" \
+  us-central1-docker.pkg.dev/trinket742/trinket/app:latest \
+  node scripts/make-admin.js matthew.stockinger@isd742.org
+```
 
 ## Project Structure
 
