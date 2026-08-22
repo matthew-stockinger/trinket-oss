@@ -20,19 +20,24 @@ A log of setup steps I took to get Trinket deployed for my classroom.
     - Instructions at [https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid?authuser=1](https://developers.google.com/identity/gsi/web/guides/get-google-api-clientid?authuser=1)
     - Uncommented local.yaml settings and copied in client ID and secret **git ignored**
     - Updated plugins: session: cookieOptions: password in local.yaml. Stored in password manager.
-- Got google login working on https://trinket-647187954071.us-central1.run.app/login.  Updated production.yaml and default.yaml with auth section and url.  Updated deploy command to use new url seen here.  Updated gcloud console APIs section with this URL and callback URL.
+- Got google login working on https://trinket-647187954071.us-central1.run.app/login. Updated production.yaml and default.yaml with auth section and url. Updated deploy command to use new url seen here. Updated gcloud console APIs section with this URL and callback URL.
 - removed cookieOptions secret and google auth from production.yaml because these values are passed in via the deploy command, environment vars, and gcloud secrets.
-- hooked up custom domain.  See DEVOPS_OVERVIEW.md for steps taken.
-- made matthew.stockinger@isd742.org admin on trinket742.org.  Steps to do this are in GETTING_STARTED.md.
+- hooked up custom domain. See DEVOPS_OVERVIEW.md for steps taken.
+- made matthew.stockinger@isd742.org admin on trinket742.org. Steps to do this are in GETTING_STARTED.md.
 - decision: no email needed because all logins with be Google OAuth.
     - side note: could probably set up smtp settings to send through matthew.stockinger@isd742.org in the future if needed.
 
 ## TODO
 
 - file storage / S3?
+    - getting "unsupported file type" on front end.  Debug.
 - remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.
 
 ## Student testing TODO
 
 - When a student logs in, does it look like the teacher view? Can they create new courses?
 - Ensure that a student can join a course.
+
+## Maintenance TODO
+
+- upgrade to aws-sdk v3. One thing I noticed but didn't touch: aws-sdk v2 is end-of-support (it prints a deprecation warning on load). Not urgent, and migrating to v3 would touch all 8 call sites — but worth knowing it's on the clock.

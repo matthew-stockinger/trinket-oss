@@ -1,0 +1,17 @@
+# =============================================================================
+# OPTIONAL: File Storage (for asset uploads in trinkets)
+# =============================================================================
+# Without S3, the asset upload feature is disabled. Code still works fine.
+
+features:
+    assets: true
+
+aws:
+    keyId: "your-access-key-id"
+    key: "your-secret-key"
+    endpoint: "https://storage.us-central1.rep.googleapis.com"
+    region: "us-central1"
+    buckets:
+        userassets:
+            name: "trinket742-user-uploads"
+            host: "https://your-bucket.s3.amazonaws.com"

@@ -6,10 +6,20 @@ This info will point you in the right direction to manage this fork/deployment o
 
 **Host = Google Cloud**
 
-- console.cloud.google.com. Log in with google, matthew.stockinger@isd742.org
+Several Google Cloud services are used in the trinket742 deployment. They are:
+
+- Cloud Run: fully managed container orchestration. Runs the container and wires it up to trinket742.org public internet.
+- Cloud Secrets: Stores environment variables and things needed by the container.
+- Artifact Registry: Stores built Docker container images.
+- APIs and Services: the place to access info and configs for OAuth logins
+- Cloud Storage: needed for student artifact uploads (e.g. images for website trinkets). This is Google's AWS S3-compatible storage offering.
+
+Summary / How-To Overview:
+
+- go to console.cloud.google.com. Log in with google, matthew.stockinger@isd742.org
 - search for 'cloud run'
 - project id is trinket742
-- container is built locally using docker or docker-compose, then pushed to the google cloud artifact registry. From the cloud console, you can search for artifact registry and see this. The push itself happens via gcloud CLI.  All the steps are described in detail below.
+- container is built locally using docker or docker-compose, then pushed to the google cloud artifact registry. From the cloud console, you can search for artifact registry and see this. The push itself happens via gcloud CLI. All the steps are described in detail below.
 
 **MongoDB Atlas**
 
@@ -81,9 +91,9 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
     To store a new secret: `echo 'whatever_secret' | gcloud secrets create SECRET_NAME --data-file=-`
 
-    Deploying. _(You should be able to copy and paste this directly. Note: if trinket742.org doesn't load, go find the alternate URL on the google cloud console >> cloud run.  Most recent was https://trinket-647187954071.us-central1.run.app.  
-    
-    Also note: min-instances may be changed, and concurrency.  That's future load testing work.)_
+    Deploying. \_(You should be able to copy and paste this directly. Note: if trinket742.org doesn't load, go find the alternate URL on the google cloud console >> cloud run. Most recent was https://trinket-647187954071.us-central1.run.app.
+
+    Also note: min-instances may be changed, and concurrency. That's future load testing work.)\_
 
     `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest","SESSION_SECRET=SESSION_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
 
@@ -112,7 +122,7 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
         `gcloud domains verify trinket742.org`
 
-    2. map the service to a custom domain.  _(matt done 8.15.2026)_
+    2. map the service to a custom domain. _(matt done 8.15.2026)_
 
         `gcloud beta run domain-mappings create --service trinket --domain trinket742.org --region us-central1`
 
@@ -126,14 +136,55 @@ Copied conversation with Claude. Before doing everything, read all the way throu
 
         `gcloud beta run domain-mappings describe --domain trinket742.org`
 
-        edit DNS at namesilo.  tip: use 'www' to map to www.trinket742.org.  Use '@' to map to trinket742.org.
+        edit DNS at namesilo. tip: use 'www' to map to www.trinket742.org. Use '@' to map to trinket742.org.
 
-    4. Update yaml settings and google console URLs.  Rebuild, push, deploy. _(done by Matt 8.17.2026)_
+    4. Update yaml settings and google console URLs. Rebuild, push, deploy. _(done by Matt 8.17.2026)_
 
         production.yaml session cookieOptions domain = `.trinket742.org`
-        
+
         production.yaml url hostname = `trinket742.org`
 
-        production.yaml google auth settings.  Copy from local.yaml.
+        production.yaml google auth settings. Copy from local.yaml.
 
         check google cloud web console >> APIs and Services >> Credentials >> authorized javascript origins and authorized redirect URI.
+
+## How to wire up S3 Storage
+
+This is the procedure Matt followed to get google cloud storage working.
+
+1. Modified aws.js with Claude because there was a bug:
+
+    ```javascript
+    // delete line that says module.exports = AWS;
+    // paste in the code below, including comments.
+
+    // When `aws.endpoint` is set we are talking to an S3-compatible provider
+    // (Google Cloud Storage, MinIO, Wasabi...) rather than Amazon. Those need the
+    // bucket in the URL path instead of the hostname, and v4 request signing.
+    var s3Defaults = {};
+    if (config.aws.endpoint) {
+        s3Defaults.endpoint = config.aws.endpoint;
+        s3Defaults.s3ForcePathStyle = true;
+        s3Defaults.signatureVersion = "v4";
+    }
+
+    // Shadow AWS.S3 so every `new aws.S3()` in the app picks the defaults up,
+    // without mutating the aws-sdk module other requires share.
+    var exported = Object.create(AWS);
+    exported.S3 = function (options) {
+        return new AWS.S3(Object.assign({}, s3Defaults, options));
+    };
+
+    module.exports = exported;
+    ```
+
+2. Create HMAC key.  This requires a service account to already exist (which it did).  Cloud Console --> cloud storage --> settings --> interoperability.  Create.
+
+    I stored the key in local.yaml and in 1password.
+
+3. Create four buckets.  All in us-central1, autoclass (opt-in to coldline and archive classes), uncheck enforce public access, uniform access control, no data protection.
+
+    trinket742-user-uploads, trinket742-materials, trinket742-avatars, trinket742-snapshots
+
+4. Make the four buckets public.  See https://docs.cloud.google.com/storage/docs/access-control/making-data-public?authuser=1
+

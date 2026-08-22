@@ -67,7 +67,7 @@ docker-compose restart app
 
 ### Creating an Admin User
 
-#### Local
+#### Local Admin User
 
 After registering a user through the web interface, promote them to admin:
 
@@ -77,7 +77,7 @@ docker-compose exec app npm run make-admin user@example.com
 
 Admin users can access `/admin` for site administration features.
 
-#### External DB deployment
+#### External DB deployment admin user
 
 This workflow is for instances that are hosted with a container hosting service and an external DB as a service provider.  E.g. Google Cloud Run for the container and MongoDB Atlas for DBaaS.
 
