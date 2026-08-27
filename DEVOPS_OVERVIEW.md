@@ -41,9 +41,9 @@ Summary / How-To Overview:
 2. from project root, `docker-compose up`.
 3. view at localhost:3000
 
-## How To Deploy
+## How To Build and Deploy From Local Machine
 
-Copied conversation with Claude. Before doing everything, read all the way through. Some changes at the bottom.
+Only use this method if you have admin rights to your dev machine.  If using a district MacBook, see next heading below this for alternate method using Google Cloud Shell.
 
 1. Set up MongoDB Atlas (free tier) _(Already done by Matt. Don't redo, just make sure you can log in and see the preexisting cluster0.)_
     1. Go to https://cloud.mongodb.com → Create a free M0 cluster.
@@ -101,6 +101,90 @@ Copied conversation with Claude. Before doing everything, read all the way throu
     Also note: min-instances may be changed, and concurrency. That's future load testing work.)\_
 
     `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest","SESSION_SECRET=SESSION_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
+
+    _(The commands below are older originals that Matt tried. Copied here for documentation. Don't use. Correct syntax is above.)_
+
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production","GOOGLE_CALLBACK_URL=https://trinket742.org/auth/google/callback" --set-secrets "MONGO_URI=MONGO_URI:latest","SESSION_SECRET=SESSION_SECRET:latest","GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest","GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest" --set-secrets "SESSION_SECRET=SESSION_SECRET:latest" --set-secrets "GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID:latest" --set-secrets "GOOGLE_CLIENT_SECRET=GOOGLE_CLIENT_SECRET:latest" --set-env-vars "GOOGLE_CALLBACK_URL=https://trinket-xxxxxxxxxxxx-uc.a.run.app/auth/google/callback" --min-instances 0 --max-instances 2`
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/YOUR_PROJECT_ID/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest" --set-env-vars "SESSION_SECRET=your-session-password-min-32-chars-here" --set-env-vars "GOOGLE_CLIENT_ID=647187954071-u36mqcud4t7h43d7ke7s00nrgccdrdrg.apps.googleusercontent.com" --set-env-vars "GOOGLE_CLIENT_SECRET=your-oauth-secret-from-password-manager" --set-env-vars "GOOGLE_CALLBACK_URL=https://trinket-xxxxxxxxxxxx-uc.a.run.app/auth/google/callback" --min-instances 0 --max-instances 2`
+
+5. Update Google OAuth callback URL _(Already done by Matt)_
+
+    After getting your Cloud Run URL, go to Google Cloud Console → APIs & Services → Credentials (https://console.cloud.google.com/apis/credentials), edit your OAuth 2.0 Client ID, and add: _https://YOUR-CLOUD-RUN-URL/auth/google/callback_ to Authorized redirect URIs
+
+    Need changes to default.yaml, local.yaml, and production.yaml. See GETTING_STARTED.md for instructions. Also update url and hostname sections.
+
+6. Custom domain (after deployment works) _(matt done)_
+
+    The method below is one of two methods supported by Google. See https://docs.cloud.google.com/run/docs/mapping-custom-domains. Method 1 = **global external application load balancer.** More complex, but better supported and more flexible. Method 2 = **Cloud Run domain mapping.** In preview. Matt decision = method 2, 8.14.2026.
+
+    Cloud run domain mapping how-to here:
+    1. Verify ownership of the domain. _(matt done 8.15.2026)_
+
+        `gcloud domains list-user-verified`
+
+        If trinket742.org isn't in there:
+
+        `gcloud domains verify trinket742.org`
+
+    2. map the service to a custom domain. _(matt done 8.15.2026)_
+
+        `gcloud beta run domain-mappings create --service trinket --domain trinket742.org --region us-central1`
+
+        and
+
+        `gcloud beta run domain-mappings create --service trinket --domain www.trinket742.org --region us-central1`
+
+    3. Add DNS records at registrar. _(matt done 8.15.2026)_
+
+        Retrieve the relevant records:
+
+        `gcloud beta run domain-mappings describe --domain trinket742.org`
+
+        edit DNS at namesilo. tip: use 'www' to map to www.trinket742.org. Use '@' to map to trinket742.org.
+
+    4. Update yaml settings and google console URLs. Rebuild, push, deploy. _(done by Matt 8.17.2026)_
+
+        production.yaml session cookieOptions domain = `.trinket742.org`
+
+        production.yaml url hostname = `trinket742.org`
+
+        production.yaml google auth settings. Copy from local.yaml.
+
+        check google cloud web console >> APIs and Services >> Credentials >> authorized javascript origins and authorized redirect URI.
+
+## How To Build and Deploy Using Google Cloud Shell
+
+1. Set up MongoDB Atlas (free tier) _(Already done by Matt. Don't redo, just make sure you can log in and see the preexisting cluster0.)_
+    1. Go to https://cloud.mongodb.com → Create a free M0 cluster.
+    2. Create a database user (username + password)
+    3. Under Network Access, add 0.0.0.0/0 to allow Cloud Run (or use a VPC connector for stricter security)
+    4. Get your connection string: Connect → Drivers → copy the mongodb+srv://... URI
+    5. Replace <password> in the URI and set the database name to trinket: mongodb+srv://youruser:yourpass@cluster0.xxxxx.mongodb.net/trinket
+2. Set up Google Cloud _(Do all of these steps unless otherwise noted.)_
+    1. Log into console.cloud.google.com.  Click the little terminal icon in the upper right.  `gcloud` and `docker` commands are preinstalled and preauthenticated.
+    2. _(Don't do: Matt did already.)_ One time: Create Artifact Registry repo
+
+        `gcloud artifacts repositories create trinket --repository-format=docker --location=us-central1`
+
+3. Build and push the image
+
+
+    1. To build using docker, from the cloud shell (preferred): first ensure that any local dev changes you've made have been pushed to github.  Then, on the google cloud web shell, first time only: `git clone https://github.com/matthew-stockinger/trinket-oss` --OR-- in the future, the repo will already be there, so just `cd trinket-oss` and `git pull`.
+    2. `production.yaml` isn't committed to github (and never should be!).  Therefore, you need to upload that from your local machine to the cloud shell trinket-oss/config folder.  There's an upload button under the kebab menu.
+    3. Then: `gcloud builds submit --tag us-central1-docker.pkg.dev/YOUR_PROJECT_ID/trinket/app:latest`
+
+4. Deploy to Google Cloud Run
+
+    use google secret manager to store secrets if needed. _(Matt already did this. You can see the stored secrets in the GCloud console. Go to secret manager.)_
+
+    To store a new secret: `echo 'whatever_secret' | gcloud secrets create SECRET_NAME --data-file=-`
+
+    Deploying. \_(You should be able to copy and paste this directly. Note: if trinket742.org doesn't load, go find the alternate URL on the google cloud console >> cloud run. Most recent was https://trinket-647187954071.us-central1.run.app.
+
+    Also note: min-instances may be changed, and concurrency. That's future load testing work.)\_
+
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest,SESSION_SECRET=SESSION_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
 
     _(The commands below are older originals that Matt tried. Copied here for documentation. Don't use. Correct syntax is above.)_
 

@@ -26,11 +26,10 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - made matthew.stockinger@isd742.org admin on trinket742.org. Steps to do this are in GETTING_STARTED.md.
 - decision: no email needed because all logins with be Google OAuth.
     - side note: could probably set up smtp settings to send through matthew.stockinger@isd742.org in the future if needed.
+- file storage.  Implemented with Google Cloud Storage.  See DEVOPS_OVERVIEW.md for steps taken.
 
 ## TODO
 
-- file storage / S3?
-    - getting "unsupported file type" on front end.  Debug.
 - remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.
 
 ## Student testing TODO
@@ -41,3 +40,4 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 ## Maintenance TODO
 
 - upgrade to aws-sdk v3. One thing I noticed but didn't touch: aws-sdk v2 is end-of-support (it prints a deprecation warning on load). Not urgent, and migrating to v3 would touch all 8 call sites — but worth knowing it's on the clock.
+- Watch production build output for other errors and deprecation notices.
