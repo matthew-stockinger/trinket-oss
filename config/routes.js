@@ -339,7 +339,9 @@ routes = [
       auth: 'session',
       payload : {
         maxBytes  : 1048576 * 10, // 10MB
-        output : 'file'
+        output    : 'file',
+        parse     : true,
+        multipart : true
       },
       validate : {
         payload : {
@@ -355,7 +357,9 @@ routes = [
       auth: 'session',
       payload : {
         maxBytes  : 1048576 * 5, // 5MB
-        output: 'file'
+        output    : 'file',
+        parse     : true,
+        multipart : true
       },
       validate : {
         payload : {

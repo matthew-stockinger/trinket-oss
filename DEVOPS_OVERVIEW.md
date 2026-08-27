@@ -30,6 +30,11 @@ Summary / How-To Overview:
 
 - registrar is namesilo.com. Login is matt's personal account.
 
+## Local Installs Needed
+
+- Docker Desktop
+- Google Cloud CLI
+
 ## How to run locally
 
 1. ensure Docker daemon is running. On Windows, this means starting the Docker Desktop application.

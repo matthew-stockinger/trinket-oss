@@ -1241,7 +1241,9 @@ module.exports = [
       auth: 'session',
       payload : {
         maxBytes  : 1048576 * 5, // 5MB
-        output : 'file'
+        output    : 'file',
+        parse     : true,
+        multipart : true
       },
       validate : {
         payload : {
@@ -1256,8 +1258,10 @@ module.exports = [
       auth: 'session',
       pre : ['file(params.fileId)'],
       payload : {
-        maxBytes : 1048576 * 5, // 5MB
-        output : 'file'
+        maxBytes  : 1048576 * 5, // 5MB
+        output    : 'file',
+        parse     : true,
+        multipart : true
       },
       validate : {
         payload : {
