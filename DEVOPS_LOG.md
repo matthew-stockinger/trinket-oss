@@ -27,10 +27,13 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - decision: no email needed because all logins with be Google OAuth.
     - side note: could probably set up smtp settings to send through matthew.stockinger@isd742.org in the future if needed.
 - file storage.  Implemented with Google Cloud Storage.  See DEVOPS_OVERVIEW.md for steps taken.
+- removed email + password login from the frontend.  Google OAuth only.  8.27.2026
+    - kept a copy of the old login page at lib/views/login-original.html.  It is not routed, so it never renders.
+- fixed a bug that broke the *first* Google sign-in for every new user.  8.27.2026
 
 ## TODO
 
-- remove email + password logins. Google Oauth only. Before doing this, ensure that Matt and Joe have full admin rights when logging in through Google Oauth.
+- nothing open.
 
 ## Student testing TODO
 

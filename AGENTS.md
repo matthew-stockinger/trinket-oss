@@ -53,7 +53,9 @@
 ---
 
 ## Key Active Roadmap / Focus Areas
-1. **File Uploads / Cloud Storage:** Debug and resolve the "unsupported file type" error on student asset uploads.
-2. **Auth Cleanup:** Fully remove legacy email/password auth paths in favor of Google OAuth while safeguarding admin roles.
-3. **Student Permissions:** Verify student view constraints vs. teacher course creation capabilities.
-4. **Maintenance:** Plan migration from deprecated `aws-sdk` v2 to `@aws-sdk/client-s3` (v3).
+1. **Student Permissions:** Verify student view constraints vs. teacher course creation capabilities.
+2. **Maintenance:** Plan migration from deprecated `aws-sdk` v2 to `@aws-sdk/client-s3` (v3).
+
+Done: email/password login removed from the UI (Google OAuth only). The server-side auth
+routes and handlers were intentionally left in place, so password login still works if an
+endpoint is called directly.

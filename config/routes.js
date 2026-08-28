@@ -542,7 +542,7 @@ routes = [
       redirect:  '{redirectTo}'
     },
     fail: {
-      redirect: '/signup'
+      redirect: '/login'
     },
     config : {
       auth : false

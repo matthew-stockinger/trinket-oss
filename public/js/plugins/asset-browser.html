@@ -60,23 +60,13 @@
     </div>
 
     <div id="upload-guest" class="dropzone hide">
-      <!--<p>Log in or create a free account to upload new <span data-replace-text="files">images</span>.</p>-->
       <p>Log in to upload new <span data-replace-text="files">images</span>.</p>
-      <form id="assetAccount">
-        <span class="message"></span>
-        <div class="row">
-          <div class="small-4 columns text-center">
-            <input type="text" name="email" value="" placeholder="Email" />
-          </div>
-          <div class="small-4 columns text-center">
-            <input type="password" name="password" value="" placeholder="Password" />
-          </div>
-          <div class="small-4 columns">
-            <a class="button tiny success" id="assetLogin" name="assetLogin" data-action="login">Log In</a>
-            <!--<a class="button tiny primary" id="assetCreateAccount" name="assetCreateAccount" data-action="signup">Create Account</a>-->
-          </div>
+      <div class="row">
+        <div class="small-12 columns text-center">
+          <a class="button tiny success" href="/login" target="_blank" rel="noopener">Log In with Google</a>
+          <p><small>Opens in a new tab. Come back here when you are signed in.</small></p>
         </div>
-      </form>
+      </div>
     </div>
 
     <div id="upload-nonguest">
