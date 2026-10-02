@@ -33,12 +33,13 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 
 ## TODO
 
-- nothing open.
-
-## Student testing TODO
-
-- When a student logs in, does it look like the teacher view? Can they create new courses?
-- Ensure that a student can join a course.
+- students can create new courses.
+- move My Courses above recent trinkets on dashboard.
+- change quiz submission behavior.  Students shouldn't be able to edit after submitting.
+    - make a separate type of assignment?
+    - make teacher unsubmit?
+    - number of attempts?
+    - ... figure out easiest v1.  Iterate later.
 
 ## Maintenance TODO
 
