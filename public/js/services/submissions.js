@@ -37,17 +37,6 @@
     }
 
     /**
-     * updates submission in case where submission is not complete
-     */
-    service.updateSubmission = function(submission, code, comments) {
-      var submissionElement = Restangular.restangularizeElement(null, { id : submission.id }, "submissions");
-      return submissionElement.customPOST({
-          code     : code
-        , comments : comments
-      });
-    }
-
-    /**
      * get all submissions for the current user for this material
      */
     service.getSubmissionsForMaterial = function(material) {

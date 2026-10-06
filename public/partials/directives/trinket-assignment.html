@@ -32,7 +32,7 @@
           <a ng-class="{disabled:!assignmentVisible || !canSubmit || !submissionsAllowed, light:!isModified}"
              ng-click="submitAssignment()" class="button secondary small submit-button">
             <i class="fa" ng-class="submittingCode ? 'fa-circle-o-notch fa-spin' : codeSubmitted ? 'fa-check' : 'fa-cloud-upload'"></i>
-            {{ codeSubmitted ? "Submitted" : canUpdate ? "Update Your Submission" : "Submit Your Code" }}</a>
+            {{ codeSubmitted ? "Submitted" : canUpdate ? "Submit Again" : "Submit Your Code" }}</a>
 
           <div ng-if="assignmentVisible" class="assignment-notices">
             <span ng-if="hasDueDate() && submissionsAllowed">

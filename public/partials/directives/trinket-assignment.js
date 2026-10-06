@@ -15,10 +15,11 @@
           "submitted"     : "submittedOn"
         , "completed"     : "submittedOn"
         , "submittedLate" : "submittedOn"
+        , "superseded"    : "submittedOn"
         , "feedback"      : "lastUpdated"
       };
 
-      var url, latestSubmission, feedbackComments;
+      var url, feedbackComments;
       var parser = markdownParser({
           $scope  : scope
         , preview : false
@@ -93,58 +94,37 @@
         }
 
         scope.submittingCode = true;
-        latestSubmission     = null;
 
-        angular.forEach(scope.submissions, function(submission, index) {
-          if (submission.submissionState === "submitted" || submission.submissionState === "submittedLate") {
-            latestSubmission = index;
-          }
-        });
+        // each submission is kept; the server marks earlier pending ones as superseded
+        trinketSubmissions.submitAssignment(scope.material, scope.serialized, scope.submission.comments)
+          .then(function(result) {
+            $timeout(function() {
+              angular.forEach(scope.submissions, function(submission) {
+                if (submission.submissionState === "submitted" || submission.submissionState === "submittedLate") {
+                  submission.submissionState = "superseded";
+                }
+              });
 
-        if (latestSubmission != null) {
-          trinketSubmissions.updateSubmission(scope.submissions[latestSubmission], scope.serialized, scope.submission.comments)
-            .then(function(result) {
-              $timeout(function() {
-                scope.submissions[latestSubmission] = result.submission;
+              scope.submissions.unshift(result.submission);
 
-                scope.codeSubmitted  = true;
-                scope.isModified     = false;
+              scope.codeSubmitted  = true;
+              scope.isModified     = false;
+              scope.canUpdate      = true;
+              scope.errorMessage   = "";
 
-              }, 500);
-            }, function(err) {
-              if (err.status === 403) {
-                // TODO: transition error display
-                scope.errorMessage = err.data.message;
-              }
-              else {
-                // same as above?
-              }
-            })
-            .finally(function() {
-              scope.submittingCode = false;
-            });
-        }
-        else {
-          trinketSubmissions.submitAssignment(scope.material, scope.serialized, scope.submission.comments)
-            .then(function(result) {
-              $timeout(function() {
-                scope.submissions.unshift(result.submission);
-
-                scope.submittingCode = false;
-                scope.codeSubmitted  = true;
-                scope.isModified     = false;
-
-              }, 500);
-            }, function(err) {
-              if (err.status === 403) {
-                // TODO: transition error display
-                scope.errorMessage = err.data.message;
-              }
-              else {
-                // same as above?
-              }
-            });
-        }
+            }, 500);
+          }, function(err) {
+            if (err.status === 403) {
+              // TODO: transition error display
+              scope.errorMessage = err.data.message;
+            }
+            else {
+              // same as above?
+            }
+          })
+          .finally(function() {
+            scope.submittingCode = false;
+          });
       }
 
       /**
@@ -225,6 +205,10 @@
                       scope.submissions.push(submission);
 
                       scope.canUpdate = true;
+
+                      break;
+                    case "superseded":
+                      scope.submissions.push(submission);
 
                       break;
                     case "completed":

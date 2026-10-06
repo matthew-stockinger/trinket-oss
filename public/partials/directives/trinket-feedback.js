@@ -16,6 +16,7 @@
       scope.sendingFeedback = false;
       scope.revisionMade    = false;
       scope.acceptingSubmission = false;
+      scope.errorMessage        = "";
 
       scope.feedbackForm = {
           includeRevision : false
@@ -59,6 +60,9 @@
         scope.canUpdate      = false;
         scope.canAccept      = false;
         scope.revisionIframe = null;
+        scope.errorMessage   = "";
+
+        scope.previousSubmissions = [];
 
         if (scope.submission && scope.submission.lang && scope.submission.shortCode) {
           url         = scope.submission.lang + "/" + scope.submission.shortCode;
@@ -98,7 +102,15 @@
             .then(function(submissions) {
               submissions.reverse();
               angular.forEach(submissions, function(submission) {
-                if (submission.shortCode !== scope.submission.shortCode && submission.submissionState === "completed") {
+                if (submission.shortCode === scope.submission.shortCode) {
+                  return;
+                }
+
+                // earlier versions the student replaced before feedback was given
+                if (submission.submissionState === "superseded") {
+                  scope.previousSubmissions.push(submission);
+                }
+                else if (submission.submissionState === "completed") {
                   // find teacher feedback
                   angular.forEach(submission.comments, function(comment) {
                     if (comment.commentType === "feedback") {
@@ -145,6 +157,9 @@
 
               scope.sendingFeedback  = false;
             }, 500);
+          }, function(err) {
+            scope.sendingFeedback = false;
+            scope.errorMessage    = feedbackError(err);
           });
       }
 
@@ -164,6 +179,9 @@
                 scope.canSubmit = true;
               }
             }, 500);
+          }, function(err) {
+            scope.acceptingSubmission = false;
+            scope.errorMessage        = feedbackError(err);
           });
       }
 
@@ -252,6 +270,12 @@
           }
         }
       }
+    }
+
+    function feedbackError(err) {
+      return err && err.data && err.data.message
+        ? err.data.message
+        : "Something went wrong. Please reload the page and try again.";
     }
 
     return {

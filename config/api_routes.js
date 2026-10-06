@@ -573,31 +573,18 @@ module.exports = [
       auth: 'session'
     }
   },
-  {
-    route : 'POST /api/submissions/{trinketId} course.updateMySubmission',
-    config : {
-      auth: 'session',
-      pre : ['trinket(params.trinketId)'],
-      validate : {
-        payload : {
-          code : Joi.object().required(),
-          comments : Joi.string().allow('').required()
-        }
-      }
-    }
-  },
-  {
-    route : 'GET /api/courses/{courseId}/dashboard course.dashboardOverview',
-    config : {
-      auth: 'session',
-      pre : ['course(params.courseId)'],
-      validate : {
-        query : {
-          listBy : Joi.string().optional()
-        }
-      }
-    }
-  },
+  // {
+  //   route : 'GET /api/courses/{courseId}/dashboard course.dashboardOverview',
+  //   config : {
+  //     auth: 'session',
+  //     pre : ['course(params.courseId)'],
+  //     validate : {
+  //       query : {
+  //         listBy : Joi.string().optional()
+  //       }
+  //     }
+  //   }
+  // },
   {
     route : 'POST /api/courses/{courseId}/lessons/{lessonId}/materials/{materialId}/feedback course.sendFeedback',
     config : {
