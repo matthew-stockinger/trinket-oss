@@ -26,43 +26,12 @@
   </div>
 </section>
 {% endif %}
-<section id="recent-trinkets" class="row">
-  <div class="clearfix">
-    <h2 class="left">My Recent Trinkets</h2>
-    <nav class="right">
-      <new-trinket></new-trinket>
-    </nav>
-  </div>
-  <p>Trinkets are interactive examples you can put on any site.  Create or edit your trinkets here:</p>
-  <ul class="medium-block-grid-3 small-block-grid-1">
-  {% for trinket in trinkets %}
-    <li class="item" title="{% if trinket.name == "" %}{% else %}{{ trinket.name }}{% endif %}">
-      <a href="/library/trinkets/{{ trinket.shortCode }}">
-        <img src="{{ trinket.snapshot }}">
-        <div class="overlay">
-          Click To Edit
-          <div class="homeLabel">
-            {% if trinket.name == "" %}<i>Untitled</i>{% else %}{{ trinket.name }}{% endif %}
-          </div>
-        </div>
-      </a>
-    </li>
-  {% endfor %}
-  </ul>
-  <section class="row">
-    <div class="columns small-12">
-      <a href="/library/trinkets" class="right button">View All My Trinkets&nbsp;<i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-  </section>
-</section>
 {% if config.features.courses != false %}
-<hr>
-
 {% raw %}
-<section ng-controller="CoursesController">
+<section id="home-courses" ng-controller="CoursesController">
   <div class="row clearfix">
     <div class="small-12 medium-8 columns">
-      <h2 class="left">My Courses</h2>
+      <h2 class="left courses-heading">My Courses</h2>
 
       <div ng-hide="courses" class="row">
         <div class="small-12 columns">
@@ -131,7 +100,40 @@
   </div>
 </section>
 {% endraw %}
+<hr>
 {% endif %}
+
+<section id="recent-trinkets" class="row">
+  <div class="small-12 columns">
+    <div class="clearfix">
+      <h2 class="left">My Recent Trinkets</h2>
+      <nav class="right">
+        <new-trinket></new-trinket>
+      </nav>
+    </div>
+    <p>Trinkets are interactive examples you can put on any site.  Create or edit your trinkets here:</p>
+    <ul class="medium-block-grid-3 small-block-grid-1">
+    {% for trinket in trinkets %}
+      <li class="item" title="{% if trinket.name == "" %}{% else %}{{ trinket.name }}{% endif %}">
+        <a href="/library/trinkets/{{ trinket.shortCode }}">
+          <img src="{{ trinket.snapshot }}">
+          <div class="overlay">
+            Click To Edit
+            <div class="homeLabel">
+              {% if trinket.name == "" %}<i>Untitled</i>{% else %}{{ trinket.name }}{% endif %}
+            </div>
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+    </ul>
+    <section class="row">
+      <div class="columns small-12">
+        <a href="/library/trinkets" class="right button">View All My Trinkets&nbsp;<i class="fa fa-arrow-circle-right"></i></a>
+      </div>
+    </section>
+  </div>
+</section>
 
 {% if flash.acceptedCourseInvitation %}
 <div id="classWelcomeModal" class="reveal-modal small" data-reveal>

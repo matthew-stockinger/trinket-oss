@@ -135,14 +135,15 @@ body#home {
     }
   }
 
-  @media #{$small-only} {
-    #recent-trinkets, #my-courses {
-      max-width: 80%;
-    }
-  }
-  @media #{$medium-only} {
-    #recent-trinkets, #my-courses {
-      max-width: 90%;
+  #home-courses {
+    margin-bottom: 150px;
+
+    // 1.5x Foundation's h2 sizes (1.6875rem small, 2.3125rem medium-up)
+    .courses-heading {
+      font-size: 2.53125rem;
+      @media #{$medium-up} {
+        font-size: 3.46875rem;
+      }
     }
   }
 
