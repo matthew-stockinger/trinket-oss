@@ -18,13 +18,16 @@
 
     $scope.coursesById = {};
 
-    $scope.canCreateCourse = roles.hasPermission("create-public-course") ? true : false;
     $scope.courses;
     $scope.archived;
     $scope.showArchived = false;
 
     $scope.trinketTeacher = roles.hasRole("trinket-teacher");
     $scope.trinketAdmin   = roles.hasRole("admin");
+
+    // only teachers and site admins can create courses; every user has the
+    // create-public-course permission, so gate on site role instead
+    $scope.canCreateCourse = $scope.trinketTeacher || $scope.trinketAdmin;
 
     $scope.accessCode = "";
     $scope.checkingAccessCode = false;

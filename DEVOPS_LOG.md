@@ -34,6 +34,8 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 ## TODO
 
 - students can create new courses.
+    - 10.2.2026 fixed and works locally.  Needs redeploy and testing.  Then commit.
+- possible bug: students don't appear to be able to make new submissions to quizzes that have already been submitted?  See Zuheid quiz retake.  Possible crossing streams between quiz and retake quiz?
 - move My Courses above recent trinkets on dashboard.
 - change quiz submission behavior.  Students shouldn't be able to edit after submitting.
     - make a separate type of assignment?
