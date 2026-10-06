@@ -30,18 +30,28 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - removed email + password login from the frontend.  Google OAuth only.  8.27.2026
     - kept a copy of the old login page at lib/views/login-original.html.  It is not routed, so it never renders.
 - fixed a bug that broke the *first* Google sign-in for every new user.  8.27.2026
+- fixed 10.6.2026: students can create new courses.
 
 ## TODO
 
-- students can create new courses.
-    - 10.2.2026 fixed and works locally.  Needs redeploy and testing.  Then commit.
-- possible bug: students don't appear to be able to make new submissions to quizzes that have already been submitted?  See Zuheid quiz retake.  Possible crossing streams between quiz and retake quiz?
+- possible bug: students don't appear to be able to make new submissions to quizzes that have already been submitted?  See Zuheid quiz retake.  Possible crossing streams between quiz and retake quiz?  quiz retake 1, student work is perfect, but won't allow submit.  Says 'error saving' top right.  Zuheid sc995333 SChmwdy742
+
+    - Logged into my account on trinket742.org.  Through admin user search, logged in as a student.  Viewed an assignment as a student and did some work, but the "submit code" button is inactive.  Got "Error Saving" message in upper right corner div with id="draftMessage". 
+    - Got same issue when logging in directly on a student chromebook (i.e. without going through admin screens to log in as student).
+    - tried a new submission for a different student and got same issue.
+    - tried to reproduce the issue with app running locally.  Same "Error Saving".  However, it allowed me to submit the assignment, and it allowed me to update my submission.  Updating didn't add a submission #2.  Instead, it replaced my submission #1.
+    - try: student chromebook, go to retake quiz 1.  See if previous submission exists.  Screenshot everything about it: user, date submitted, the code.  Try updating submission and note results.  Then go to quiz 2.9 and do the same.  Finally, repeat all this with a different student's chromebook.  Compare to what admin sees when logging in as student.
+        - I suspect that admin view is actually showing my submission--not the student's.  
+        - I would want admin to be able to genuinely log in as student.
+
 - move My Courses above recent trinkets on dashboard.
 - change quiz submission behavior.  Students shouldn't be able to edit after submitting.
     - make a separate type of assignment?
     - make teacher unsubmit?
     - number of attempts?
     - ... figure out easiest v1.  Iterate later.
+- See student code before they submit.
+- See full student edit history timestamps.
 
 ## Maintenance TODO
 

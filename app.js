@@ -23,6 +23,7 @@ const Boom           = require('@hapi/boom');
 const Inert          = require('@hapi/inert');
 const Vision         = require('@hapi/vision');
 const Yar            = require('@hapi/yar');
+const Qs             = require('qs');
 const config         = require('./config/app.config');
 const Helpers        = require('./lib/util/helpers');
 const Authentication = require('./lib/auth/passport.js');
@@ -109,6 +110,18 @@ const init = async () => {
       }
     }
   ]);
+
+  // Hapi 20 parses form-encoded payloads with querystring, which leaves jQuery's
+  // nested fields as flat keys ('settings[foo]', 'assets[0][name]'). Hapi 4 used
+  // qs, and route validation expects nested objects, so expand them here.
+  server.ext('onPostAuth', (request, h) => {
+    var contentType = request.headers['content-type'] || '';
+    if (contentType.indexOf('application/x-www-form-urlencoded') === 0
+        && request.payload && typeof request.payload === 'object') {
+      request.payload = Qs.parse(request.payload, { arrayLimit: 1000, depth: 20 });
+    }
+    return h.continue;
+  });
 
   // Add _logIn method to yar for session-based login
   // Also ensure request.user is set from auth credentials (for inject() calls)
