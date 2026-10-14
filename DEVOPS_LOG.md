@@ -33,15 +33,21 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - fixed 10.6.2026: students can create new courses.
 - fix autosave not working on assignments.  10.6.2026
 - feature assignment submissions before teacher feedback now create a new submission with datestamp instead of overwriting the prior submission.
+- move My Courses above recent trinkets on dashboard.  done 10.6.2026
 
 ## TODO
 
-- move My Courses above recent trinkets on dashboard.
-- See student code before they submit.
 - add a home button next to my trinkets button on homepage.
-- Add code.org game lab trinkets.
+- Add code.org game lab trinkets.  See existing .md plan.
+- Add animation library?
 
 ## Maintenance TODO
 
 - upgrade to aws-sdk v3. One thing I noticed but didn't touch: aws-sdk v2 is end-of-support (it prints a deprecation warning on load). Not urgent, and migrating to v3 would touch all 8 call sites — but worth knowing it's on the clock.
 - Watch production build output for other errors and deprecation notices.
+
+## Shelved TODO
+
+Deemed unimportant for now.
+
+- See student code before they submit.

@@ -17,7 +17,7 @@ Add a client-side `gamelab` trinket type modeled on the **glowscript** type: a c
 
 ### Step 0: compatibility spike (before writing code)
 - Export 3–5 real student projects from code.org.
-- Paste each into an HTML trinket that loads p5 and `@code-dot-org/p5.play@1.3.21-cdo` from jsdelivr, plus the exported `gamelab-api.js`.
+- Paste each into an HTML trinket that loads code.org's p5 fork `@code-dot-org/p5@0.5.4-cdo.10` and `@code-dot-org/p5.play@1.3.21-cdo` from jsdelivr, plus the exported `gamelab-api.js`.
 - Note any API gaps, such as `World.*`, `randomNumber`, `createEdgeSprites`, or `playSound` against our asset URLs.
 
 ### Step 1: register the type (follow every glowscript touchpoint)
@@ -39,7 +39,7 @@ Add a client-side `gamelab` trinket type modeled on the **glowscript** type: a c
   - **Keyboard:** focus the iframe and `preventDefault` arrow keys and space so the page doesn't scroll.
   - **Infinite loops:** a simple guard that instruments `while`/`for` loops with a time check, or at minimum a watchdog that kills an unresponsive iframe.
 - `lib/views/trinket/gamelab/`: the full-page trinket view, mirroring `lib/views/trinket/glowscript/`.
-- Runtime files: vendor `p5.js`, `p5.play.js` and our own `gamelab-shim.js` under `public/js/embed/gamelab/`. Keep them versioned in git rather than in the gitignored `public/components`.
+- Runtime files: vendor code.org's p5 fork (`@code-dot-org/p5@0.5.4-cdo.10`, not vanilla p5), `p5.play.js` and our own `gamelab-shim.js` under `public/js/embed/gamelab/`. Keep them versioned in git rather than in the gitignored `public/components`.
   - The shim ports the needed parts of `api-entry.js` and `dropletUtilsGlobalFunctions` (`randomNumber`, `playSound`, etc.) and sets up instance/global mode like Game Lab does: auto-calling `draw`, plus `World.frameRate`, `World.mouseX` and similar.
 
 ### Step 3: animations (needed early)
