@@ -16,9 +16,9 @@ Research shows this is very feasible:
 Add a client-side `gamelab` trinket type modeled on the **glowscript** type: a client-side language with its own embed template, runner JS and sandboxed iframe. Student code runs as native JS in that iframe, on top of p5 + p5.play + a Game Lab shim. Animations are stored as trinket assets and preloaded into p5.play's own hook.
 
 ### Step 0: compatibility spike (before writing code)
-- Export 3–5 real student projects from code.org.
-- Paste each into an HTML trinket that loads code.org's p5 fork `@code-dot-org/p5@0.5.4-cdo.10` and `@code-dot-org/p5.play@1.3.21-cdo` from jsdelivr, plus the exported `gamelab-api.js`.
-- Note any API gaps, such as `World.*`, `randomNumber`, `createEdgeSprites`, or `playSound` against our asset URLs.
+- [x] Export 3–5 real student projects from code.org.
+- [x] 10.14.2026 Paste each into an HTML trinket that loads code.org's p5 fork `@code-dot-org/p5@0.5.4-cdo.10` and `@code-dot-org/p5.play@1.3.21-cdo` from jsdelivr, plus the exported `gamelab-api.js`.
+- [ ] Note any API gaps, such as `World.*`, `randomNumber`, `createEdgeSprites`, or `playSound` against our asset URLs.
 
 ### Step 1: register the type (follow every glowscript touchpoint)
 - `config/constants.js`: add `'gamelab'` to the language list.

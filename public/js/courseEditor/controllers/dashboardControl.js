@@ -7,8 +7,9 @@
       var cache = TrinketIO.import("utils.cache");
 
       var parser = markdownParser({
-        $scope:  $scope,
-        preview: false
+        $scope:    $scope,
+        preview:   false,
+        resizable: true
       });
 
       $scope.assignmentsOverview = {};

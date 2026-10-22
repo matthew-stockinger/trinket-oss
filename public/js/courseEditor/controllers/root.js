@@ -14,8 +14,9 @@
     this.$q          = $q;
     this.Restangular = Restangular;
     this.parser      = markdownParser({
-      $scope:  $scope,
-      preview: false
+      $scope:    $scope,
+      preview:   false,
+      resizable: true
     });
     this.trinketConfig = trinketConfig;
     this.trinketUtil   = trinketUtil;

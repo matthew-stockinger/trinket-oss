@@ -11,6 +11,46 @@
   var python_types    = [];
   var inline_trinkets = ['python', 'python3', 'html', 'glowscript', 'java', 'R', 'pygame'];
 
+  // Resizable embeds (options.resizable): the iframe is wrapped with a drag bar on its right edge.
+  // Handlers are delegated on document because the markup is injected later (ng-bind-html).
+  // Pointer events cover mouse, touch and pen; pointer capture keeps move/up events coming to the
+  // bar while the pointer is over an iframe or outside the window. body.embedded-resizing also
+  // disables pointer events on iframes and text selection for the duration of the drag.
+  var EMBED_DRAGBAR_WIDTH = 9;
+  var EMBED_MIN_WIDTH     = 200;
+
+  (function bindEmbedResize($) {
+    if (!$) return;
+
+    $(document).on('pointerdown.embedResize', '.embedded-content-dragbar', function(e) {
+      e.preventDefault();
+
+      var pointerId = e.originalEvent.pointerId,
+          $wrapper  = $(this).closest('.embedded-content-wrapper'),
+          left      = $wrapper.offset().left;
+
+      try { this.setPointerCapture(pointerId); } catch (err) {}
+
+      $('body').addClass('embedded-resizing');
+
+      $(document).on('pointermove.embedResize', function(event) {
+        if (event.originalEvent.pointerId !== pointerId) return;
+
+        var max   = $wrapper.parent().width(),
+            width = Math.max(EMBED_MIN_WIDTH, Math.min(max, event.originalEvent.pageX - left));
+
+        $wrapper.css('width', width + 'px');
+      });
+
+      $(document).on('pointerup.embedResize pointercancel.embedResize lostpointercapture.embedResize', function(event) {
+        if (event.originalEvent.pointerId !== pointerId) return;
+
+        $(document).off('pointermove.embedResize pointerup.embedResize pointercancel.embedResize lostpointercapture.embedResize');
+        $('body').removeClass('embedded-resizing');
+      });
+    });
+  })(window.jQuery);
+
   var EMBED_URLS = [
     {
       regex : /^(?:https?\:)?\/\/(?:www\.)?youtu\.?be(?:\.com)?\/(?:watch\?v=|embed\/)?(\S+)$/i,
@@ -482,6 +522,14 @@
         }
         else {
           frame.addClass('embedded-content');
+
+          if (options.resizable) {
+            // wrap with a drag bar on the right edge; see bindEmbedResize below
+            width = frame.attr('width') || '100%';
+            if (width.match(/^\d+$/)) width = (parseInt(width, 10) + EMBED_DRAGBAR_WIDTH) + 'px';
+            frame.wrap('<div class="embedded-content-wrapper" style="width:' + width + ';"></div>');
+            frame.after('<div class="embedded-content-dragbar" title="Drag to resize"></div>');
+          }
         }
       });
 

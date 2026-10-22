@@ -23,8 +23,9 @@ angular
     var lastRenderedMaterial = null;
     var currentPath       = null;
     var parser            = markdownParser({
-      $scope:  $scope,
-      preview: false
+      $scope:    $scope,
+      preview:   false,
+      resizable: true
     });
 
     $anchorScroll.yOffset = 75;

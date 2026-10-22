@@ -1877,11 +1877,17 @@ $('document').ready(function() {
       var $editor = $('#editor');
       var self = this;
 
-      $(document).on('mousedown.dragbar', '#dragbar', function(e) {
+      // pointer events cover mouse, touch and pen; capture keeps move/up events coming to the
+      // bar even when the pointer leaves it or the window
+      $(document).on('pointerdown.dragbar', '#dragbar', function(e) {
         e.preventDefault();
 
+        var pointerId     = e.originalEvent.pointerId;
         var wrapper_width = $('.trinket-content-wrapper').width();
 
+        try { this.setPointerCapture(pointerId); } catch (err) {}
+
+        $('body').addClass('dragbar-active');
         $('#content-overlay').show();
         self.dragging = true;
         var $ghostbar = $('<div>', {
@@ -1893,12 +1899,15 @@ $('document').ready(function() {
           }
         }).appendTo('body');
 
-        $(document).on('mousemove.dragbar', function(event) {
-          var leftPct = event.pageX / wrapper_width;
-          var rightPct = ( wrapper_width - event.pageX ) / wrapper_width;
+        $(document).on('pointermove.dragbar', function(event) {
+          if (event.originalEvent.pointerId !== pointerId) return;
+
+          var pageX = event.originalEvent.pageX;
+          var leftPct = pageX / wrapper_width;
+          var rightPct = ( wrapper_width - pageX ) / wrapper_width;
           if (leftPct >= .3 && rightPct >= .25) {
-            $ghostbar.css('left', event.pageX + 2);
-            $('#editor').css('width', event.pageX + 2);
+            $ghostbar.css('left', pageX + 2);
+            $('#editor').css('width', pageX + 2);
 
             if (resizeFn) {
               resizeFn();
@@ -1906,14 +1915,18 @@ $('document').ready(function() {
           }
         });
 
-        $(document).one('mouseup.dragbar', function(e) {
+        $(document).on('pointerup.dragbar pointercancel.dragbar lostpointercapture.dragbar', function(e) {
+          if (e.originalEvent.pointerId !== pointerId) return;
+
           $('#content-overlay').hide();
+          $('body').removeClass('dragbar-active');
 
           if (self.dragging) {
             $('#ghostbar').remove();
-            $(document).off('mousemove.dragbar');
             self.dragging = false;
           }
+
+          $(document).off('pointermove.dragbar pointerup.dragbar pointercancel.dragbar lostpointercapture.dragbar');
         });
       });
     },
