@@ -1,3 +1,5 @@
 $assets_host: "";
 $img_prefix: "/img";
 $fonts_prefix: "/fonts";
+// invisible grab area added on each side of the drag bars on touchscreens
+$drag-touch-slop: 18px;

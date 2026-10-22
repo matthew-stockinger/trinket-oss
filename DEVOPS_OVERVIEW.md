@@ -184,7 +184,7 @@ Only use this method if you have admin rights to your dev machine.  If using a d
 
     Also note: min-instances may be changed, and concurrency. That's future load testing work.)\_
 
-    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest,SESSION_SECRET=SESSION_SECRET:latest" --min-instances 0 --max-instances 4 --concurrency 20`
+    `gcloud run deploy trinket --image us-central1-docker.pkg.dev/trinket742/trinket/app:latest --platform managed --region us-central1 --allow-unauthenticated --set-env-vars "NODE_ENV=production" --set-secrets "MONGO_URI=MONGO_URI:latest,SESSION_SECRET=SESSION_SECRET:latest" --min-instances 1 --max-instances 4 --concurrency 20`
 
     _(The commands below are older originals that Matt tried. Copied here for documentation. Don't use. Correct syntax is above.)_
 

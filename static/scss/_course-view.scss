@@ -44,14 +44,14 @@ body.course {
       border-right: 1px solid #b4b4b4;
 
       // bigger touch target for fingers without changing the layout
-      @media (pointer: coarse) {
+      @media (any-pointer: coarse) {
         &::before {
           content: '';
           position: absolute;
           top: 0;
           bottom: 0;
-          left: -8px;
-          right: -8px;
+          left: -$drag-touch-slop;
+          right: -$drag-touch-slop;
         }
       }
     }

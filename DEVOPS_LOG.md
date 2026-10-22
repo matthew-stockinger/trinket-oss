@@ -35,6 +35,7 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - feature assignment submissions before teacher feedback now create a new submission with datestamp instead of overwriting the prior submission.
 - move My Courses above recent trinkets on dashboard.  done 10.6.2026
 - add horizontal drag bar to code/preview divider and embedded-content iframes in courses.  10.22.2026
+- make horizontal dragbar hitbox bigger.  It's easy to use with touch emulation, but difficult to use with an actual touchscreen. 10.22.2026
 
 ## TODO
 
