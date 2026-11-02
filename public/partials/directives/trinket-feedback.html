@@ -9,7 +9,7 @@
     <div class="small-12 columns">
       <div class="row">
         <div class="small-12 columns" ng-click="toggleSubmission(submission)">
-          Submission #{{ $index + 1 }} &mdash; <span title="{{ submission.submittedOn | localDate }}">{{ submission.submittedOn | formatDate }}</span>
+          Submission #{{ $index + 1 }} &mdash; <span title="{{ submission.submittedOn | schoolDate:true }}">{{ submission.submittedOn | schoolDate }}</span>
         </div>
       </div>
       <div class="row collapsed" ng-class="{'show-row':showSubmission[submission.id]}">
@@ -41,7 +41,7 @@
           <div ng-if="submission.submissionState === 'completed'">
             <div class="row">
               <div class="small-12 columns">
-                <span title="{{ submission.lastUpdated | localDate }}">Feedback sent {{ submission.lastUpdated | formatDate }}</span>
+                <span title="{{ submission.lastUpdated | schoolDate:true }}">Feedback sent {{ submission.lastUpdated | schoolDate }}</span>
               </div>
             </div>
 
@@ -71,7 +71,7 @@
   <div class="small-12 columns">
     <div class="previous-submission">
       <strong>Submission #{{ previousSubmissions.length + 1 }}</strong>
-      <span ng-if="submission.submittedOn">&mdash; <span title="{{ submission.submittedOn | localDate }}">{{ submission.submittedOn | formatDate }}</span></span>
+      <span ng-if="submission.submittedOn">&mdash; <span title="{{ submission.submittedOn | schoolDate:true }}">{{ submission.submittedOn | schoolDate }}</span></span>
     </div>
     <iframe
             ng-src="{{ submissionIframe }}"
@@ -166,7 +166,7 @@
     <div ng-repeat="comment in submission.comments | filter:{ commentType:'feedback' }:true" class="row">
       <div class="small-4 comment-info columns">
         <img class="avatar" ng-src="{{ comment.avatar }}" /> {{ comment.displayName }}<br />
-        <span class="submission-commented">{{ comment.commented | formatDate }}</span>
+        <span class="submission-commented" title="{{ comment.commented | schoolDate:true }}">{{ comment.commented | schoolDate }}</span>
       </div>
       <div class="small-8 columns" ng-bind-html="displayFeedback(comment.commentText)"></div>
     </div>

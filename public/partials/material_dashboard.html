@@ -53,7 +53,7 @@
         </div>
         <div class="small-5 columns" ng-click="toggleStudent(user)">
           <i ng-class="stateDisplay[user.state].icon" class="fa fa-fw"></i>
-          {{ stateDisplay[user.state].text }} <span ng-if="user.state !== 'not-started'" title="{{ user.lastUpdated | localDate }}">{{ user[ stateDisplay[user.state].dateField ] | formatDate }}</span>
+          {{ stateDisplay[user.state].text }} <span ng-if="user.state !== 'not-started'" title="{{ user[ stateDisplay[user.state].dateField ] | schoolDate:true }}">{{ user[ stateDisplay[user.state].dateField ] | schoolDate }}</span>
         </div>
         <div class="small-1 columns">
           <a class="dashboard-actions-link right" data-dropdown="user-{{ user.username }}"><i class="fa fa-ellipsis-v"></i></a>
@@ -91,7 +91,7 @@
                 </div>
                 <div class="small-6 columns" ng-click="toggleStudent(user)">
                   <i ng-class="stateDisplay[user.state].icon" class="fa fa-fw"></i>
-                  {{ stateDisplay[user.state].text }} <span ng-if="user.state !== 'not-started'" title="{{ user.lastUpdated | localDate }}">{{ user[ stateDisplay[user.state].dateField ] | formatDate }}</span>
+                  {{ stateDisplay[user.state].text }} <span ng-if="user.state !== 'not-started'" title="{{ user[ stateDisplay[user.state].dateField ] | schoolDate:true }}">{{ user[ stateDisplay[user.state].dateField ] | schoolDate }}</span>
                 </div>
                 <div ng-if="false" class="small-1 columns"> <!-- add action here to move user into view? -->
                   <a class="dashboard-actions-link right" data-dropdown="user-{{ user.username }}"><i class="fa fa-ellipsis-v"></i></a>

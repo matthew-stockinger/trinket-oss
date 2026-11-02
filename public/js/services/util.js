@@ -51,5 +51,20 @@
       return function(date) {
         return moment(date).local().format('LLLL');
       }
+    })
+    .filter('schoolDate', function() {
+      var zone  = 'America/Chicago'
+        , short = new Intl.DateTimeFormat('en-US', { timeZone: zone, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
+        , long  = new Intl.DateTimeFormat('en-US', { timeZone: zone, weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit', timeZoneName: 'short' });
+
+      return function(date, tooltip) {
+        var d = new Date(date);
+        if (!date || isNaN(d)) return '';
+        if (tooltip) return long.format(d);
+
+        var p = {};
+        short.formatToParts(d).forEach(function(part) { p[part.type] = part.value; });
+        return p.weekday + ', ' + p.month + ' ' + p.day + ', ' + p.year + ' ' + p.hour + ':' + p.minute + ' ' + p.dayPeriod;
+      }
     });
 })(window.angular);

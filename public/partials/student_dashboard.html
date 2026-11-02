@@ -47,7 +47,7 @@
               <section ng-if="submissions[ material.id ]">
                 <i ng-class="stateDisplay[ submissions[ material.id ].state ].icon" class="fa fa-fw"></i>
                 {{ stateDisplay[ submissions[ material.id ].state ].text }}
-                <span title="{{ submissions[ material.id ].lastUpdated }}">{{ submissions[ material.id ][ stateDisplay[submissions[ material.id ].state].dateField ] | formatDate }}</span>
+                <span title="{{ submissions[ material.id ][ stateDisplay[submissions[ material.id ].state].dateField ] | schoolDate:true }}">{{ submissions[ material.id ][ stateDisplay[submissions[ material.id ].state].dateField ] | schoolDate }}</span>
               </section>
               <section ng-if="!submissions[ material.id ]">
                 <i ng-class="stateDisplay['not-started'].icon" class="fa fa-fw"></i>

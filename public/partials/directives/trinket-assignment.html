@@ -75,7 +75,7 @@
           <div class="small-12 columns" role="tab" ng-click="toggleSubmission(submission)">
             <span ng-class="{'previous-label':showSubmission[submission.id]}">
               <span>{{ submission.submissionState === 'submittedLate' ? 'Late' : 'My' }} Submission #{{ submissions.length - $index }}</span>
-              &mdash; <span title="{{ submission[ stateDateFields[ submission.submissionState ] ] | localDate }}">{{ submission[ stateDateFields[ submission.submissionState ] ] | formatDate }}</span>
+              &mdash; <span title="{{ submission[ stateDateFields[ submission.submissionState ] ] | schoolDate:true }}">{{ submission[ stateDateFields[ submission.submissionState ] ] | schoolDate }}</span>
               <span ng-if="submission.feedback" class="label success"><i class="fa fa-reply"></i> Teacher Feedback</span>
             </span>
           </div>
@@ -115,7 +115,7 @@
             <div ng-if="submission.feedback" class="row">
               <div class="small-4 comment-info columns">
                 <img class="avatar" ng-src="{{ submission.feedback.comment.avatar }}" /> {{ submission.feedback.comment.displayName }}<br />
-                <span class="submission-commented" title="{{ submission.feedback.lastUpdated | localDate }}">{{ submission.feedback.comment.commented | formatDate }}</span>
+                <span class="submission-commented" title="{{ submission.feedback.comment.commented | schoolDate:true }}">{{ submission.feedback.comment.commented | schoolDate }}</span>
               </div>
               <div class="small-8 columns">
                 <p tabindex="0" aria-label="Teacher Feedback" ng-bind-html="displayFeedback(submission.feedback.comment.commentText)"></p>

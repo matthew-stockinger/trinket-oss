@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Agent Guidelines
+
+### Dependencies
+
+Never install a new dependency or dev dependency without first getting approval.
+
+### Scripts
+
+If a package.json script exists to complete a task, use it.  Don't do the same task manually.
+
+### Dev Server
+
+Usually, there will already be a dev server running in a Docker Container, at localhost:3000.  Do not spin up a new instance--use the already-running server.
+
 ## Project context
 
 Fork of `trinket-oss` (Node/Hapi + MongoDB + AngularJS coding-education platform) deployed as **Trinket742** for ISD742 schools. Deployment/ops facts (GCP project `trinket742`, Cloud Run, Atlas, Secret Manager, buckets, roadmap) live in `AGENTS.md`; the step-by-step runbook is `DEVOPS_OVERVIEW.md` with local setup in `GETTING_STARTED.md`. Read those rather than re-deriving infra details here.
