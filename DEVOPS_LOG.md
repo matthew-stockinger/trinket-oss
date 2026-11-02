@@ -40,7 +40,8 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 
 ## TODO
 
-- add a home button next to my trinkets button on homepage.
+- regression: user submits assignment, teacher gives feedback, then later views have submission timestamp gone.
+- Change "Go to my trinkets" button to say "Home" with the house icon.
 - Add code.org game lab trinkets.  See existing .md plan.
 - Add animation library?
 
