@@ -37,11 +37,10 @@ A log of setup steps I took to get Trinket deployed for my classroom.
 - add horizontal drag bar to code/preview divider and embedded-content iframes in courses.  10.22.2026
 - make horizontal dragbar hitbox bigger.  It's easy to use with touch emulation, but difficult to use with an actual touchscreen. 10.22.2026
 - make timestamps on submissions more precise than e.g. "four days ago".  Done 11.2.2026
+- Change "Go to my trinkets" button to say "Home" with the house icon.  Done 11.2.2026
 
 ## TODO
 
-- regression: user submits assignment, teacher gives feedback, then later views have submission timestamp gone.
-- Change "Go to my trinkets" button to say "Home" with the house icon.
 - Add code.org game lab trinkets.  See existing .md plan.
 - Add animation library?
 
